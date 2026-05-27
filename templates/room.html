@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room {{ room_code }} | BaatChit</title>
+    <title>Room {{ room_code }} | BaatCheet</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
@@ -12,6 +13,7 @@
         const USERNAME = "{{ username }}";
     </script>
 </head>
+
 <body class="room-body">
     <!-- Background Blobs for Glassmorphism -->
     <div class="background-elements">
@@ -20,7 +22,7 @@
     </div>
 
     <div class="room-container">
-        
+
         <!-- Main Video Area -->
         <main class="video-area">
             <header class="room-header">
@@ -28,7 +30,7 @@
                 <div class="controls">
                     <button id="toggle-audio" class="btn btn-icon active">🎤</button>
                     <button id="toggle-video" class="btn btn-icon active">📷</button>
-                    
+
                     <div class="reaction-container">
                         <button id="toggle-reaction" class="btn btn-icon">😊</button>
                         <div id="reaction-panel" class="reaction-panel">
@@ -39,11 +41,11 @@
                             <button class="reaction-emoji" data-emoji="😘">😘</button>
                         </div>
                     </div>
-                    
+
                     <button id="leave-room" class="btn btn-danger">Leave</button>
                 </div>
             </header>
-            
+
             <div id="video-grid" class="video-grid">
                 <div class="video-wrapper local-wrapper">
                     <video id="local-video" autoplay muted playsinline></video>
@@ -59,7 +61,7 @@
                 <h3>Live Chat</h3>
                 <span class="mobile-room-code">Room: <span class="highlight">{{ room_code }}</span></span>
             </div>
-            
+
             <div id="chat-messages" class="chat-messages">
                 <!-- Messages will be injected here -->
                 <div id="typing-indicator" class="typing-indicator">
@@ -69,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="chat-input-area">
                 <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
                 <button id="send-btn" class="btn btn-primary">Send</button>
@@ -81,4 +83,5 @@
     <!-- WebRTC and Chat Logic -->
     <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 </body>
+
 </html>

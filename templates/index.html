@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BaatChit | Ephemeral Chat</title>
+    <title>BaatCheet | Ephemeral Chat</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="background-elements">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
-    
+
     <div class="container index-container">
         <div class="glass-panel">
             <h1 class="logo-title">BaatChit</h1>
@@ -25,7 +27,8 @@
             <form action="{{ url_for('index') }}" method="POST" class="auth-form">
                 <div class="input-group">
                     <label for="username">Your Name</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your display name" required autocomplete="off">
+                    <input type="text" id="username" name="username" placeholder="Enter your display name" required
+                        autocomplete="off">
                 </div>
 
                 <div class="actions">
@@ -41,7 +44,8 @@
                         <h3>Join Existing Room</h3>
                         <p>Enter a code shared with you.</p>
                         <div class="join-group">
-                            <input type="text" name="room_code" placeholder="Room Code (e.g. A7X9Q2)" autocomplete="off">
+                            <input type="text" name="room_code" placeholder="Room Code (e.g. A7X9Q2)"
+                                autocomplete="off">
                             <button type="submit" name="action" value="join" class="btn btn-secondary">Join</button>
                         </div>
                     </div>
@@ -50,4 +54,5 @@
         </div>
     </div>
 </body>
+
 </html>
