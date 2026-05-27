@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 import string
 import random
 from flask import Flask, render_template, request, redirect, url_for
