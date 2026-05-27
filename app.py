@@ -1,24 +1,35 @@
 import eventlet
 eventlet.monkey_patch()
 
+import os
 import string
 import random
+import redis
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'super-secret-ephemeral-key'
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-ephemeral-key')
 
-# In-memory storage for active rooms
-# Format: { 'room_code': { 'users': {'session_id': 'username'} } }
-active_rooms = {}
+# Setup Redis URL (defaults to localhost for development)
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
+# Connect to Redis
+redis_client = redis.from_url(REDIS_URL, decode_responses=True)
+
+# Setup SocketIO with Redis message queue for multi-worker scaling
+socketio = SocketIO(
+    app, 
+    cors_allowed_origins="*", 
+    async_mode='eventlet',
+    message_queue=REDIS_URL
+)
 
 def generate_room_code(length=6):
     letters = string.ascii_uppercase + string.digits
     while True:
         code = ''.join(random.choice(letters) for _ in range(length))
-        if code not in active_rooms:
+        if not redis_client.exists(f"room:{code}:exists"):
             return code
 
 @app.route('/', methods=['GET', 'POST'])
@@ -32,12 +43,14 @@ def index():
 
         if action == 'create':
             room_code = generate_room_code()
-            active_rooms[room_code] = {'users': {}}
+            # Set a temporary marker for the room so it can be joined. 
+            # It expires in 1 hour if no one actually connects via WebSockets.
+            redis_client.setex(f"room:{room_code}:exists", 3600, "1")
             return redirect(url_for('room', room_code=room_code, username=username))
         
         elif action == 'join':
             room_code = request.form.get('room_code').upper()
-            if room_code in active_rooms:
+            if redis_client.exists(f"room:{room_code}:exists") or redis_client.exists(f"room:{room_code}:users"):
                 return redirect(url_for('room', room_code=room_code, username=username))
             else:
                 return render_template('index.html', error="Invalid room code.")
@@ -50,7 +63,7 @@ def room(room_code):
     if not username:
         return redirect(url_for('index'))
         
-    if room_code not in active_rooms:
+    if not (redis_client.exists(f"room:{room_code}:exists") or redis_client.exists(f"room:{room_code}:users")):
         return redirect(url_for('index'))
         
     return render_template('room.html', room_code=room_code, username=username)
@@ -62,78 +75,71 @@ def on_join(data):
     username = data['username']
     room = data['room']
     
-    if room not in active_rooms:
+    # Check if room is valid
+    if not (redis_client.exists(f"room:{room}:exists") or redis_client.exists(f"room:{room}:users")):
         return
         
     join_room(room)
-    active_rooms[room]['users'][request.sid] = username
     
-    # Notify others in the room
+    # Store user state in Redis
+    redis_client.hset(f"room:{room}:users", request.sid, username)
+    redis_client.set(f"sid:{request.sid}:room", room)
+    redis_client.set(f"sid:{request.sid}:username", username)
+    
     emit('message', {'user': 'System', 'text': f"{username} has joined the room."}, to=room)
-    # Send the updated list of users to everyone in the room
     emit('user_joined', {'sid': request.sid, 'username': username}, to=room, include_self=False)
 
 @socketio.on('leave')
 def on_leave(data):
     username = data['username']
     room = data['room']
-    leave_room(room)
-    
-    if room in active_rooms and request.sid in active_rooms[room]['users']:
-        del active_rooms[room]['users'][request.sid]
-        
-        # Notify others
-        emit('message', {'user': 'System', 'text': f"{username} has left the room."}, to=room)
-        emit('user_left', {'sid': request.sid, 'username': username}, to=room)
-        
-        # If room is empty, delete it
-        if len(active_rooms[room]['users']) == 0:
-            del active_rooms[room]
+    _leave_room_logic(request.sid, room, username)
 
 @socketio.on('disconnect')
 def on_disconnect():
-    # Find which room the user was in
-    for room_code, room_data in list(active_rooms.items()):
-        if request.sid in room_data['users']:
-            username = room_data['users'][request.sid]
-            leave_room(room_code)
-            del room_data['users'][request.sid]
-            
-            emit('message', {'user': 'System', 'text': f"{username} has disconnected."}, to=room_code)
-            emit('user_left', {'sid': request.sid, 'username': username}, to=room_code)
-            
-            if len(room_data['users']) == 0:
-                del active_rooms[room_code]
+    room = redis_client.get(f"sid:{request.sid}:room")
+    username = redis_client.get(f"sid:{request.sid}:username")
+    if room and username:
+        _leave_room_logic(request.sid, room, username)
+
+def _leave_room_logic(sid, room, username):
+    leave_room(room)
+    
+    # Remove user from Redis state
+    redis_client.hdel(f"room:{room}:users", sid)
+    redis_client.delete(f"sid:{sid}:room")
+    redis_client.delete(f"sid:{sid}:username")
+    
+    emit('message', {'user': 'System', 'text': f"{username} has left the room."}, to=room)
+    emit('user_left', {'sid': sid, 'username': username}, to=room)
+    
+    # If room is completely empty, wipe it from existence (Ephemeral design preserved!)
+    if redis_client.hlen(f"room:{room}:users") == 0:
+        redis_client.delete(f"room:{room}:exists")
+        redis_client.delete(f"room:{room}:users")
 
 @socketio.on('send_message')
 def handle_message(data):
     room = data['room']
-    if room in active_rooms:
+    if redis_client.exists(f"room:{room}:exists") or redis_client.exists(f"room:{room}:users"):
         emit('message', {'user': data['username'], 'text': data['text']}, to=room)
 
 @socketio.on('typing')
 def handle_typing(data):
-    room = data['room']
-    if room in active_rooms:
-        emit('user_typing', {'username': data['username']}, to=room, include_self=False)
+    emit('user_typing', {'username': data['username']}, to=data['room'], include_self=False)
 
 @socketio.on('stop_typing')
 def handle_stop_typing(data):
-    room = data['room']
-    if room in active_rooms:
-        emit('user_stop_typing', {'username': data['username']}, to=room, include_self=False)
+    emit('user_stop_typing', {'username': data['username']}, to=data['room'], include_self=False)
 
 @socketio.on('reaction')
 def handle_reaction(data):
-    room = data['room']
-    if room in active_rooms:
-        emit('reaction', {'reaction': data['reaction'], 'sender_sid': request.sid}, to=room)
+    emit('reaction', {'reaction': data['reaction'], 'sender_sid': request.sid}, to=data['room'])
 
 # --- WebRTC Signaling Events ---
 
 @socketio.on('webrtc_offer')
 def handle_webrtc_offer(data):
-    # Relay offer to the specific peer
     emit('webrtc_offer', {
         'sdp': data['sdp'],
         'sender_sid': request.sid,
@@ -142,7 +148,6 @@ def handle_webrtc_offer(data):
 
 @socketio.on('webrtc_answer')
 def handle_webrtc_answer(data):
-    # Relay answer back to the peer that created the offer
     emit('webrtc_answer', {
         'sdp': data['sdp'],
         'sender_sid': request.sid
@@ -150,7 +155,6 @@ def handle_webrtc_answer(data):
 
 @socketio.on('webrtc_ice_candidate')
 def handle_ice_candidate(data):
-    # Relay ICE candidate to the specific peer
     emit('webrtc_ice_candidate', {
         'candidate': data['candidate'],
         'sender_sid': request.sid
