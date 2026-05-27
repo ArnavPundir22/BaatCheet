@@ -272,7 +272,9 @@ input[type="text"]:focus {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: var(--bg-card);
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 24px;
     border: 1px solid var(--border);
     overflow: hidden;
@@ -284,8 +286,8 @@ input[type="text"]:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(15, 23, 42, 0.5);
-    border-bottom: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 10;
 }
 
@@ -381,9 +383,10 @@ input[type="text"]:focus {
     aspect-ratio: 16 / 9;
     border-radius: 20px;
     overflow: hidden;
-    background: #000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    border: 2px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .video-wrapper video {
@@ -416,8 +419,8 @@ input[type="text"]:focus {
 
 .chat-header {
     padding: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    background: rgba(15, 23, 42, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(15, 23, 42, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -434,7 +437,7 @@ input[type="text"]:focus {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    background: #0b141a; /* WhatsApp dark background */
+    background: transparent;
 }
 
 .message {
@@ -466,50 +469,37 @@ input[type="text"]:focus {
 }
 
 .message.mine {
-    background: #005c4b;
+    background: rgba(99, 102, 241, 0.7);
+    backdrop-filter: blur(8px);
     align-self: flex-end;
     border-top-right-radius: 0;
 }
 .message.mine::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -8px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 8px 8px 0;
-    border-color: transparent #005c4b transparent transparent;
+    display: none; /* Removed harsh solid tail for glassy look */
 }
 
 .message.theirs {
-    background: #202c33;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     align-self: flex-start;
     border-top-left-radius: 0;
 }
 .message.theirs::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -8px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 0 8px 8px;
-    border-color: transparent transparent transparent #202c33;
+    display: none; /* Removed harsh solid tail for glassy look */
 }
 
 .message .sender {
     font-size: 0.75rem;
     font-weight: 600;
     margin-bottom: 0.3rem;
-    color: #53bdeb; /* WhatsApp name color */
+    color: #a5b4fc; /* Light purple for sender names */
 }
 
 .chat-input-area {
     padding: 10px;
-    background: #202c33;
-    border-top: none;
+    background: rgba(15, 23, 42, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -519,8 +509,8 @@ input[type="text"]:focus {
     flex: 1;
     padding: 0.8rem 1.2rem;
     border-radius: 24px;
-    border: none;
-    background: #2a3942;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: white;
     font-size: 1rem;
     font-family: inherit;
@@ -529,7 +519,8 @@ input[type="text"]:focus {
 
 .chat-input-area input:focus {
     outline: none;
-    background: #32434d;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
 }
 
 #send-btn {
@@ -541,7 +532,9 @@ input[type="text"]:focus {
 .typing-indicator {
     display: none;
     align-self: flex-start;
-    background: #202c33;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     padding: 0.6rem 1rem;
     border-radius: 20px;
     border-top-left-radius: 0;
@@ -549,24 +542,15 @@ input[type="text"]:focus {
     align-items: center;
     gap: 0.5rem;
     width: fit-content;
-    position: relative;
 }
 
 .typing-indicator::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -8px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 0 8px 8px;
-    border-color: transparent transparent transparent #202c33;
+    display: none;
 }
 
 .typing-text {
     font-size: 0.8rem;
-    color: #53bdeb;
+    color: #a5b4fc;
     font-weight: 600;
 }
 
@@ -632,7 +616,9 @@ input[type="text"]:focus {
         display: flex;
         flex-direction: column;
         overflow: visible; /* Let reaction panel spill out! */
-        background: #0f172a;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
     }
     
     /* Compact Controls for Miniplayer */
@@ -686,7 +672,7 @@ input[type="text"]:focus {
         height: 100%;
         overflow: hidden;
         border-radius: 16px;
-        background: #000;
+        background: transparent;
     }
     
     /* Remote video takes full miniplayer space */
