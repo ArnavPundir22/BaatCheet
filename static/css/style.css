@@ -324,8 +324,11 @@ input[type="text"]:focus {
     background: rgba(15, 23, 42, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
-    padding: 0.5rem;
+    padding: 0.8rem;
     display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 260px;
     gap: 0.5rem;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     z-index: 100;
@@ -644,10 +647,10 @@ input[type="text"]:focus {
     .reaction-panel {
         top: auto;
         bottom: calc(100% + 8px);
-        width: 140px;
-        padding: 6px;
+        width: 170px; /* Expands to almost full miniplayer width */
+        padding: 8px;
         border-radius: 12px;
-        gap: 4px;
+        gap: 6px;
         flex-wrap: wrap;
         justify-content: center;
     }
