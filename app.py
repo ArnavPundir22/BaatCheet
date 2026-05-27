@@ -32,6 +32,10 @@ def generate_room_code(length=6):
         if not redis_client.exists(f"room:{code}:exists"):
             return code
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
