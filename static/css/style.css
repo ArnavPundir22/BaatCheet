@@ -752,7 +752,7 @@ input[type="text"]:focus {
     /* Target PWA specifically */
     @media all and (display-mode: standalone) {
         .chat-input-area {
-            padding-bottom: calc(1.5rem + 90px + env(safe-area-inset-bottom, 80px));
+            padding-bottom: calc(1.5rem + 130px + env(safe-area-inset-bottom, 80px));
         }
 
         .room-header {
