@@ -33,13 +33,13 @@ async function initMedia() {
             }
         });
         localVideo.srcObject = localStream;
-        
+
         // After getting media, join the room via Socket
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
     } catch (err) {
         console.error("Error accessing media devices.", err);
         addChatMessage("System", "Error accessing camera/microphone. Please check permissions.", true);
-        
+
         // Still join the room even if no media
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
     }
@@ -75,22 +75,22 @@ function createPeerConnection(sid, username) {
             videoWrapper = document.createElement('div');
             videoWrapper.id = `wrapper-${sid}`;
             videoWrapper.className = 'video-wrapper';
-            
+
             const videoElement = document.createElement('video');
             videoElement.id = `video-${sid}`;
             videoElement.autoplay = true;
             videoElement.playsInline = true;
-            
+
             const label = document.createElement('span');
             label.className = 'video-label';
             label.innerText = username;
-            
+
             videoWrapper.appendChild(videoElement);
             videoWrapper.appendChild(label);
             videoGrid.appendChild(videoWrapper);
             makeDraggable(videoWrapper);
         }
-        
+
         const videoElement = document.getElementById(`video-${sid}`);
         if (videoElement.srcObject !== event.streams[0]) {
             videoElement.srcObject = event.streams[0];
@@ -124,11 +124,11 @@ socket.on('user_joined', async (data) => {
     // New user joined, we need to send them an offer
     const sid = data.sid;
     const pc = createPeerConnection(sid, data.username);
-    
+
     try {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
-        
+
         socket.emit('webrtc_offer', {
             target_sid: sid,
             username: USERNAME,
@@ -143,12 +143,12 @@ socket.on('webrtc_offer', async (data) => {
     // Received an offer, create a peer connection and send an answer
     const sid = data.sender_sid;
     const pc = createPeerConnection(sid, data.sender_username);
-    
+
     try {
         await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
-        
+
         socket.emit('webrtc_answer', {
             target_sid: sid,
             sdp: pc.localDescription
@@ -197,7 +197,7 @@ socket.on('user_left', (data) => {
 function addChatMessage(user, text, isSystem = false) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message';
-    
+
     if (isSystem) {
         msgDiv.classList.add('system');
         msgDiv.innerText = text;
@@ -211,12 +211,12 @@ function addChatMessage(user, text, isSystem = false) {
             senderSpan.innerText = user;
             msgDiv.appendChild(senderSpan);
         }
-        
+
         const textSpan = document.createElement('span');
         textSpan.innerText = text;
         msgDiv.appendChild(textSpan);
     }
-    
+
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
 }
@@ -305,11 +305,11 @@ document.querySelectorAll('.reaction-emoji').forEach(btn => {
 
 function showFloatingReaction(wrapperId, emoji) {
     const wrapper = document.getElementById(wrapperId);
-    
+
     const reactionEl = document.createElement('div');
     reactionEl.className = 'floating-reaction';
     reactionEl.innerText = emoji;
-    
+
     if (wrapper) {
         const rect = wrapper.getBoundingClientRect();
         const startX = rect.left + rect.width / 2;
@@ -321,9 +321,9 @@ function showFloatingReaction(wrapperId, emoji) {
         const randomLeft = 20 + Math.random() * 60;
         reactionEl.style.left = `${randomLeft}vw`;
     }
-    
+
     document.body.appendChild(reactionEl);
-    
+
     // Remove element after animation completes
     setTimeout(() => {
         if (reactionEl.parentNode === document.body) {
@@ -335,13 +335,13 @@ function showFloatingReaction(wrapperId, emoji) {
 socket.on('reaction', (data) => {
     const isMe = data.sender_sid === socket.id;
     const wrapperId = isMe ? 'wrapper-local' : `wrapper-${data.sender_sid}`;
-    
+
     // Wait, the local wrapper doesn't have an ID. Let's add it or use the class.
     const localWrapper = document.querySelector('.local-wrapper');
     if (isMe && localWrapper) {
         if (!localWrapper.id) localWrapper.id = 'wrapper-local';
     }
-    
+
     showFloatingReaction(isMe ? 'wrapper-local' : `wrapper-${data.sender_sid}`, data.reaction);
 });
 
@@ -388,6 +388,33 @@ leaveRoomBtn.addEventListener('click', () => {
     window.location.href = '/';
 });
 
+// Invite Copy Logic
+const inviteBtn = document.getElementById('invite-btn');
+
+if (inviteBtn) {
+    inviteBtn.addEventListener('click', async () => {
+        const inviteLink = `${window.location.origin}/`;
+        const textToCopy = `Hey!\n\nJoin my BaatCheet video room.\n\nRoom Code: ${ROOM_CODE}\nSite: ${inviteLink}\n\nSee you there!`;
+        
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            
+            // Visual feedback
+            const originalIcon = inviteBtn.innerText;
+            inviteBtn.innerText = '✅';
+            inviteBtn.classList.add('active');
+            
+            setTimeout(() => {
+                inviteBtn.innerText = originalIcon;
+                inviteBtn.classList.remove('active');
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            alert('Failed to copy to clipboard. Room Code: ' + ROOM_CODE);
+        }
+    });
+}
+
 // Start everything
 initMedia();
 
@@ -402,9 +429,9 @@ function makeDraggable(el) {
     let xOffset = 0;
     let yOffset = 0;
 
-    el.addEventListener("touchstart", dragStart, {passive: false});
+    el.addEventListener("touchstart", dragStart, { passive: false });
     el.addEventListener("touchend", dragEnd, false);
-    el.addEventListener("touchmove", drag, {passive: false});
+    el.addEventListener("touchmove", drag, { passive: false });
 
     el.addEventListener("mousedown", dragStart, false);
     document.addEventListener("mouseup", dragEnd, false);
@@ -412,10 +439,10 @@ function makeDraggable(el) {
 
     function dragStart(e) {
         if (window.innerWidth > 1024) return;
-        
+
         // Prevent click events from propagating if we're dragging (or just bring to front)
         el.style.zIndex = 1000;
-        
+
         if (e.type === "touchstart") {
             initialX = e.touches[0].clientX - xOffset;
             initialY = e.touches[0].clientY - yOffset;
@@ -440,7 +467,7 @@ function makeDraggable(el) {
     function drag(e) {
         if (isDragging) {
             e.preventDefault();
-            
+
             if (e.type === "touchmove") {
                 currentX = e.touches[0].clientX - initialX;
                 currentY = e.touches[0].clientY - initialY;
