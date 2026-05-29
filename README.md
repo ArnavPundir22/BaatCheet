@@ -25,8 +25,10 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 
 - **🎥 Peer-to-Peer Video Calls:** High-quality, low-latency video streaming powered by native WebRTC and Google STUN servers.
 - **💬 Real-Time Messaging:** WhatsApp-styled text chat interface with dynamic typing indicators.
+- **🖼️ View-Once Ephemeral Images:** Send images directly in the chat that are automatically compressed and transmitted purely over WebSockets. Once viewed and closed, the image data is instantly and permanently destroyed.
 - **👻 Fully Ephemeral Design:** Data only exists while people are present. Managed entirely by Redis TTLs and hash counts.
 - **📱 Progressive Web App (PWA):** Fully installable mobile app experience. Works offline, launches in full-screen standalone mode without a browser bar.
+- **📱 Notch-Aware UI:** Built-in dynamic padding that automatically respects mobile safe-area insets (`env(safe-area-inset-bottom)`) ensuring your UI is never blocked by iOS/Android home indicators.
 - **🖼️ Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
 - **🎉 Animated Reactions:** Instantly send fully animated emoji reactions (👍, ❤️, 😂, 🎉, 😘) that float seamlessly across the screen.
 - **🎧 Advanced Audio Filtering:** Built-in echo cancellation, automatic gain control, and noise suppression for crystal clear audio.
