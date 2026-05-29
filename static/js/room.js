@@ -88,6 +88,7 @@ function createPeerConnection(sid, username) {
             videoWrapper.appendChild(videoElement);
             videoWrapper.appendChild(label);
             videoGrid.appendChild(videoWrapper);
+            makeDraggable(videoWrapper);
         }
         
         const videoElement = document.getElementById(`video-${sid}`);
@@ -390,70 +391,74 @@ leaveRoomBtn.addEventListener('click', () => {
 // Start everything
 initMedia();
 
-// --- Mobile Draggable Miniplayer Logic ---
+// --- Mobile Draggable Floating Windows Logic ---
 
-const dragElement = document.querySelector('.video-area');
-let isDragging = false;
-let currentX;
-let currentY;
-let initialX;
-let initialY;
-let xOffset = 0;
-let yOffset = 0;
+function makeDraggable(el) {
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = 0;
+    let yOffset = 0;
 
-dragElement.addEventListener("touchstart", dragStart, {passive: false});
-dragElement.addEventListener("touchend", dragEnd, false);
-dragElement.addEventListener("touchmove", drag, {passive: false});
+    el.addEventListener("touchstart", dragStart, {passive: false});
+    el.addEventListener("touchend", dragEnd, false);
+    el.addEventListener("touchmove", drag, {passive: false});
 
-dragElement.addEventListener("mousedown", dragStart, false);
-document.addEventListener("mouseup", dragEnd, false);
-document.addEventListener("mousemove", drag, false);
+    el.addEventListener("mousedown", dragStart, false);
+    document.addEventListener("mouseup", dragEnd, false);
+    document.addEventListener("mousemove", drag, false);
 
-function dragStart(e) {
-    // Only drag if it's mobile view
-    if (window.innerWidth > 1024) return;
-    
-    // Don't drag if clicking controls
-    if (e.target.closest('.controls')) return;
-
-    if (e.type === "touchstart") {
-        initialX = e.touches[0].clientX - xOffset;
-        initialY = e.touches[0].clientY - yOffset;
-    } else {
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-    }
-
-    if (dragElement.contains(e.target)) {
-        isDragging = true;
-    }
-}
-
-function dragEnd(e) {
-    initialX = currentX;
-    initialY = currentY;
-    isDragging = false;
-}
-
-function drag(e) {
-    if (isDragging) {
-        e.preventDefault();
+    function dragStart(e) {
+        if (window.innerWidth > 1024) return;
         
-        if (e.type === "touchmove") {
-            currentX = e.touches[0].clientX - initialX;
-            currentY = e.touches[0].clientY - initialY;
+        // Prevent click events from propagating if we're dragging (or just bring to front)
+        el.style.zIndex = 1000;
+        
+        if (e.type === "touchstart") {
+            initialX = e.touches[0].clientX - xOffset;
+            initialY = e.touches[0].clientY - yOffset;
         } else {
-            currentX = e.clientX - initialX;
-            currentY = e.clientY - initialY;
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
         }
 
-        xOffset = currentX;
-        yOffset = currentY;
+        if (e.target === el || el.contains(e.target)) {
+            isDragging = true;
+        }
+    }
 
-        setTranslate(currentX, currentY, dragElement);
+    function dragEnd(e) {
+        if (!isDragging) return;
+        initialX = currentX;
+        initialY = currentY;
+        isDragging = false;
+        el.style.zIndex = 50;
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            e.preventDefault();
+            
+            if (e.type === "touchmove") {
+                currentX = e.touches[0].clientX - initialX;
+                currentY = e.touches[0].clientY - initialY;
+            } else {
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+            }
+
+            xOffset = currentX;
+            yOffset = currentY;
+
+            el.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+        }
     }
 }
 
-function setTranslate(xPos, yPos, el) {
-    el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+// Make the local video draggable on mobile
+const localWrapper = document.querySelector('.local-wrapper');
+if (localWrapper) {
+    makeDraggable(localWrapper);
 }
