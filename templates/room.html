@@ -12,6 +12,8 @@
         const ROOM_CODE = "{{ room_code }}";
         const USERNAME = "{{ username }}";
     </script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
 </head>
 
 <body class="room-body">
@@ -95,6 +97,17 @@
 
     <!-- WebRTC and Chat Logic -->
     <script src="{{ url_for('static', filename='js/room.js') }}"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </body>
 
 </html>
