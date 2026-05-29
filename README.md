@@ -4,69 +4,71 @@
   # 💬 BaatCheet: Ephemeral Video & Text Chat
 
   *A sleek, modern, scalable, and fully ephemeral real-time communication platform built with Flask, WebRTC, Redis, and pure magic.*
+  
+  [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python)](https://www.python.org/)
+  [![Flask](https://img.shields.io/badge/Flask-Web%2BFramework-lightgrey?style=flat-square&logo=flask)](https://flask.palletsprojects.com/)
+  [![Redis](https://img.shields.io/badge/Redis-State%20Management-red?style=flat-square&logo=redis)](https://redis.io/)
+  [![WebRTC](https://img.shields.io/badge/WebRTC-P2P%20Streaming-green?style=flat-square&logo=webrtc)](https://webrtc.org/)
 </div>
 
 ---
 
-## ✨ Features
+## 📖 Introduction
+
+**BaatCheet** (meaning "Conversation" in Hindi) is a cutting-edge, real-time video and text chat application designed from the ground up for absolute privacy and zero persistence. When you join a room, you communicate directly via peer-to-peer WebRTC streams. When the last person leaves the room, the room and all its data are wiped from existence instantly.
+
+No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral communication.
+
+---
+
+## ✨ Key Features
 
 - **🎥 Peer-to-Peer Video Calls:** High-quality, low-latency video streaming powered by native WebRTC and Google STUN servers.
 - **💬 Real-Time Messaging:** WhatsApp-styled text chat interface with dynamic typing indicators.
-- **👻 Fully Ephemeral:** No persistent SQL databases, no logs, no chat history. Once everyone leaves a room, the data is gone forever.
-- **📱 Fully Responsive Design:** Stunning glassmorphism UI with a dynamic mobile layout featuring a YouTube-style floating Picture-in-Picture (PIP) miniplayer.
-- **🎉 Animated Reactions:** Instantly send fully animated emoji reactions (👍, ❤️, 😂, 🎉, 😘) that float seamlessly across the entire screen!
+- **👻 Fully Ephemeral Design:** Data only exists while people are present. Managed entirely by Redis TTLs and hash counts.
+- **📱 Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
+- **🎉 Animated Reactions:** Instantly send fully animated emoji reactions (👍, ❤️, 😂, 🎉, 😘) that float seamlessly across the screen.
 - **🎧 Advanced Audio Filtering:** Built-in echo cancellation, automatic gain control, and noise suppression for crystal clear audio.
-- **🚀 Scalable Architecture:** Backend engineered with Redis to support multi-worker deployments (Gunicorn/Eventlet), easily handling thousands of concurrent connections.
+- **🚀 Scalable Architecture:** Backend engineered with Redis to support multi-worker deployments (Gunicorn/Eventlet).
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
-- Python 3.10
-- Redis Server (local or cloud)
-- A modern web browser with WebRTC support (Chrome, Firefox, Safari)
+## 📚 Documentation Index
 
-### Installation
+To keep this README clean, detailed technical documentation has been divided into specialized modules. Please explore the following guides to understand the inner workings of BaatCheet:
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/baatcheet.git
-   cd baatcheet
-   ```
+### 1. [🏗️ Architecture & Logic](docs/architecture.md)
+Discover the backend mechanics, including:
+- **WebRTC Signaling Flow:** How Offers, Answers, and ICE candidates are routed via Socket.IO.
+- **Redis State Management:** The logic behind the ephemeral "No Database" design.
+- **Worker Scaling:** How Redis Pub/Sub acts as a message queue for horizontal scaling.
 
-2. **Install dependencies:**
-   *(Ensure you have Flask, Flask-SocketIO, Eventlet, and Redis installed)*
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 2. [🎮 UI & Controls Logic](docs/ui-controls.md)
+Dive into the frontend magic, including:
+- **Mobile Miniplayer:** The drag-and-drop mathematics and CSS translation behind the floating PIP.
+- **Media Controls:** How video and audio tracks are isolated and toggled.
+- **Chat & Reactions:** The logic driving typing indicators and floating CSS animations.
 
-3. **Start your Redis Server:**
-   Ensure you have a Redis instance running locally on port `6379`, or set your `REDIS_URL` environment variable.
+### 3. [🚀 Deployment & Setup Guide](docs/deployment.md)
+Learn how to run BaatCheet, including:
+- **Local Setup:** Creating the Python environment and running Redis.
+- **Production Execution:** Using Gunicorn with Eventlet workers.
+- **HTTPS Requirements:** Why SSL is strictly necessary for WebRTC to function over the internet.
 
-4. **Run the server (Production Mode):**
-   ```bash
-   gunicorn --worker-class eventlet -w 1 app:app
-   ```
-   *Note: For camera and microphone access to work over the internet on non-localhost devices, you must serve the application over **HTTPS** or deploy it to a platform like Render.*
+---
 
-5. **Access the application:**
-   Open your browser and navigate to `http://localhost:8000` (Gunicorn default port).
-
-## 🛠️ Tech Stack
+## 🛠️ Quick Tech Stack Overview
 
 - **Backend:** Python, Flask, Flask-SocketIO, Eventlet
-- **State Management:** Redis (In-Memory Key-Value Store)
+- **Data Layer:** Redis (In-Memory Key-Value Store)
 - **Frontend:** Vanilla JavaScript, HTML5, Vanilla CSS
-- **Signaling:** WebSockets (Socket.IO)
-- **Media Streaming:** WebRTC API
+- **Signaling Protocol:** WebSockets (Socket.IO)
+- **Media Protocol:** WebRTC API
 
-## 📱 Mobile Experience
-BaatCheet is designed to feel like a native application on mobile devices.
-- **Floating Miniplayer:** The video feed collapses into a picture-in-picture window while chatting.
-- **Smart Controls:** Controls intuitively adapt and wrap perfectly based on your screen size.
-- **Dynamic Glassmorphism:** Deep blurs and frosted glass panels that maintain performance on mobile devices.
+---
 
-## 🔒 Security & Privacy
-This application does **not** use a permanent database. All room states and active connections are held entirely in Redis with TTLs (Time-To-Live). Once the last person disconnects, the room automatically self-destructs and wipes itself from existence.
+## 🔒 Security & Privacy Guarantee
+This application does **not** use a permanent database. All room states and active connections are held entirely in Redis. Once the last person disconnects, the server executes a self-destruct sequence, ensuring the room automatically wipes itself from memory. 
 
 ---
 <div align="center">
