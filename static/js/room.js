@@ -194,7 +194,7 @@ socket.on('user_left', (data) => {
 
 // --- Chat Logic ---
 
-function addChatMessage(user, text, isSystem = false) {
+function addChatMessage(user, text, isSystem = false, image = null) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message';
 
@@ -212,9 +212,26 @@ function addChatMessage(user, text, isSystem = false) {
             msgDiv.appendChild(senderSpan);
         }
 
-        const textSpan = document.createElement('span');
-        textSpan.innerText = text;
-        msgDiv.appendChild(textSpan);
+        if (text) {
+            const textSpan = document.createElement('span');
+            textSpan.innerText = text;
+            msgDiv.appendChild(textSpan);
+        }
+        
+        if (image) {
+            const viewBtn = document.createElement('button');
+            viewBtn.className = 'btn btn-primary view-image-btn';
+            viewBtn.innerText = '📸 View Once Image';
+            viewBtn.onclick = () => {
+                showImageModal(image);
+                viewBtn.disabled = true;
+                viewBtn.innerText = '❌ Expired';
+                viewBtn.classList.remove('btn-primary');
+                viewBtn.classList.add('btn-secondary');
+                viewBtn.onclick = null; // Remove listener
+            };
+            msgDiv.appendChild(viewBtn);
+        }
     }
 
     chatMessages.appendChild(msgDiv);
@@ -225,7 +242,7 @@ socket.on('message', (data) => {
     if (data.user === 'System') {
         addChatMessage(data.user, data.text, true);
     } else {
-        addChatMessage(data.user, data.text, false);
+        addChatMessage(data.user, data.text, false, data.image);
     }
 });
 
@@ -277,6 +294,79 @@ socket.on('user_typing', (data) => {
 
 socket.on('user_stop_typing', (data) => {
     typingIndicator.style.display = 'none';
+});
+
+// --- Image Ephemeral Sharing Logic ---
+const imageBtn = document.getElementById('image-btn');
+const imageUpload = document.getElementById('image-upload');
+const imageViewerOverlay = document.getElementById('image-viewer-overlay');
+const closeViewerBtn = document.getElementById('close-viewer');
+const viewerImg = document.getElementById('viewer-img');
+
+imageBtn.addEventListener('click', () => {
+    imageUpload.click();
+});
+
+imageUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        console.log("Compressing image...");
+        compressImage(file, (base64Img) => {
+            console.log("Image compressed, sending to server...");
+            socket.emit('send_message', {
+                room: ROOM_CODE,
+                username: USERNAME,
+                text: '', // Fallback empty text
+                image: base64Img
+            });
+            // Reset input
+            imageUpload.value = '';
+        });
+    }
+});
+
+function compressImage(file, callback) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 800;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            callback(canvas.toDataURL('image/jpeg', 0.7)); // compress to ~70% JPEG quality
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function showImageModal(base64Img) {
+    viewerImg.src = base64Img;
+    imageViewerOverlay.style.display = 'flex';
+}
+
+closeViewerBtn.addEventListener('click', () => {
+    imageViewerOverlay.style.display = 'none';
+    viewerImg.src = ''; // Destroy data from DOM
 });
 
 // --- Reactions Logic ---

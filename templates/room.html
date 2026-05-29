@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room {{ room_code }} | BaatCheet</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
@@ -89,6 +89,8 @@
             </div>
 
             <div class="chat-input-area">
+                <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                <button id="image-btn" class="btn btn-icon" title="Send View-Once Image">🖼️</button>
                 <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
                 <button id="send-btn" class="btn btn-primary">Send</button>
             </div>
@@ -96,8 +98,16 @@
 
     </div>
 
+    <!-- View-Once Image Viewer -->
+    <div id="image-viewer-overlay" class="modal-overlay">
+        <div class="image-viewer-content">
+            <span class="close-viewer" id="close-viewer">&times;</span>
+            <img id="viewer-img" src="" alt="View Once Image">
+        </div>
+    </div>
+
     <!-- WebRTC and Chat Logic -->
-    <script src="{{ url_for('static', filename='js/room.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/room.js') }}?v=11"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

@@ -22,7 +22,8 @@ socketio = SocketIO(
     app, 
     cors_allowed_origins="*", 
     async_mode='eventlet',
-    message_queue=REDIS_URL
+    message_queue=REDIS_URL,
+    max_http_buffer_size=10 * 1024 * 1024  # 10MB limit for image payloads
 )
 
 def generate_room_code(length=6):
@@ -134,7 +135,12 @@ def _leave_room_logic(sid, room, username):
 def handle_message(data):
     room = data['room']
     if redis_client.exists(f"room:{room}:exists") or redis_client.exists(f"room:{room}:users"):
-        emit('message', {'user': data['username'], 'text': data['text']}, to=room)
+        payload = {'user': data['username']}
+        if 'text' in data:
+            payload['text'] = data['text']
+        if 'image' in data:
+            payload['image'] = data['image']
+        emit('message', payload, to=room)
 
 @socketio.on('typing')
 def handle_typing(data):
