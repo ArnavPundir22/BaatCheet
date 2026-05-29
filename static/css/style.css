@@ -651,7 +651,6 @@ input[type="text"]:focus {
         width: 100vw;
         height: 100dvh;
         border-radius: 0;
-        padding-bottom: calc(100px + env(safe-area-inset-bottom, 20px)); /* Prevent docked controls from hiding chat input */
     }
     
     .chat-header {
@@ -666,6 +665,19 @@ input[type="text"]:focus {
         font-weight: 600;
         color: var(--text-muted);
         margin-top: 0.3rem;
+    }
+    .chat-input-area {
+        padding-bottom: calc(1.5rem + 80px); /* Base padding for mobile browser */
+    }
+    
+    /* Target PWA specifically */
+    @media all and (display-mode: standalone) {
+        .chat-input-area {
+            padding-bottom: calc(1.5rem + 90px + env(safe-area-inset-bottom, 20px));
+        }
+        .room-header {
+            bottom: calc(15px + env(safe-area-inset-bottom, 20px));
+        }
     }
     
     /* YouTube Style Floating Miniplayer -> Now Individual Floating Windows */
