@@ -651,7 +651,7 @@ input[type="text"]:focus {
         width: 100vw;
         height: 100dvh;
         border-radius: 0;
-        padding-bottom: calc(85px + env(safe-area-inset-bottom, 20px)); /* Prevent docked controls from hiding chat input */
+        padding-bottom: calc(100px + env(safe-area-inset-bottom, 20px)); /* Prevent docked controls from hiding chat input */
     }
     
     .chat-header {
@@ -687,18 +687,17 @@ input[type="text"]:focus {
     .room-header {
         pointer-events: auto; /* Enable clicks on controls */
         padding: 0.8rem;
-        padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 20px));
         justify-content: center;
         background: rgba(10, 10, 25, 0.85);
-        border-top: 1px solid var(--primary);
-        box-shadow: 0 -5px 20px rgba(0, 243, 255, 0.2);
-        position: absolute;
-        bottom: 0;
-        width: 100%;
+        border: 1px solid var(--primary);
+        box-shadow: 0 5px 25px rgba(0, 243, 255, 0.3);
+        position: fixed;
+        bottom: calc(15px + env(safe-area-inset-bottom, 10px));
+        left: 5%;
+        width: 90%;
         z-index: 100;
-        border-radius: 24px 24px 0 0;
+        border-radius: 24px;
         flex-direction: row;
-        border-bottom: none;
     }
     .room-header h2 {
         display: none;
