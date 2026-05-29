@@ -26,7 +26,8 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 - **🎥 Peer-to-Peer Video Calls:** High-quality, low-latency video streaming powered by native WebRTC and Google STUN servers.
 - **💬 Real-Time Messaging:** WhatsApp-styled text chat interface with dynamic typing indicators.
 - **👻 Fully Ephemeral Design:** Data only exists while people are present. Managed entirely by Redis TTLs and hash counts.
-- **📱 Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
+- **📱 Progressive Web App (PWA):** Fully installable mobile app experience. Works offline, launches in full-screen standalone mode without a browser bar.
+- **🖼️ Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
 - **🎉 Animated Reactions:** Instantly send fully animated emoji reactions (👍, ❤️, 😂, 🎉, 😘) that float seamlessly across the screen.
 - **🎧 Advanced Audio Filtering:** Built-in echo cancellation, automatic gain control, and noise suppression for crystal clear audio.
 - **🚀 Scalable Architecture:** Backend engineered with Redis to support multi-worker deployments (Gunicorn/Eventlet).
@@ -54,6 +55,16 @@ Learn how to run BaatCheet, including:
 - **Local Setup:** Creating the Python environment and running Redis.
 - **Production Execution:** Using Gunicorn with Eventlet workers.
 - **HTTPS Requirements:** Why SSL is strictly necessary for WebRTC to function over the internet.
+
+---
+
+## 📲 Install as a Mobile App (PWA)
+
+BaatCheet is a fully configured Progressive Web App (PWA). You can install it directly to your device for a native-like experience:
+
+- **Android (Chrome):** Open the site, tap the menu (⋮), and select **"Install App"** or **"Add to Home Screen"**.
+- **iOS (Safari):** Open the site in Safari, tap the **Share** button at the bottom, and select **"Add to Home Screen"**.
+- **Desktop (Chrome/Edge):** Click the **Install** icon on the right side of the URL address bar.
 
 ---
 

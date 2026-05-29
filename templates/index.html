@@ -54,6 +54,17 @@
                 </div>
             </form>
 
+            <div class="action-card app-promo-card" style="margin-top: 2rem; border-color: var(--secondary);">
+                <h3 style="color: var(--secondary);">📱 Get the BaatCheet App</h3>
+                <p>Install BaatCheet directly on your device for a full-screen, native experience.</p>
+                <div id="install-instructions" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; display: none; text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                    <strong>🍏 iOS (Safari):</strong> Tap the <b>Share</b> icon at the bottom and select <b>"Add to Home Screen"</b>.<br><br>
+                    <strong>🤖 Android:</strong> Tap the install button below or use the browser menu to <b>"Add to Home screen"</b>.<br><br>
+                    <strong>💻 Desktop:</strong> Click the install icon (monitor with arrow) in your browser's address bar.
+                </div>
+                <button id="install-btn" class="btn btn-secondary" style="display: none; margin-top: 15px; width: 100%; box-shadow: 0 0 15px rgba(255, 0, 234, 0.4);">Install App Now</button>
+            </div>
+
             <div style="text-align: center; margin-top: 1.5rem;">
                 <a href="{{ url_for('about') }}" style="color: var(--text-muted); text-decoration: underline; font-size: 0.9rem; transition: color 0.3s ease;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'">About BaatCheet</a>
             </div>
@@ -69,6 +80,46 @@
                 });
             });
         }
+
+        // PWA Install Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const isIos = () => {
+                const userAgent = window.navigator.userAgent.toLowerCase();
+                return /iphone|ipad|ipod/.test(userAgent);
+            };
+            
+            // Detect if already installed
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            const installCard = document.querySelector('.app-promo-card');
+            const installInstructions = document.getElementById('install-instructions');
+            
+            if (isStandalone) {
+                if(installCard) installCard.style.display = 'none';
+            } else {
+                // Show manual instructions always as fallback
+                installInstructions.style.display = 'block';
+            }
+        });
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.getElementById('install-btn');
+            if(installBtn) {
+                installBtn.style.display = 'block';
+                installBtn.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            deferredPrompt = null;
+                            installBtn.style.display = 'none';
+                        }
+                    }
+                });
+            }
+        });
     </script>
 </body>
 
