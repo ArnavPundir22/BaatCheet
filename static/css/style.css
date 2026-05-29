@@ -651,7 +651,7 @@ input[type="text"]:focus {
         width: 100vw;
         height: 100dvh;
         border-radius: 0;
-        padding-bottom: 75px; /* Prevent docked controls from hiding chat input */
+        padding-bottom: calc(85px + env(safe-area-inset-bottom, 20px)); /* Prevent docked controls from hiding chat input */
     }
     
     .chat-header {
@@ -687,6 +687,7 @@ input[type="text"]:focus {
     .room-header {
         pointer-events: auto; /* Enable clicks on controls */
         padding: 0.8rem;
+        padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 20px));
         justify-content: center;
         background: rgba(10, 10, 25, 0.85);
         border-top: 1px solid var(--primary);
