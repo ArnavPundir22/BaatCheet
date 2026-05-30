@@ -30,9 +30,13 @@ BaatCheet strictly adheres to a "No Database" policy for absolute privacy. All s
 
 ### Redis Key Schema
 -   `room:{room_code}:exists` (String): A temporary marker set when a room is created. It has a TTL of 3600 seconds (1 hour). If no one joins, the room expires automatically.
+-   `room:{room_code}:name` (String): An optional custom name assigned to the room by the creator. Uses the exact same 3600s TTL as the existence key.
 -   `room:{room_code}:users` (Hash): Stores active users in a room. Key = Socket ID (`request.sid`), Value = Username.
 -   `sid:{sid}:room` (String): Maps a user's Socket ID to their current room code (O(1) lookup on disconnect).
 -   `sid:{sid}:username` (String): Maps a user's Socket ID to their username.
+
+### Zero-Log Metrics & Transparency
+To build trust and prove the "Zero-Log" guarantee, the backend actively exposes its own memory state. The `/api/stats` endpoint queries Redis for `dbsize`, active room counts (by scanning `room:*:exists`), and the absence of log files, returning real-time data to the landing page dashboard.
 
 ### Ephemeral Cleanup Logic
 When a user disconnects or clicks "Leave Room", the server intercepts the `disconnect` event:

@@ -27,6 +27,8 @@ The chat system is designed to look and feel like modern messaging apps (e.g., W
 -   **Message Rendering:** Messages are dynamically created as DOM elements. `mine` and `theirs` CSS classes dictate bubble alignment (right for self, left for others). System messages are centered.
 -   **Typing Events:** When a user types in the input field, a `typing` event is emitted. The client uses a debounce timer (`setTimeout`) of 1.5 seconds. If no input is detected within this window, a `stop_typing` event is fired.
 -   **UI Feedback:** When receiving a `user_typing` event, a CSS-animated bouncing dot indicator (`#typing-indicator`) is appended to the bottom of the chat list, auto-scrolling the view.
+-   **Inline Message Replies:** Users can hover over any chat bubble to reveal a permanently fixed, slightly opaque `↩️` reply button. Clicking it populates a `replyingTo` state object and reveals a glassmorphic `#reply-preview` banner above the chat input. When the message is dispatched, the socket payload includes the `reply_to` context, which is rendered dynamically as a quoted block inside the chat bubble by `addChatMessage`.
+-   **"Zero-Log" Glitch Purge:** To visually reinforce the ephemeral nature, clicking "Leave & Destroy" triggers a full-screen `#purge-overlay` that applies SVG filter-based glitch animations to the screen for 800ms before disconnecting the socket and routing home.
 
 ## 🎉 Animated Reactions
 
