@@ -140,6 +140,8 @@ def handle_message(data):
             payload['text'] = data['text']
         if 'image' in data:
             payload['image'] = data['image']
+        if 'audio' in data:
+            payload['audio'] = data['audio']
         emit('message', payload, to=room)
 
 @socketio.on('typing')

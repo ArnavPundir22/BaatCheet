@@ -194,7 +194,7 @@ socket.on('user_left', (data) => {
 
 // --- Chat Logic ---
 
-function addChatMessage(user, text, isSystem = false, image = null) {
+function addChatMessage(user, text, isSystem = false, image = null, audio = null) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message';
 
@@ -232,6 +232,27 @@ function addChatMessage(user, text, isSystem = false, image = null) {
             };
             msgDiv.appendChild(viewBtn);
         }
+        
+        if (audio) {
+            const playBtn = document.createElement('button');
+            playBtn.className = 'btn btn-primary play-audio-btn';
+            playBtn.innerText = '▶️ Play Audio Message';
+            playBtn.onclick = () => {
+                const audioObj = new Audio(audio);
+                audioObj.play();
+                playBtn.innerText = '🔊 Playing...';
+                playBtn.disabled = true;
+                
+                audioObj.onended = () => {
+                    playBtn.innerText = '❌ Expired';
+                    playBtn.classList.remove('btn-primary');
+                    playBtn.classList.add('btn-secondary');
+                    audioObj.src = ""; // destroy
+                    playBtn.onclick = null;
+                };
+            };
+            msgDiv.appendChild(playBtn);
+        }
     }
 
     chatMessages.appendChild(msgDiv);
@@ -242,7 +263,7 @@ socket.on('message', (data) => {
     if (data.user === 'System') {
         addChatMessage(data.user, data.text, true);
     } else {
-        addChatMessage(data.user, data.text, false, data.image);
+        addChatMessage(data.user, data.text, false, data.image, data.audio);
     }
 });
 
@@ -368,6 +389,73 @@ closeViewerBtn.addEventListener('click', () => {
     imageViewerOverlay.style.display = 'none';
     viewerImg.src = ''; // Destroy data from DOM
 });
+
+// --- Audio Ephemeral Sharing Logic ---
+const audioBtn = document.getElementById('audio-btn');
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+if (audioBtn) {
+    audioBtn.addEventListener('mousedown', startAudioRecording);
+    audioBtn.addEventListener('mouseup', stopAudioRecording);
+    audioBtn.addEventListener('mouseleave', stopAudioRecording);
+    audioBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startAudioRecording(); }, { passive: false });
+    audioBtn.addEventListener('touchend', (e) => { e.preventDefault(); stopAudioRecording(); }, { passive: false });
+    audioBtn.addEventListener('touchcancel', (e) => { e.preventDefault(); stopAudioRecording(); }, { passive: false });
+}
+
+function startAudioRecording() {
+    if (isRecording) return;
+    
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        isRecording = true;
+        audioBtn.classList.add('recording');
+        
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            audioChunks = [];
+            
+            // Stop tracks to release mic
+            stream.getTracks().forEach(track => track.stop());
+            
+            // Send if we recorded something substantial
+            if (audioBlob.size > 100) {
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    socket.emit('send_message', {
+                        room: ROOM_CODE,
+                        username: USERNAME,
+                        text: '',
+                        audio: reader.result
+                    });
+                };
+            }
+        };
+        
+        mediaRecorder.start();
+    }).catch(err => {
+        console.error("Error accessing microphone for recording: ", err);
+        alert("Microphone permission denied or not available.");
+    });
+}
+
+function stopAudioRecording() {
+    if (!isRecording || !mediaRecorder) return;
+    isRecording = false;
+    audioBtn.classList.remove('recording');
+    if (mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    }
+}
 
 // --- Reactions Logic ---
 
