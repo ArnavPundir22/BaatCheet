@@ -10,6 +10,22 @@ const toggleAudioBtn = document.getElementById('toggle-audio');
 const toggleVideoBtn = document.getElementById('toggle-video');
 const leaveRoomBtn = document.getElementById('leave-room');
 
+// Reply Elements
+let replyingTo = null;
+const replyPreview = document.getElementById('reply-preview');
+const replyPreviewUser = document.getElementById('reply-preview-user');
+const replyPreviewText = document.getElementById('reply-preview-text');
+const cancelReplyBtn = document.getElementById('cancel-reply-btn');
+
+if (cancelReplyBtn) {
+    cancelReplyBtn.addEventListener('click', cancelReply);
+}
+
+function cancelReply() {
+    replyingTo = null;
+    if (replyPreview) replyPreview.style.display = 'none';
+}
+
 // WebRTC and Media configuration
 let localStream;
 const peers = {}; // Store RTCPeerConnection objects by socket ID
@@ -196,7 +212,7 @@ socket.on('user_left', (data) => {
 
 // --- Chat Logic ---
 
-function addChatMessage(user, text, isSystem = false, image = null, audio = null) {
+function addChatMessage(user, text, isSystem = false, image = null, audio = null, replyTo = null) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message';
 
@@ -212,6 +228,20 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
             senderSpan.className = 'sender';
             senderSpan.innerText = user;
             msgDiv.appendChild(senderSpan);
+        }
+
+        if (replyTo) {
+            const replyCtx = document.createElement('div');
+            replyCtx.className = 'reply-context';
+            const rUser = document.createElement('span');
+            rUser.className = 'reply-user';
+            rUser.innerText = replyTo.user;
+            const rText = document.createElement('span');
+            rText.className = 'reply-text';
+            rText.innerText = replyTo.text;
+            replyCtx.appendChild(rUser);
+            replyCtx.appendChild(rText);
+            msgDiv.appendChild(replyCtx);
         }
 
         if (text) {
@@ -260,6 +290,20 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
             };
             msgDiv.appendChild(playBtn);
         }
+
+        const replyBtn = document.createElement('button');
+        replyBtn.className = 'reply-btn';
+        replyBtn.innerHTML = '↩️';
+        replyBtn.title = 'Reply';
+        replyBtn.onclick = () => {
+            let rText = text || (image ? '📸 Image' : (audio ? '🎙️ Audio' : ''));
+            replyingTo = { user, text: rText };
+            replyPreviewUser.innerText = user;
+            replyPreviewText.innerText = rText;
+            replyPreview.style.display = 'flex';
+            chatInput.focus();
+        };
+        msgDiv.appendChild(replyBtn);
     }
 
     chatMessages.appendChild(msgDiv);
@@ -270,7 +314,7 @@ socket.on('message', (data) => {
     if (data.user === 'System') {
         addChatMessage(data.user, data.text, true);
     } else {
-        addChatMessage(data.user, data.text, false, data.image, data.audio);
+        addChatMessage(data.user, data.text, false, data.image, data.audio, data.reply_to);
     }
 });
 
@@ -285,9 +329,11 @@ function sendMessage() {
         socket.emit('send_message', {
             room: ROOM_CODE,
             username: USERNAME,
-            text: text
+            text: text,
+            reply_to: replyingTo
         });
         chatInput.value = '';
+        cancelReply();
         socket.emit('stop_typing', { room: ROOM_CODE, username: USERNAME });
         isTyping = false;
     }
@@ -345,10 +391,12 @@ imageUpload.addEventListener('change', (e) => {
                 room: ROOM_CODE,
                 username: USERNAME,
                 text: '', // Fallback empty text
-                image: base64Img
+                image: base64Img,
+                reply_to: replyingTo
             });
             // Reset input
             imageUpload.value = '';
+            cancelReply();
         });
     }
 });
@@ -442,8 +490,10 @@ function startAudioRecording() {
                         room: ROOM_CODE,
                         username: USERNAME,
                         text: '',
-                        audio: reader.result
+                        audio: reader.result,
+                        reply_to: replyingTo
                     });
+                    cancelReply();
                 };
             }
         };
