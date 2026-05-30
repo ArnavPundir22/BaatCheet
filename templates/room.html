@@ -58,7 +58,7 @@
                     </div>
 
                     <button id="invite-btn" class="btn btn-icon" title="Copy Invite Link">🔗</button>
-                    <button id="leave-room" class="btn btn-danger">Leave</button>
+                    <button id="leave-room" class="btn btn-danger">Leave & Destroy</button>
                 </div>
             </header>
 
@@ -76,6 +76,10 @@
             <div class="chat-header">
                 <h3>Live Chat</h3>
                 <span class="mobile-room-code">Room: <span class="highlight">{{ room_code }}</span></span>
+            </div>
+            
+            <div class="zero-log-banner">
+                <span>🔒 Zero-Log Mode Active. Ephemeral means ephemeral.</span>
             </div>
 
             <div id="chat-messages" class="chat-messages">
@@ -104,6 +108,15 @@
         <div class="image-viewer-content">
             <span class="close-viewer" id="close-viewer">&times;</span>
             <img id="viewer-img" src="" alt="View Once Image">
+        </div>
+    </div>
+
+    <!-- Purge Overlay -->
+    <div id="purge-overlay" class="purge-overlay">
+        <div class="purge-content">
+            <div class="glitch-spinner"></div>
+            <h2>Purging room data...</h2>
+            <p>Destroying temporary session.</p>
         </div>
     </div>
 

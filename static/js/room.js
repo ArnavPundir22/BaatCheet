@@ -36,12 +36,14 @@ async function initMedia() {
 
         // After getting media, join the room via Socket
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
+        addChatMessage("System", "🔒 History is never saved. You are seeing live messages only.", true);
     } catch (err) {
         console.error("Error accessing media devices.", err);
         addChatMessage("System", "Error accessing camera/microphone. Please check permissions.", true);
 
         // Still join the room even if no media
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
+        addChatMessage("System", "🔒 History is never saved. You are seeing live messages only.", true);
     }
 }
 
@@ -228,7 +230,9 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
                 viewBtn.innerText = '❌ Expired';
                 viewBtn.classList.remove('btn-primary');
                 viewBtn.classList.add('btn-secondary');
+                viewBtn.classList.add('expired-glitch');
                 viewBtn.onclick = null; // Remove listener
+                setTimeout(() => viewBtn.remove(), 800);
             };
             msgDiv.appendChild(viewBtn);
         }
@@ -247,8 +251,11 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
                     playBtn.innerText = '❌ Expired';
                     playBtn.classList.remove('btn-primary');
                     playBtn.classList.add('btn-secondary');
-                    audioObj.src = ""; // destroy
+                    playBtn.classList.add('expired-glitch');
+                    
                     playBtn.onclick = null;
+                    audioObj.src = '';
+                    setTimeout(() => playBtn.remove(), 800);
                 };
             };
             msgDiv.appendChild(playBtn);
@@ -562,8 +569,17 @@ toggleVideoBtn.addEventListener('click', () => {
 });
 
 leaveRoomBtn.addEventListener('click', () => {
-    socket.emit('leave', { room: ROOM_CODE, username: USERNAME });
-    window.location.href = '/';
+    const purgeOverlay = document.getElementById('purge-overlay');
+    if (purgeOverlay) {
+        purgeOverlay.classList.add('active');
+        setTimeout(() => {
+            socket.emit('leave', { room: ROOM_CODE, username: USERNAME });
+            window.location.href = '/';
+        }, 1200);
+    } else {
+        socket.emit('leave', { room: ROOM_CODE, username: USERNAME });
+        window.location.href = '/';
+    }
 });
 
 // Invite Copy Logic

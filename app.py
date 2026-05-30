@@ -47,12 +47,17 @@ def about():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    try:
+        active_rooms = len(redis_client.keys("room:*:exists"))
+    except Exception:
+        active_rooms = 0
+
     if request.method == 'POST':
         action = request.form.get('action')
         username = request.form.get('username')
         
         if not username:
-            return render_template('index.html', error="Username is required.")
+            return render_template('index.html', error="Username is required.", active_rooms=active_rooms)
 
         if action == 'create':
             room_code = generate_room_code()
@@ -66,9 +71,9 @@ def index():
             if redis_client.exists(f"room:{room_code}:exists") or redis_client.exists(f"room:{room_code}:users"):
                 return redirect(url_for('room', room_code=room_code, username=username))
             else:
-                return render_template('index.html', error="Invalid room code.")
+                return render_template('index.html', error="Invalid room code.", active_rooms=active_rooms)
                 
-    return render_template('index.html')
+    return render_template('index.html', active_rooms=active_rooms)
 
 @app.route('/room/<room_code>')
 def room(room_code):
