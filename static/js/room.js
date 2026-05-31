@@ -251,7 +251,7 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
             textSpan.innerText = text;
             msgDiv.appendChild(textSpan);
         }
-        
+
         if (image) {
             const viewBtn = document.createElement('button');
             viewBtn.className = 'btn btn-primary view-image-btn';
@@ -268,7 +268,7 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
             };
             msgDiv.appendChild(viewBtn);
         }
-        
+
         if (audio) {
             const playBtn = document.createElement('button');
             playBtn.className = 'btn btn-primary play-audio-btn';
@@ -278,13 +278,13 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
                 audioObj.play();
                 playBtn.innerText = '🔊 Playing...';
                 playBtn.disabled = true;
-                
+
                 audioObj.onended = () => {
                     playBtn.innerText = '❌ Expired';
                     playBtn.classList.remove('btn-primary');
                     playBtn.classList.add('btn-secondary');
                     playBtn.classList.add('expired-glitch');
-                    
+
                     playBtn.onclick = null;
                     audioObj.src = '';
                     setTimeout(() => playBtn.remove(), 800);
@@ -295,7 +295,7 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
 
         const replyBtn = document.createElement('button');
         replyBtn.className = 'reply-btn';
-        replyBtn.innerHTML = '↩️';
+        replyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"></polyline><path d="M20 18v-2a4 4 0 0 0-4-4H4"></path></svg>';
         replyBtn.title = 'Reply';
         replyBtn.onclick = () => {
             let rText = text || (image ? '📸 Image' : (audio ? '🎙️ Audio' : ''));
@@ -405,9 +405,9 @@ imageUpload.addEventListener('change', (e) => {
 
 function compressImage(file, callback) {
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         const img = new Image();
-        img.onload = function() {
+        img.onload = function () {
             const canvas = document.createElement('canvas');
             const MAX_WIDTH = 800;
             const MAX_HEIGHT = 800;
@@ -464,25 +464,25 @@ if (audioBtn) {
 
 function startAudioRecording() {
     if (isRecording) return;
-    
+
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
         isRecording = true;
         audioBtn.classList.add('recording');
-        
+
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
-        
+
         mediaRecorder.ondataavailable = e => {
             if (e.data.size > 0) audioChunks.push(e.data);
         };
-        
+
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             audioChunks = [];
-            
+
             // Stop tracks to release mic
             stream.getTracks().forEach(track => track.stop());
-            
+
             // Send if we recorded something substantial
             if (audioBlob.size > 100) {
                 const reader = new FileReader();
@@ -499,7 +499,7 @@ function startAudioRecording() {
                 };
             }
         };
-        
+
         mediaRecorder.start();
     }).catch(err => {
         console.error("Error accessing microphone for recording: ", err);
@@ -641,15 +641,15 @@ if (inviteBtn) {
     inviteBtn.addEventListener('click', async () => {
         const inviteLink = `${window.location.origin}/`;
         const textToCopy = `Hey!\n\nJoin my BaatCheet video room.\n\nRoom Code: ${ROOM_CODE}\nSite: ${inviteLink}\n\nSee you there!`;
-        
+
         try {
             await navigator.clipboard.writeText(textToCopy);
-            
+
             // Visual feedback
             const originalIcon = inviteBtn.innerText;
             inviteBtn.innerText = '✅';
             inviteBtn.classList.add('active');
-            
+
             setTimeout(() => {
                 inviteBtn.innerText = originalIcon;
                 inviteBtn.classList.remove('active');
