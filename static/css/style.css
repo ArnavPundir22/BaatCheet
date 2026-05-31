@@ -595,13 +595,26 @@ input[type="text"]:focus {
     box-shadow: none;
 }
 
-.message.mine {
+/* .message.mine {
     background: rgba(0, 243, 255, 0.2);
     backdrop-filter: blur(8px);
     align-self: flex-end;
     border-top-right-radius: 0;
     border: 1px solid rgba(0, 243, 255, 0.4);
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+} */
+.message.mine {
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+    backdrop-filter: blur(8px);
+
+    align-self: flex-end;
+    border-top-right-radius: 0;
+
+    border: 1px solid var(--primary);
+
+    box-shadow: 0 0 10px color-mix(in srgb, var(--primary) 35%, transparent);
+
+    color: var(--text-main);
 }
 
 .message.mine::before {
@@ -609,12 +622,23 @@ input[type="text"]:focus {
     /* Removed harsh solid tail for glassy look */
 }
 
-.message.theirs {
+/* .message.theirs {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     align-self: flex-start;
     border-top-left-radius: 0;
+} */
+.message.theirs {
+    background: var(--panelBg);
+    backdrop-filter: blur(8px);
+
+    border: 1px solid var(--border);
+
+    align-self: flex-start;
+    border-top-left-radius: 0;
+
+    color: var(--text-main);
 }
 
 .message.theirs::before {

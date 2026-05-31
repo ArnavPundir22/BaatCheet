@@ -62,34 +62,34 @@ const THEMES = {
     },
 
     sunsetGlow: {
-    name: "Sunset Glow",
-    premium: false,
+        name: "Sunset Glow",
+        premium: false,
 
-    bgDark: "#1a1020",
-    bgCard: "rgba(35, 20, 28, 0.78)",
-    panelBg: "rgba(45, 25, 35, 0.35)",
+        bgDark: "#1a1020",
+        bgCard: "rgba(35, 20, 28, 0.78)",
+        panelBg: "rgba(45, 25, 35, 0.35)",
 
-    primary: "#ff7b54",
-    primaryHover: "#ff936f",
+        primary: "#ff7b54",
+        primaryHover: "#ff936f",
 
-    secondary: "#ffb26b",
-    secondaryHover: "#ffc98f",
+        secondary: "#ffb26b",
+        secondaryHover: "#ffc98f",
 
-    border: "rgba(255, 123, 84, 0.28)",
+        border: "rgba(255, 123, 84, 0.28)",
 
-    textMain: "#fff4eb",
-    textMuted: "#d8b4a0",
-    textAccent: "#ffd59e",
+        textMain: "#fff4eb",
+        textMuted: "#d8b4a0",
+        textAccent: "#ffd59e",
 
-    buttonText: "#ffffff",
+        buttonText: "#ffffff",
 
-    success: "#4ade80",
-    error: "#fb7185",
-    neutral: "#94a3b8",
+        success: "#4ade80",
+        error: "#fb7185",
+        neutral: "#94a3b8",
 
-    blob1: "#d65a31",
-    blob2: "#ffd166"
-},
+        blob1: "#d65a31",
+        blob2: "#ffd166"
+    },
 
     cyberNeon: {
         name: "Cyber Neon",
@@ -217,6 +217,8 @@ function applyTheme(themeName) {
     root.style.setProperty("--panel-bg", theme.panelBg);
 
     root.style.setProperty("--button-text", theme.buttonText || "#ffffff" );
+    root.style.setProperty("--bg-card", theme.bgCard);
+
 
     document.body.classList.remove(
     "theme-aurora",
