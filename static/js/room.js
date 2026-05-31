@@ -23,6 +23,8 @@ const iceServers = {
 
 // Initialize Media
 async function initMedia() {
+    console.log("navigator =", navigator);
+    console.log("navigator.mediaDevices =", navigator.mediaDevices);
     try {
         localStream = await navigator.mediaDevices.getUserMedia({
             video: true,
@@ -579,3 +581,26 @@ const localWrapper = document.querySelector('.local-wrapper');
 if (localWrapper) {
     makeDraggable(localWrapper);
 }
+
+// Theme Modal
+
+const themeBtn = document.getElementById("theme-btn");
+const themeModal = document.getElementById("theme-modal");
+const closeThemeModal = document.getElementById("close-theme-modal");
+
+themeBtn.addEventListener("click", () => {
+    themeModal.style.display = "flex";
+});
+
+closeThemeModal.addEventListener("click", () => {
+    themeModal.style.display = "none";
+});
+document.querySelectorAll(".theme-option").forEach(button => {
+    button.addEventListener("click", () => {
+        const themeName = button.dataset.theme;
+
+        setTheme(themeName);
+
+        themeModal.style.display = "none";
+    });
+});

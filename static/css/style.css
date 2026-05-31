@@ -1,18 +1,34 @@
 :root {
     --bg-dark: #050510;
     --bg-card: rgba(10, 10, 25, 0.7);
+
     --primary: #00f3ff;
     --primary-hover: #5cffff;
+
     --secondary: #ff00ea;
     --secondary-hover: #ff54f0;
+
     --danger: #ff003c;
     --danger-hover: #ff4d79;
+
     --text-main: #e0f2fe;
     --text-muted: #94a3b8;
+
+    /* NEW VARIABLES */
+    --text-accent: #a5b4fc;
+    --success: #86efac;
+    --error: #fca5a5;
+    --neutral: #8696a0;
+
     --border: rgba(0, 243, 255, 0.3);
+
     --blob-1: #00f3ff;
     --blob-2: #ff00ea;
+
+    --panel-bg: rgba(15, 23, 42, 0.3);
+    --button-text: #ffffff;
 }
+
 
 * {
     box-sizing: border-box;
@@ -120,7 +136,7 @@ body {
 
 .error-msg {
     background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
+    color: var(--error);
     padding: 1rem;
     border-radius: 12px;
     border: 1px solid rgba(239, 68, 68, 0.3);
@@ -269,8 +285,67 @@ input[type="text"]:focus {
 
 .btn-icon.inactive {
     background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
+    color: var(--error);
     border: 1px solid rgba(239, 68, 68, 0.3);
+}
+/* Theme button icon */
+#theme-btn {
+    min-width: 48px;
+    min-height: 48px;
+}
+
+#theme-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px;
+    min-height: 20px;
+    display: block;
+    flex-shrink: 0;
+}
+.theme-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.theme-list h4 {
+    margin-top: 12px;
+    margin-bottom: 4px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.theme-card {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-weight: 600;
+}
+
+.theme-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+
+.premium-theme {
+    border-color: rgba(255, 77, 166, 0.3);
+}
+
+.premium-theme:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#unlock-premium {
+    margin-top: 10px;
 }
 
 /* Room Page Layout */
@@ -291,7 +366,7 @@ input[type="text"]:focus {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: rgba(15, 23, 42, 0.3);
+    background: var(--panel-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-radius: 24px;
@@ -426,7 +501,8 @@ input[type="text"]:focus {
     overflow: hidden;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+    /* box-shadow: 0 0 20px rgba(0, 243, 255, 0.3); */
+    box-shadow: 0 0 20px var(--border);
     border: 1px solid var(--primary);
 }
 
@@ -548,7 +624,7 @@ input[type="text"]:focus {
     font-size: 0.75rem;
     font-weight: 600;
     margin-bottom: 0.3rem;
-    color: #a5b4fc;
+    color: var(--text-accent);
     /* Light purple for sender names */
 }
 
@@ -583,6 +659,9 @@ input[type="text"]:focus {
     width: auto;
     padding: 0.8rem 1.5rem;
     border-radius: 24px;
+
+    color: var(--button-text);
+    font-weight: 700;
 }
 
 .typing-indicator {
@@ -606,7 +685,7 @@ input[type="text"]:focus {
 
 .typing-text {
     font-size: 0.8rem;
-    color: #a5b4fc;
+    color: var(--text-accent);
     font-weight: 600;
 }
 
@@ -618,7 +697,7 @@ input[type="text"]:focus {
 .typing-indicator .dots span {
     width: 6px;
     height: 6px;
-    background: #8696a0;
+    background: var(--neutral);
     border-radius: 50%;
     animation: typing 1.4s infinite ease-in-out both;
 }
@@ -739,11 +818,11 @@ input[type="text"]:focus {
 }
 
 .status-msg.error {
-    color: #fca5a5;
+    color: var(--error);
 }
 
 .status-msg.success {
-    color: #86efac;
+    color: var(--success);
 }
 
 @keyframes scaleUp {
@@ -922,4 +1001,13 @@ input[type="text"]:focus {
         bottom: 0.5rem;
         left: 0.5rem;
     }
+}
+.theme-sunsetGlow .room-header,
+.theme-sunsetGlow .chat-input-area {
+    background: rgba(40, 20, 25, 0.45);
+}
+.theme-sunsetGlow .video-wrapper {
+    box-shadow:
+        0 0 25px rgba(255, 94, 58, 0.35),
+        0 0 50px rgba(255, 209, 102, 0.15);
 }

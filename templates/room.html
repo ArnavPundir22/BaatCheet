@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
     <script>
         const ROOM_CODE = "{{ room_code }}";
         const USERNAME = "{{ username }}";
@@ -58,6 +59,23 @@
                     </div>
 
                     <button id="invite-btn" class="btn btn-icon" title="Copy Invite Link">🔗</button>
+                    <button id="theme-btn" class="btn btn-icon" title="Themes">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"></path>
+                            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                        </svg>
+                    </button>
                     <button id="leave-room" class="btn btn-danger">Leave</button>
                 </div>
             </header>
@@ -106,6 +124,30 @@
         </div>
     </div>
 
+    <!-- Theme Modal -->
+    <div id="theme-modal" class="modal-overlay" style="display:none;">
+       <div class="modal-content glass-panel">
+
+            <h3>🎨 Personalize BaatCheet</h3>
+            <p>Choose how your BaatCheet looks.</p>
+
+            <div class="theme-list">
+                <button class="theme-card theme-option" data-theme="aurora"> ✓ Aurora </button>
+                <button class="theme-card theme-option" data-theme="midnightRomance"> 💖 Midnight Romance </button>
+                <button class="theme-card theme-option" data-theme="sunsetGlow"> 🌅 Sunset Glow</button>
+                <button class="theme-card theme-option" data-theme="cyberNeon"> ⚡ Cyber Neon </button>
+                <button class="theme-card theme-option" data-theme="coffeeHouse"> ☕ Coffee House </button>
+                <button class="theme-card theme-option" data-theme="minimalBlack"> 🖤 Minimal Black </button>
+            </div>
+            <div class="modal-actions">
+                <button id="close-theme-modal" class="btn btn-danger"> Close </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Engine -->
+    <script src="{{ url_for('static', filename='js/themes.js') }}"></script>
+
     <!-- WebRTC and Chat Logic -->
     <script src="{{ url_for('static', filename='js/room.js') }}?v=11"></script>
     <script>
@@ -119,6 +161,7 @@
             });
         }
     </script>
+
 </body>
 
 </html>
