@@ -26,6 +26,34 @@ function cancelReply() {
     if (replyPreview) replyPreview.style.display = 'none';
 }
 
+// --- Visual Viewport Fix for Mobile Keyboard ---
+function adjustViewport() {
+    if (window.innerWidth <= 1024) {
+        const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        const sidebar = document.querySelector('.chat-sidebar');
+        if (sidebar) {
+            sidebar.style.height = `${vh}px`;
+        }
+        document.body.style.height = `${vh}px`;
+        window.scrollTo(0, 0);
+    } else {
+        const sidebar = document.querySelector('.chat-sidebar');
+        if (sidebar) {
+            sidebar.style.height = ''; 
+        }
+        document.body.style.height = '';
+    }
+}
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', adjustViewport);
+    window.visualViewport.addEventListener('scroll', adjustViewport);
+}
+window.addEventListener('resize', adjustViewport);
+// Initial call
+adjustViewport();
+
 // WebRTC and Media configuration
 let localStream;
 const peers = {}; // Store RTCPeerConnection objects by socket ID
