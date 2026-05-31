@@ -29,7 +29,9 @@
         <!-- Main Video Area -->
         <main class="video-area">
             <header class="room-header">
-                <h2>{{ room_name }} <span style="font-size: 0.6em; color: var(--text-muted); font-weight: normal; margin-left: 10px;">Code: <span class="highlight">{{ room_code }}</span></span></h2>
+                <h2>{{ room_name }} <span
+                        style="font-size: 0.6em; color: var(--text-muted); font-weight: normal; margin-left: 10px;">Code:
+                        <span class="highlight">{{ room_code }}</span></span></h2>
                 <div class="controls">
                     <button id="toggle-audio" class="btn btn-icon active">🎤</button>
                     <button id="toggle-video" class="btn btn-icon active">📷</button>
@@ -95,7 +97,7 @@
                 <h3>{{ room_name }}</h3>
                 <span class="mobile-room-code">Code: <span class="highlight">{{ room_code }}</span></span>
             </div>
-            
+
             <div class="zero-log-banner">
                 <span>🔒 Zero-Log Mode Active. Ephemeral means ephemeral.</span>
             </div>
@@ -133,7 +135,7 @@
     <div id="image-viewer-overlay" class="modal-overlay">
         <div class="image-viewer-content">
             <span class="close-viewer" id="close-viewer">&times;</span>
-            <img id="viewer-img" src="" alt="View Once Image">
+            <img id="viewer-img" src="" alt="View Once Image" draggable="false" oncontextmenu="return false;">
         </div>
     </div>
 
@@ -175,6 +177,27 @@
         }
     </script>
 
+</body>
+
+</html> ctx.moveTo(particles[i].x, particles[i].y);
+ctx.lineTo(particles[j].x, particles[j].y);
+ctx.stroke();
+}
+}
+}
+requestAnimationFrame(animate);
+}
+
+init();
+animate();
+
+window.addEventListener('resize', () => {
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+init();
+});
+}
+</script>
 </body>
 
 </html>

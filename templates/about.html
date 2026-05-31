@@ -22,35 +22,83 @@
             <p class="subtitle" style="margin-bottom: 1.5rem;">Ephemeral, Instant Video & Text Chat</p>
 
             <div style="color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem;">
-                <p style="margin-bottom: 1rem; font-size: 1.05rem;"><strong>BaatCheet</strong> is a next-generation ephemeral chat platform designed for spontaneous, secure, and private communication. Built on the principle that not everything needs to be saved forever.</p>
-                
-                <div class="action-card" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0, 243, 255, 0.2); padding: 1.5rem; margin-bottom: 1.5rem; text-align: left;">
-                    <h3 style="color: var(--primary); margin-bottom: 0.5rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <p style="margin-bottom: 1rem; font-size: 1.05rem;"><strong>BaatCheet</strong> is a next-generation
+                    ephemeral chat platform designed for spontaneous, secure, and private communication. Built on the
+                    principle that not everything needs to be saved forever.</p>
+
+                <div class="action-card"
+                    style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0, 243, 255, 0.2); padding: 1.5rem; margin-bottom: 1.5rem; text-align: left;">
+                    <h3
+                        style="color: var(--primary); margin-bottom: 0.5rem; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                         <span>🔒</span> The Zero-Log Guarantee
                     </h3>
-                    <p style="font-size: 0.9rem; margin-bottom: 0;">BaatCheet does not use a permanent database. All chat rooms, text messages, and connections are held entirely in volatile server memory. When the last participant leaves, the server executes a self-destruct sequence, instantly wiping the room and all its data from existence. <strong>No SQL. No logs. No history.</strong></p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0;">BaatCheet does not use a permanent database. All
+                        chat rooms, text messages, and connections are held entirely in volatile server memory. When the
+                        last participant leaves, the server executes a self-destruct sequence, instantly wiping the room
+                        and all its data from existence. <strong>No SQL. No logs. No history.</strong></p>
                 </div>
 
                 <h3 style="color: var(--text-main); margin-bottom: 0.8rem; font-weight: 600;">Core Features</h3>
                 <ul style="list-style-type: none; padding-left: 0; margin-bottom: 2rem; display: grid; gap: 10px;">
-                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">🎥</span> <strong>P2P Video & Audio:</strong> High-quality, low-latency WebRTC streams.</li>
-                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">👻</span> <strong>View-Once Media:</strong> Send audio notes and images that instantly self-destruct after being viewed or played once.</li>
-                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">📱</span> <strong>Mobile First PWA:</strong> Fully installable Progressive Web App with a custom Picture-in-Picture (PIP) miniplayer for multitasking.</li>
-                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">✨</span> <strong>Cyberpunk Aesthetics:</strong> A stunning, responsive glassmorphism UI with smooth CSS animations.</li>
+                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">🎥</span> <strong>P2P
+                            Video & Audio:</strong> High-quality, low-latency WebRTC streams.</li>
+                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">👻</span>
+                        <strong>View-Once Media:</strong> Send audio notes and images that instantly self-destruct after
+                        being viewed or played once.</li>
+                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">📱</span>
+                        <strong>Mobile First PWA:</strong> Fully installable Progressive Web App with a custom
+                        Picture-in-Picture (PIP) miniplayer for multitasking.</li>
+                    <li style="display: flex; gap: 10px;"><span style="color: var(--secondary);">✨</span>
+                        <strong>Cyberpunk Aesthetics:</strong> A stunning, responsive glassmorphism UI with smooth CSS
+                        animations.</li>
                 </ul>
 
                 <h3 style="color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600;">Under The Hood</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Powered by <strong>Python & Flask</strong> on the backend, utilizing <strong>Socket.IO</strong> for real-time WebSocket signaling, and <strong>Redis</strong> for highly-scalable, ephemeral state management. The frontend is built entirely with pure, vanilla <strong>JavaScript and CSS3</strong> for maximum performance without the bloat of frontend frameworks.</p>
+                <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">Powered by <strong>Python & Flask</strong> on the
+                    backend, utilizing <strong>Socket.IO</strong> for real-time WebSocket signaling, and
+                    <strong>Redis</strong> for highly-scalable, ephemeral state management. The frontend is built
+                    entirely with pure, vanilla <strong>JavaScript and CSS3</strong> for maximum performance without the
+                    bloat of frontend frameworks.</p>
 
                 <h3 style="color: var(--text-main); margin-bottom: 0.5rem; font-weight: 600;">Developer</h3>
-                <p>Designed and developed by <a href="https://arnavpundir22.github.io" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: bold; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='var(--primary-hover)'" onmouseout="this.style.color='var(--primary)'">Arnav Pundir</a>.</p>
+                <p>Designed and developed by <a href="https://arnavpundir22.github.io" target="_blank"
+                        rel="noopener noreferrer"
+                        style="color: var(--primary); font-weight: bold; text-decoration: none; transition: color 0.3s ease;"
+                        onmouseover="this.style.color='var(--primary-hover)'"
+                        onmouseout="this.style.color='var(--primary)'">Arnav Pundir</a>.</p>
             </div>
 
             <div class="actions">
-                <a href="{{ url_for('index') }}" class="btn btn-secondary" style="display: block; text-align: center; text-decoration: none;">Back to Home</a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary"
+                    style="display: block; text-align: center; text-decoration: none;">Back to Home</a>
             </div>
         </div>
     </div>
+</body>
+
+</html>
+
+<script>
+    // Page Transition Handling
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            document.body.classList.remove('page-loading');
+            document.body.classList.add('page-loaded');
+        }, 100);
+
+        const backBtn = document.querySelector('.back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.remove('page-loaded');
+                document.body.classList.add('page-loading');
+                setTimeout(() => {
+                    window.location.href = backBtn.href;
+                }, 800);
+            });
+        }
+    });
+</script>
 </body>
 
 </html>
