@@ -27,6 +27,8 @@ The chat system is designed to look and feel like modern messaging apps (e.g., W
 -   **Message Rendering:** Messages are dynamically created as DOM elements. `mine` and `theirs` CSS classes dictate bubble alignment (right for self, left for others). System messages are centered.
 -   **Typing Events:** When a user types in the input field, a `typing` event is emitted. The client uses a debounce timer (`setTimeout`) of 1.5 seconds. If no input is detected within this window, a `stop_typing` event is fired.
 -   **UI Feedback:** When receiving a `user_typing` event, a CSS-animated bouncing dot indicator (`#typing-indicator`) is appended to the bottom of the chat list, auto-scrolling the view.
+-   **Inline Message Replies:** Users can hover over any chat bubble to reveal a permanently fixed, slightly opaque `↩️` reply button. Clicking it populates a `replyingTo` state object and reveals a glassmorphic `#reply-preview` banner above the chat input. When the message is dispatched, the socket payload includes the `reply_to` context, which is rendered dynamically as a quoted block inside the chat bubble by `addChatMessage`.
+-   **"Zero-Log" Glitch Purge:** To visually reinforce the ephemeral nature, clicking "Leave & Destroy" triggers a full-screen `#purge-overlay` that applies SVG filter-based glitch animations to the screen for 800ms before disconnecting the socket and routing home.
 
 ## 🎉 Animated Reactions
 
@@ -37,3 +39,20 @@ Users can send ephemeral emoji reactions that float across everyone's screens.
 -   **Math & Randomization:** The spawn position includes a random horizontal offset (`(Math.random() - 0.5) * 80`) to ensure multiple reactions don't overlap perfectly.
 -   **CSS Keyframes:** The element uses CSS animations (`@keyframes floatUp`) to rise, fade out, and disappear.
 -   **Garbage Collection:** A `setTimeout` removes the element from the DOM after 3.6 seconds to prevent memory leaks and DOM clutter.
+
+## 👻 View-Once Ephemeral Media (Images & Audio)
+
+BaatCheet implements a "Snapchat-like" view-once media system directly in the browser without relying on any backend storage or databases.
+
+### 🖼️ Ephemeral Images
+-   **Client-Side Compression:** When an image is selected, it is loaded into a hidden `<canvas>` element using the `FileReader` and `Image` APIs. The canvas aggressively resizes and compresses the image to a maximum 800x800 resolution at 70% JPEG quality.
+-   **Transmission:** The compressed image is converted into a Base64 string (`canvas.toDataURL()`) and transmitted over WebSockets alongside the chat message payload.
+-   **View-Once Logic:** The recipient sees a "📸 View Once Image" button. Clicking this triggers a modal overlay to display the image. Crucially, the button's `onclick` listener is immediately set to `null`, the button is disabled, and its text changes to "❌ Expired".
+-   **Destruction:** When the modal is closed, the underlying `<img>` `src` attribute is wiped (`viewerImg.src = ''`), completely destroying the image data from the DOM and memory.
+
+### 🎙️ Ephemeral Audio Messages
+-   **MediaRecorder API:** A microphone button listens for `mousedown`/`touchstart` events. Upon activation, it requests a dedicated audio stream via `navigator.mediaDevices.getUserMedia({ audio: true })`.
+-   **Recording & Encoding:** A `MediaRecorder` instance captures the audio stream into chunks. When the user releases the button (`mouseup`/`touchend`), the recording stops, and the chunks are assembled into a `.webm` Blob.
+-   **Transmission:** Similar to images, the audio Blob is read as a Base64 Data URL via `FileReader` and sent through the WebSocket pipeline. The active microphone tracks are immediately stopped (`track.stop()`) to release the device hardware.
+-   **Play-Once Logic:** The recipient receives a "▶️ Play Audio Message" button. When clicked, a new JavaScript `Audio(base64Data)` object is instantiated and played.
+-   **Destruction:** The script listens for the audio object's `onended` event. Once playback completes, the button is permanently disabled ("❌ Expired"), and the audio object's `src` is cleared, wiping it from memory.

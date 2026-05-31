@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room {{ room_code }} | BaatCheet</title>
+    <title>{{ room_name }} | BaatCheet</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
@@ -29,7 +29,7 @@
         <!-- Main Video Area -->
         <main class="video-area">
             <header class="room-header">
-                <h2>Room: <span class="highlight">{{ room_code }}</span></h2>
+                <h2>{{ room_name }} <span style="font-size: 0.6em; color: var(--text-muted); font-weight: normal; margin-left: 10px;">Code: <span class="highlight">{{ room_code }}</span></span></h2>
                 <div class="controls">
                     <button id="toggle-audio" class="btn btn-icon active">🎤</button>
                     <button id="toggle-video" class="btn btn-icon active">📷</button>
@@ -92,8 +92,12 @@
         <!-- Sidebar Chat -->
         <aside class="chat-sidebar glass-panel-light">
             <div class="chat-header">
-                <h3>Live Chat</h3>
-                <span class="mobile-room-code">Room: <span class="highlight">{{ room_code }}</span></span>
+                <h3>{{ room_name }}</h3>
+                <span class="mobile-room-code">Code: <span class="highlight">{{ room_code }}</span></span>
+            </div>
+            
+            <div class="zero-log-banner">
+                <span>🔒 Zero-Log Mode Active. Ephemeral means ephemeral.</span>
             </div>
 
             <div id="chat-messages" class="chat-messages">
@@ -106,9 +110,18 @@
                 </div>
             </div>
 
+            <div id="reply-preview" class="reply-preview" style="display: none;">
+                <div class="reply-content">
+                    <span id="reply-preview-user" class="reply-user"></span>
+                    <span id="reply-preview-text" class="reply-text"></span>
+                </div>
+                <button id="cancel-reply-btn" class="btn btn-icon cancel-reply" title="Cancel Reply">&times;</button>
+            </div>
+
             <div class="chat-input-area">
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
                 <button id="image-btn" class="btn btn-icon" title="Send View-Once Image">🖼️</button>
+                <button id="audio-btn" class="btn btn-icon" title="Hold to Record Audio">🎙️</button>
                 <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
                 <button id="send-btn" class="btn btn-primary">Send</button>
             </div>

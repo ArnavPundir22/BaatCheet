@@ -567,6 +567,8 @@ input[type="text"]:focus {
     position: relative;
     box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
     font-size: 0.95rem;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 @keyframes fadeIn {
@@ -873,7 +875,7 @@ input[type="text"]:focus {
     /* Target PWA specifically */
     @media all and (display-mode: standalone) {
         .chat-input-area {
-            padding-bottom: calc(1.5rem + 130px + env(safe-area-inset-bottom, 40px));
+            padding-bottom: calc(1.5rem + 140px + env(safe-area-inset-bottom, 40px));
         }
 
         .room-header {

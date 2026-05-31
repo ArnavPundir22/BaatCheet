@@ -37,6 +37,9 @@
                     <div class="action-card">
                         <h3>Start a New Conversation</h3>
                         <p>Create a fresh, disposable room.</p>
+                        <div class="join-group" style="margin-bottom: 10px;">
+                            <input type="text" name="room_name" placeholder="Room Name (Optional)" autocomplete="off">
+                        </div>
                         <button type="submit" name="action" value="create" class="btn btn-primary">Create Room</button>
                     </div>
 
@@ -53,6 +56,30 @@
                     </div>
                 </div>
             </form>
+
+            <div class="action-card transparency-card" style="margin-top: 2rem; border-color: rgba(0, 243, 255, 0.3); background: rgba(0, 0, 0, 0.4);">
+                <h3 style="color: var(--primary);">🔒 Zero-Log Guarantee</h3>
+                <p style="font-size: 0.9rem;">We don't use a database. All room data lives in volatile memory and is instantly destroyed when you leave.</p>
+                
+                <div style="display: flex; justify-content: space-around; margin-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1rem;">
+                    <div>
+                        <div style="font-size: 1.5rem; color: white;">{{ active_rooms }}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Active Rooms</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; color: var(--secondary);">0 B</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Database Size</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; color: var(--danger);">0</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Logs Stored</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1.5rem; font-size: 0.8rem;">
+                    <a href="https://github.com/ArnavPundir22/BaatChit" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">Don't trust us, trust the code. Open Source on GitHub ↗</a>
+                </div>
+            </div>
 
             <div class="action-card app-promo-card" style="margin-top: 2rem; border-color: var(--secondary);">
                 <h3 style="color: var(--secondary);">📱 Get the BaatCheet App</h3>

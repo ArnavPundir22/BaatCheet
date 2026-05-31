@@ -10,6 +10,22 @@ const toggleAudioBtn = document.getElementById('toggle-audio');
 const toggleVideoBtn = document.getElementById('toggle-video');
 const leaveRoomBtn = document.getElementById('leave-room');
 
+// Reply Elements
+let replyingTo = null;
+const replyPreview = document.getElementById('reply-preview');
+const replyPreviewUser = document.getElementById('reply-preview-user');
+const replyPreviewText = document.getElementById('reply-preview-text');
+const cancelReplyBtn = document.getElementById('cancel-reply-btn');
+
+if (cancelReplyBtn) {
+    cancelReplyBtn.addEventListener('click', cancelReply);
+}
+
+function cancelReply() {
+    replyingTo = null;
+    if (replyPreview) replyPreview.style.display = 'none';
+}
+
 // WebRTC and Media configuration
 let localStream;
 const peers = {}; // Store RTCPeerConnection objects by socket ID
@@ -38,12 +54,14 @@ async function initMedia() {
 
         // After getting media, join the room via Socket
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
+        addChatMessage("System", "🔒 History is never saved. You are seeing live messages only.", true);
     } catch (err) {
         console.error("Error accessing media devices.", err);
         addChatMessage("System", "Error accessing camera/microphone. Please check permissions.", true);
 
         // Still join the room even if no media
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
+        addChatMessage("System", "🔒 History is never saved. You are seeing live messages only.", true);
     }
 }
 
@@ -196,7 +214,7 @@ socket.on('user_left', (data) => {
 
 // --- Chat Logic ---
 
-function addChatMessage(user, text, isSystem = false, image = null) {
+function addChatMessage(user, text, isSystem = false, image = null, audio = null, replyTo = null) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message';
 
@@ -212,6 +230,20 @@ function addChatMessage(user, text, isSystem = false, image = null) {
             senderSpan.className = 'sender';
             senderSpan.innerText = user;
             msgDiv.appendChild(senderSpan);
+        }
+
+        if (replyTo) {
+            const replyCtx = document.createElement('div');
+            replyCtx.className = 'reply-context';
+            const rUser = document.createElement('span');
+            rUser.className = 'reply-user';
+            rUser.innerText = replyTo.user;
+            const rText = document.createElement('span');
+            rText.className = 'reply-text';
+            rText.innerText = replyTo.text;
+            replyCtx.appendChild(rUser);
+            replyCtx.appendChild(rText);
+            msgDiv.appendChild(replyCtx);
         }
 
         if (text) {
@@ -230,10 +262,50 @@ function addChatMessage(user, text, isSystem = false, image = null) {
                 viewBtn.innerText = '❌ Expired';
                 viewBtn.classList.remove('btn-primary');
                 viewBtn.classList.add('btn-secondary');
+                viewBtn.classList.add('expired-glitch');
                 viewBtn.onclick = null; // Remove listener
+                setTimeout(() => viewBtn.remove(), 800);
             };
             msgDiv.appendChild(viewBtn);
         }
+        
+        if (audio) {
+            const playBtn = document.createElement('button');
+            playBtn.className = 'btn btn-primary play-audio-btn';
+            playBtn.innerText = '▶️ Play Audio Message';
+            playBtn.onclick = () => {
+                const audioObj = new Audio(audio);
+                audioObj.play();
+                playBtn.innerText = '🔊 Playing...';
+                playBtn.disabled = true;
+                
+                audioObj.onended = () => {
+                    playBtn.innerText = '❌ Expired';
+                    playBtn.classList.remove('btn-primary');
+                    playBtn.classList.add('btn-secondary');
+                    playBtn.classList.add('expired-glitch');
+                    
+                    playBtn.onclick = null;
+                    audioObj.src = '';
+                    setTimeout(() => playBtn.remove(), 800);
+                };
+            };
+            msgDiv.appendChild(playBtn);
+        }
+
+        const replyBtn = document.createElement('button');
+        replyBtn.className = 'reply-btn';
+        replyBtn.innerHTML = '↩️';
+        replyBtn.title = 'Reply';
+        replyBtn.onclick = () => {
+            let rText = text || (image ? '📸 Image' : (audio ? '🎙️ Audio' : ''));
+            replyingTo = { user, text: rText };
+            replyPreviewUser.innerText = user;
+            replyPreviewText.innerText = rText;
+            replyPreview.style.display = 'flex';
+            chatInput.focus();
+        };
+        msgDiv.appendChild(replyBtn);
     }
 
     chatMessages.appendChild(msgDiv);
@@ -244,7 +316,7 @@ socket.on('message', (data) => {
     if (data.user === 'System') {
         addChatMessage(data.user, data.text, true);
     } else {
-        addChatMessage(data.user, data.text, false, data.image);
+        addChatMessage(data.user, data.text, false, data.image, data.audio, data.reply_to);
     }
 });
 
@@ -259,9 +331,11 @@ function sendMessage() {
         socket.emit('send_message', {
             room: ROOM_CODE,
             username: USERNAME,
-            text: text
+            text: text,
+            reply_to: replyingTo
         });
         chatInput.value = '';
+        cancelReply();
         socket.emit('stop_typing', { room: ROOM_CODE, username: USERNAME });
         isTyping = false;
     }
@@ -319,10 +393,12 @@ imageUpload.addEventListener('change', (e) => {
                 room: ROOM_CODE,
                 username: USERNAME,
                 text: '', // Fallback empty text
-                image: base64Img
+                image: base64Img,
+                reply_to: replyingTo
             });
             // Reset input
             imageUpload.value = '';
+            cancelReply();
         });
     }
 });
@@ -370,6 +446,75 @@ closeViewerBtn.addEventListener('click', () => {
     imageViewerOverlay.style.display = 'none';
     viewerImg.src = ''; // Destroy data from DOM
 });
+
+// --- Audio Ephemeral Sharing Logic ---
+const audioBtn = document.getElementById('audio-btn');
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+if (audioBtn) {
+    audioBtn.addEventListener('mousedown', startAudioRecording);
+    audioBtn.addEventListener('mouseup', stopAudioRecording);
+    audioBtn.addEventListener('mouseleave', stopAudioRecording);
+    audioBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startAudioRecording(); }, { passive: false });
+    audioBtn.addEventListener('touchend', (e) => { e.preventDefault(); stopAudioRecording(); }, { passive: false });
+    audioBtn.addEventListener('touchcancel', (e) => { e.preventDefault(); stopAudioRecording(); }, { passive: false });
+}
+
+function startAudioRecording() {
+    if (isRecording) return;
+    
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        isRecording = true;
+        audioBtn.classList.add('recording');
+        
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            audioChunks = [];
+            
+            // Stop tracks to release mic
+            stream.getTracks().forEach(track => track.stop());
+            
+            // Send if we recorded something substantial
+            if (audioBlob.size > 100) {
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    socket.emit('send_message', {
+                        room: ROOM_CODE,
+                        username: USERNAME,
+                        text: '',
+                        audio: reader.result,
+                        reply_to: replyingTo
+                    });
+                    cancelReply();
+                };
+            }
+        };
+        
+        mediaRecorder.start();
+    }).catch(err => {
+        console.error("Error accessing microphone for recording: ", err);
+        alert("Microphone permission denied or not available.");
+    });
+}
+
+function stopAudioRecording() {
+    if (!isRecording || !mediaRecorder) return;
+    isRecording = false;
+    audioBtn.classList.remove('recording');
+    if (mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+    }
+}
 
 // --- Reactions Logic ---
 
@@ -476,8 +621,17 @@ toggleVideoBtn.addEventListener('click', () => {
 });
 
 leaveRoomBtn.addEventListener('click', () => {
-    socket.emit('leave', { room: ROOM_CODE, username: USERNAME });
-    window.location.href = '/';
+    const purgeOverlay = document.getElementById('purge-overlay');
+    if (purgeOverlay) {
+        purgeOverlay.classList.add('active');
+        setTimeout(() => {
+            socket.emit('leave', { room: ROOM_CODE, username: USERNAME });
+            window.location.href = '/';
+        }, 1200);
+    } else {
+        socket.emit('leave', { room: ROOM_CODE, username: USERNAME });
+        window.location.href = '/';
+    }
 });
 
 // Invite Copy Logic
