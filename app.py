@@ -168,6 +168,13 @@ def handle_stop_typing(data):
 def handle_reaction(data):
     emit('reaction', {'reaction': data['reaction'], 'sender_sid': request.sid}, to=data['room'])
 
+@socketio.on('screen_share_status')
+def handle_screen_share_status(data):
+    emit('screen_share_status', {
+        'is_sharing': data['is_sharing'],
+        'sender_sid': request.sid
+    }, to=data['room'], include_self=False)
+
 # --- WebRTC Signaling Events ---
 
 @socketio.on('webrtc_offer')

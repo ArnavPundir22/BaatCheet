@@ -8,6 +8,7 @@ const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 const toggleAudioBtn = document.getElementById('toggle-audio');
 const toggleVideoBtn = document.getElementById('toggle-video');
+const shareScreenBtn = document.getElementById('share-screen');
 const leaveRoomBtn = document.getElementById('leave-room');
 
 // Reply Elements
@@ -56,6 +57,8 @@ adjustViewport();
 
 // WebRTC and Media configuration
 let localStream;
+let screenStream = null;
+let originalVideoTrack = null;
 const peers = {}; // Store RTCPeerConnection objects by socket ID
 
 const iceServers = {
@@ -237,6 +240,17 @@ socket.on('user_left', (data) => {
     if (peers[data.sid]) {
         peers[data.sid].close();
         delete peers[data.sid];
+    }
+});
+
+socket.on('screen_share_status', (data) => {
+    const wrapper = document.getElementById(`wrapper-${data.sender_sid}`);
+    if (wrapper) {
+        if (data.is_sharing) {
+            wrapper.classList.add('is-screen-share');
+        } else {
+            wrapper.classList.remove('is-screen-share');
+        }
     }
 });
 
@@ -631,7 +645,7 @@ toggleAudioBtn.addEventListener('click', () => {
 });
 
 toggleVideoBtn.addEventListener('click', () => {
-    if (localStream) {
+    if (localStream && !screenStream) {
         const videoTrack = localStream.getVideoTracks()[0];
         if (videoTrack) {
             videoTrack.enabled = !videoTrack.enabled;
@@ -647,6 +661,87 @@ toggleVideoBtn.addEventListener('click', () => {
         }
     }
 });
+
+// --- Screen Sharing Logic ---
+
+if (shareScreenBtn) {
+    shareScreenBtn.addEventListener('click', async () => {
+        if (screenStream) {
+            stopScreenSharing();
+        } else {
+            try {
+                screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                const screenTrack = screenStream.getVideoTracks()[0];
+                
+                if (localStream) {
+                    originalVideoTrack = localStream.getVideoTracks()[0];
+                }
+
+                // Replace track for all active peer connections
+                for (let sid in peers) {
+                    const pc = peers[sid];
+                    const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                    if (sender) {
+                        sender.replaceTrack(screenTrack).catch(e => console.error("Error replacing track:", e));
+                    }
+                }
+
+                // Update local video element
+                localVideo.srcObject = new MediaStream([screenTrack]);
+                localVideo.muted = true;
+                document.querySelector('.local-wrapper').classList.add('is-screen-share');
+                socket.emit('screen_share_status', { room: ROOM_CODE, is_sharing: true });
+
+                // Update UI state
+                shareScreenBtn.classList.add('active');
+                shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><line x1="3" y1="3" x2="21" y2="21"></line></svg>'; // screen share stop icon
+                toggleVideoBtn.disabled = true;
+
+                // Listen for native stop sharing from browser UI
+                screenTrack.onended = () => {
+                    stopScreenSharing();
+                };
+            } catch (err) {
+                console.error("Error starting screen share: ", err);
+            }
+        }
+    });
+}
+
+function stopScreenSharing() {
+    if (!screenStream) return;
+    
+    const screenTrack = screenStream.getVideoTracks()[0];
+    screenTrack.stop();
+    screenStream = null;
+    document.querySelector('.local-wrapper').classList.remove('is-screen-share');
+    socket.emit('screen_share_status', { room: ROOM_CODE, is_sharing: false });
+    
+    if (originalVideoTrack) {
+        for (let sid in peers) {
+            const pc = peers[sid];
+            const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+            if (sender) {
+                sender.replaceTrack(originalVideoTrack).catch(e => console.error("Error restoring track:", e));
+            }
+        }
+        localVideo.srcObject = localStream;
+    } else {
+        for (let sid in peers) {
+            const pc = peers[sid];
+            const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+            if (sender) {
+                sender.replaceTrack(null).catch(e => console.error("Error nulling track:", e));
+            }
+        }
+        localVideo.srcObject = null;
+    }
+    
+    // Update UI state
+    shareScreenBtn.classList.remove('active');
+    shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="m8 10 4-4 4 4"></path><path d="M12 6v8"></path></svg>';
+    toggleVideoBtn.disabled = false;
+}
 
 leaveRoomBtn.addEventListener('click', () => {
     const purgeOverlay = document.getElementById('purge-overlay');
