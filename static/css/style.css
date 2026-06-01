@@ -666,6 +666,10 @@ input[type="text"]:focus {
     max-height: 80vh;
 }
 
+.video-grid.has-screen-share .video-wrapper:not(.is-screen-share) {
+    display: none;
+}
+
 .video-wrapper.is-screen-share video {
     object-fit: contain;
     transform: none;

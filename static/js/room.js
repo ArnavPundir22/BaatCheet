@@ -245,11 +245,14 @@ socket.on('user_left', (data) => {
 
 socket.on('screen_share_status', (data) => {
     const wrapper = document.getElementById(`wrapper-${data.sender_sid}`);
+    const videoGrid = document.getElementById('video-grid');
     if (wrapper) {
         if (data.is_sharing) {
             wrapper.classList.add('is-screen-share');
+            if (videoGrid) videoGrid.classList.add('has-screen-share');
         } else {
             wrapper.classList.remove('is-screen-share');
+            if (videoGrid) videoGrid.classList.remove('has-screen-share');
         }
     }
 });
@@ -713,6 +716,8 @@ if (shareScreenBtn) {
                 localVideo.srcObject = new MediaStream([screenTrack]);
                 localVideo.muted = true;
                 document.querySelector('.local-wrapper').classList.add('is-screen-share');
+                const videoGrid = document.getElementById('video-grid');
+                if (videoGrid) videoGrid.classList.add('has-screen-share');
                 socket.emit('screen_share_status', { room: ROOM_CODE, is_sharing: true });
 
                 // Update UI state
@@ -738,6 +743,8 @@ function stopScreenSharing() {
     screenTrack.stop();
     screenStream = null;
     document.querySelector('.local-wrapper').classList.remove('is-screen-share');
+    const videoGrid = document.getElementById('video-grid');
+    if (videoGrid) videoGrid.classList.remove('has-screen-share');
     socket.emit('screen_share_status', { room: ROOM_CODE, is_sharing: false });
     
     if (originalVideoTrack) {
