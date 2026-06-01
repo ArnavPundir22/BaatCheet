@@ -1,32 +1,32 @@
 :root {
-    --bg-dark: #050510;
-    --bg-card: rgba(10, 10, 25, 0.7);
+    --bg-dark: #000000;
+    --bg-card: rgba(5, 5, 5, 0.7);
 
-    --primary: #00f3ff;
-    --primary-hover: #5cffff;
+    --primary: #10b981;
+    --primary-hover: #059669;
 
-    --secondary: #ff00ea;
-    --secondary-hover: #ff54f0;
+    --secondary: #34d399;
+    --secondary-hover: #10b981;
 
-    --danger: #ff003c;
-    --danger-hover: #ff4d79;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
 
-    --text-main: #e0f2fe;
+    --text-main: #f8fafc;
     --text-muted: #94a3b8;
 
     /* NEW VARIABLES */
-    --text-accent: #a5b4fc;
-    --success: #86efac;
-    --error: #fca5a5;
-    --neutral: #8696a0;
+    --text-accent: #6ee7b7;
+    --success: #34d399;
+    --error: #f87171;
+    --neutral: #64748b;
 
-    --border: rgba(0, 243, 255, 0.3);
+    --border: rgba(16, 185, 129, 0.3);
 
-    --blob-1: #00f3ff;
-    --blob-2: #ff00ea;
+    --blob-1: #10b981;
+    --blob-2: #059669;
 
-    --panel-bg: rgba(15, 23, 42, 0.3);
-    --button-text: #ffffff;
+    --panel-bg: rgba(5, 5, 5, 0.6);
+    --button-text: #000000;
 }
 
 
@@ -42,6 +42,85 @@ body {
     color: var(--text-main);
     min-height: 100vh;
     overflow-x: hidden;
+}
+
+.font-mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Bento Grid System */
+.bento-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .bento-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .bento-section {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .col-span-2 {
+        grid-column: span 2;
+    }
+    .row-span-2 {
+        grid-row: span 2;
+    }
+}
+
+.card--border-glow {
+    position: relative;
+    background: rgba(5, 5, 5, 0.8);
+    border-radius: 16px;
+    padding: 2rem;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.card--border-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: radial-gradient(300px circle at 50% 50%, rgba(16, 185, 129, 0.8) 0%, rgba(16, 185, 129, 0.4) 30%, transparent 60%);
+    border-radius: inherit;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.card--border-glow:hover::after {
+    opacity: 1;
+}
+
+.card--border-glow:hover {
+    box-shadow: 0 4px 30px rgba(16, 185, 129, 0.15);
+}
+
+.wireframe-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    background-size: 50px 50px;
+    background-image: 
+        linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+    pointer-events: none;
 }
 
 /* Background Blobs for Glassmorphism effect */
@@ -289,13 +368,13 @@ input[type="text"]:focus {
     border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* Theme button icon */
+/* Icon button svgs */
 #theme-btn {
     min-width: 48px;
     min-height: 48px;
 }
 
-#theme-btn svg {
+.btn-icon svg {
     width: 20px !important;
     height: 20px !important;
     min-width: 20px;

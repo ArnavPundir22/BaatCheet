@@ -3,145 +3,186 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
     <title>BaatCheet | Ephemeral Chat</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=14">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6366f1">
 </head>
 
 <body>
-    <div class="background-elements">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-    </div>
+    <div class="wireframe-grid"></div>
 
-    <div class="container index-container">
-        <div class="glass-panel">
-            <h1 class="logo-title">BaatCheet</h1>
-            <p class="subtitle">Ephemeral, Instant Video & Text Chat</p>
+    <div class="container index-container" style="max-width: 1200px; padding: 4rem 2rem; display: block;">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h1 class="logo-title"
+                style="font-size: clamp(2.5rem, 12vw, 5rem); text-shadow: 0 0 30px rgba(16, 185, 129, 0.4); margin-bottom: 0;">BaatCheet</h1>
+            <p class="subtitle font-mono" style="letter-spacing: 1px; font-size: clamp(0.75rem, 3vw, 1rem); text-transform: uppercase; margin-top: 10px;">
+                INTEGRATED EPHEMERAL COMMUNICATION SYSTEM</p>
+        </div>
 
-            {% if error %}
-            <div class="error-msg">{{ error }}</div>
-            {% endif %}
+        {% if error %}
+        <div class="error-msg font-mono" style="margin-bottom: 2rem;">{{ error }}</div>
+        {% endif %}
 
-            <form action="{{ url_for('index') }}" method="POST" class="auth-form">
-                <div class="input-group">
-                    <label for="username">Your Name</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your display name" required
-                        autocomplete="off">
-                </div>
-
-                <div class="actions">
-                    <div class="action-card">
-                        <h3>Start a New Conversation</h3>
-                        <p>Create a fresh, disposable room.</p>
-                        <div class="join-group" style="margin-bottom: 10px;">
-                            <input type="text" name="room_name" placeholder="Room Name (Optional)" autocomplete="off">
-                        </div>
-                        <button type="submit" name="action" value="create" class="btn btn-primary">Create Room</button>
+        <div class="bento-section">
+            <!-- Room Creation (Spans 2 columns on desktop) -->
+            <div class="card--border-glow col-span-2">
+                <h3 class="font-mono" style="color: var(--primary); margin-bottom: 1rem;">[SYS.INIT] > New Session</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Initialize a fresh, secure, disposable
+                    environment.</p>
+                <form action="{{ url_for('index') }}" method="POST">
+                    <div class="input-group">
+                        <label for="username" class="font-mono">User Identity</label>
+                        <input type="text" id="username" name="username" placeholder="Enter operator alias" required
+                            autocomplete="off">
                     </div>
-
-                    <div class="divider"><span>OR</span></div>
-
-                    <div class="action-card">
-                        <h3>Join Existing Room</h3>
-                        <p>Enter a code shared with you.</p>
-                        <div class="join-group">
-                            <input type="text" name="room_code" placeholder="Room Code (e.g. A7X9Q2)"
-                                autocomplete="off">
-                            <button type="submit" name="action" value="join" class="btn btn-secondary">Join</button>
-                        </div>
+                    <div class="input-group">
+                        <label for="room_name" class="font-mono">Environment Designation (Optional)</label>
+                        <input type="text" name="room_name" placeholder="Assign room title" autocomplete="off">
                     </div>
-                </div>
-            </form>
+                    <button type="submit" name="action" value="create" class="btn btn-primary font-mono"
+                        style="text-transform: uppercase;">Execute: Create Room</button>
+                </form>
+            </div>
 
-            <div class="action-card transparency-card"
-                style="margin-top: 2rem; border-color: rgba(0, 243, 255, 0.3); background: rgba(0, 0, 0, 0.4);">
-                <h3 style="color: var(--primary);">🔒 Zero-Log Guarantee</h3>
-                <p style="font-size: 0.9rem;">We don't use a database. All room data lives in volatile memory and is
-                    instantly destroyed when you leave.</p>
+            <!-- Join Room -->
+            <div class="card--border-glow col-span-2">
+                <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 1rem;">[SYS.CONNECT] > Existing
+                    Session</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Establish connection to an active
+                    environment.</p>
+                <form action="{{ url_for('index') }}" method="POST">
+                    <div class="input-group">
+                        <label for="join_username" class="font-mono">User Identity</label>
+                        <input type="text" id="join_username" name="username" placeholder="Enter operator alias"
+                            required autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="room_code" class="font-mono">Connection Token</label>
+                        <input type="text" name="room_code" placeholder="e.g. A7X9Q2" required autocomplete="off">
+                    </div>
+                    <button type="submit" name="action" value="join" class="btn btn-primary font-mono"
+                        style="text-transform: uppercase;">Execute: Join Room</button>
+                </form>
+            </div>
+
+            <!-- Zero-Log Stats -->
+            <div class="card--border-glow col-span-2" style="background: rgba(16, 185, 129, 0.05);">
+                <h3 class="font-mono" style="color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.5rem;">🔒</span> Zero-Trust Architecture
+                </h3>
+                <p style="font-size: 0.9rem; margin-top: 1rem;">Absolute volatility. Room data exists only in active
+                    memory and undergoes automatic self-destruction upon termination.</p>
 
                 <div
-                    style="display: flex; justify-content: space-around; margin-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 1rem;">
-                    <div>
-                        <div style="font-size: 1.5rem; color: white;">{{ active_rooms }}</div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Active
-                            Rooms</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 1.5rem; color: var(--secondary);">0 B</div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Database
-                            Size</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 1.5rem; color: var(--danger);">0</div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Logs Stored
+                    style="display: flex; justify-content: space-around; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                    <div style="text-align: center;">
+                        <div class="font-mono" style="font-size: 1.8rem; color: white;">{{ active_rooms }}</div>
+                        <div class="font-mono" style="font-size: 0.7rem; color: var(--text-muted);">ACTIVE ENVIRONMENTS
                         </div>
                     </div>
-                </div>
-
-                <div style="margin-top: 1.5rem; font-size: 0.8rem;">
-                    <a href="https://github.com/ArnavPundir22/BaatChit" target="_blank"
-                        style="color: var(--primary); text-decoration: none; font-weight: 600;">Don't trust us, trust
-                        the code. Open Source on GitHub ↗</a>
+                    <div style="text-align: center;">
+                        <div class="font-mono" style="font-size: 1.8rem; color: var(--secondary);">0 B</div>
+                        <div class="font-mono" style="font-size: 0.7rem; color: var(--text-muted);">PERSISTENT STORAGE
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="font-mono" style="font-size: 1.8rem; color: var(--danger);">0</div>
+                        <div class="font-mono" style="font-size: 0.7rem; color: var(--text-muted);">TELEMETRY LOGS</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="action-card professional-card" style="margin-top: 2rem; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.03);">
-                <h3 style="color: #ffd700; display: flex; align-items: center; gap: 10px;">
-                    <span>💼</span> BaatCheet for Professionals
+            <!-- Professional Section -->
+            <div class="card--border-glow col-span-2">
+                <h3 class="font-mono" style="color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+                    <span>💼</span> Enterprise Protocol
                 </h3>
-                <p style="font-size: 0.9rem; margin-bottom: 1.2rem; color: var(--text-main);">
-                    Engineered for high-stakes, confidential communications where privacy is non-negotiable. Perfect for fields requiring absolute discretion.
+                <p style="font-size: 0.85rem; margin: 1rem 0; color: var(--text-muted);">
+                    Engineered for high-stakes communications where privacy is non-negotiable.
                 </p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem;">
-                    <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="color: #ffd700; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">⚖️ Legal & Law</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Absolute attorney-client privilege with zero trace.</div>
+                    <div
+                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">⚖️
+                            LEGAL & LAW</div>
                     </div>
-                    <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="color: #ffd700; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">🏥 Telemedicine</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Secure, non-persistent health consultations.</div>
+                    <div
+                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">🏥
+                            TELEMEDICINE</div>
                     </div>
-                    <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="color: #ffd700; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">🏢 Enterprise</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Prevent corporate espionage during briefings.</div>
+                    <div
+                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">🏢
+                            ENTERPRISE</div>
                     </div>
-                    <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="color: #ffd700; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px;">🛡️ Journalism</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Protect sensitive sources with ephemeral rooms.</div>
+                    <div
+                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">
+                            🛡️ JOURNALISM</div>
                     </div>
                 </div>
                 <div style="text-align: center;">
-                    <a href="https://github.com/ArnavPundir22/BaatChit/blob/main/docs/architecture.md" target="_blank" class="btn" style="background: rgba(255, 215, 0, 0.1); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.5); width: 100%; display: block; text-decoration: none; box-sizing: border-box; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 215, 0, 0.2)'" onmouseout="this.style.background='rgba(255, 215, 0, 0.1)'">Read Architecture Docs</a>
+                    <a href="https://github.com/ArnavPundir22/BaatChit/blob/main/docs/architecture.md" target="_blank"
+                        class="btn font-mono"
+                        style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); width: 100%; display: block; text-decoration: none; box-sizing: border-box;">Read
+                        Architecture Docs ↗</a>
                 </div>
             </div>
 
-            <div class="action-card app-promo-card" style="margin-top: 2rem; border-color: var(--secondary);">
-                <h3 style="color: var(--secondary);">📱 Get the BaatCheet App</h3>
-                <p>Install BaatCheet directly on your device for a full-screen, native experience.</p>
+            <!-- App Promo -->
+            <div class="card--border-glow col-span-4" style="text-align: center;">
+                <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 0.5rem;">[DEVICES] > Local
+                    Installation</h3>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem auto;">Mount BaatCheet OS
+                    directly onto your hardware for an untethered, full-screen native experience.</p>
+
                 <div id="install-instructions"
-                    style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; display: none; text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                    <strong>🍏 iOS (Safari):</strong> Tap the <b>Share</b> icon at the bottom and select <b>"Add to Home
-                        Screen"</b>.<br><br>
-                    <strong>🤖 Android:</strong> Tap the install button below or use the browser menu to <b>"Add to Home
-                        screen"</b>.<br><br>
-                    <strong>💻 Desktop:</strong> Click the install icon (monitor with arrow) in your browser's address
-                    bar.
+                    style="display: none; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
+                        <strong class="font-mono" style="color: var(--primary);">🍏 iOS (Safari)</strong><br><br>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Tap <b>Share</b> > <b>"Add to Home
+                                Screen"</b></span>
+                    </div>
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
+                        <strong class="font-mono" style="color: var(--primary);">🤖 Android</strong><br><br>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Browser menu > <b>"Add to Home
+                                screen"</b></span>
+                    </div>
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
+                        <strong class="font-mono" style="color: var(--primary);">💻 Desktop</strong><br><br>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Click the install icon in address
+                            bar</span>
+                    </div>
                 </div>
-                <button id="install-btn" class="btn btn-secondary"
-                    style="display: none; margin-top: 15px; width: 100%; box-shadow: 0 0 15px rgba(255, 0, 234, 0.4);">Install
-                    App Now</button>
-            </div>
 
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <a href="{{ url_for('about') }}"
-                    style="color: var(--text-muted); text-decoration: underline; font-size: 0.9rem; transition: color 0.3s ease;"
-                    onmouseover="this.style.color='var(--primary)'"
-                    onmouseout="this.style.color='var(--text-muted)'">About BaatCheet</a>
+                <button id="install-btn" class="btn btn-secondary font-mono"
+                    style="display: none; margin: 0 auto; width: auto; min-width: 250px; text-transform: uppercase;">Execute
+                    Install</button>
             </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; margin-bottom: 2rem;">
+            <a href="{{ url_for('about') }}" class="font-mono"
+                style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed var(--text-muted); transition: color 0.3s ease;"
+                onmouseover="this.style.color='var(--primary)'; this.style.borderColor='var(--primary)';"
+                onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--text-muted)';">About
+                Platform</a>
+            <span style="color: var(--text-muted); margin: 0 1rem;">|</span>
+            <a href="https://github.com/ArnavPundir22/BaatChit" target="_blank" class="font-mono"
+                style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed var(--text-muted); transition: color 0.3s ease;"
+                onmouseover="this.style.color='var(--primary)'; this.style.borderColor='var(--primary)';"
+                onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--text-muted)';">GitHub
+                Source</a>
         </div>
     </div>
     <script>
