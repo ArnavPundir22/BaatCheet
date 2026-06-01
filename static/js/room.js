@@ -692,6 +692,12 @@ toggleVideoBtn.addEventListener('click', () => {
 
 if (shareScreenBtn) {
     shareScreenBtn.addEventListener('click', async () => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+            const infoModal = document.getElementById("info-modal");
+            if (infoModal) infoModal.style.display = "flex";
+            return;
+        }
+
         if (screenStream) {
             stopScreenSharing();
         } else {
@@ -731,6 +737,7 @@ if (shareScreenBtn) {
                 };
             } catch (err) {
                 console.error("Error starting screen share: ", err);
+                addChatMessage('System', 'Screen sharing was denied or failed to start.', true);
             }
         }
     });
@@ -923,3 +930,18 @@ document.querySelectorAll(".theme-option").forEach(button => {
         themeModal.style.display = "none";
     });
 });
+
+// Info Modal
+const infoBtn = document.getElementById("info-btn");
+const infoModal = document.getElementById("info-modal");
+const closeInfoModal = document.getElementById("close-info");
+
+if (infoBtn && infoModal && closeInfoModal) {
+    infoBtn.addEventListener("click", () => {
+        infoModal.style.display = "flex";
+    });
+
+    closeInfoModal.addEventListener("click", () => {
+        infoModal.style.display = "none";
+    });
+}
