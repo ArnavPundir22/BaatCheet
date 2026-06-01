@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baatcheet-v11';
+const CACHE_NAME = 'baatcheet-v12';
 const ASSETS_TO_CACHE = [
   '/',
   '/static/css/style.css',

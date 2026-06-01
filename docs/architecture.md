@@ -9,6 +9,48 @@ The architecture consists of three primary layers:
 2.  **Application Server (Backend):** A Python Flask application powered by `Flask-SocketIO` and `eventlet` for asynchronous WebSocket communication.
 3.  **State Management (Data Layer):** Redis acts as both an in-memory key-value store for room/user state and a message queue for scaling across multiple worker processes.
 
+```mermaid
+graph LR
+    subgraph Client-Side
+        A["User A Browser"]
+        B["User B Browser"]
+    end
+
+    subgraph Backend Server
+        C["Flask + Socket.IO Worker 1"]
+        D["Flask + Socket.IO Worker 2"]
+    end
+
+    subgraph Data Layer
+        E[("Redis State & Pub/Sub")]
+    end
+
+    subgraph External
+        F(("Google STUN Servers"))
+    end
+
+    %% WebRTC Peer-to-Peer (Media)
+    A <==>|"WebRTC P2P Video/Audio"| B
+
+    %% Signaling & Chat
+    A <-->|"WebSockets Signaling/Chat"| C
+    B <-->|"WebSockets Signaling/Chat"| D
+
+    %% Redis connection
+    C <-->|"Read/Write State & Pub/Sub"| E
+    D <-->|"Read/Write State & Pub/Sub"| E
+
+    %% STUN
+    A -.->|"ICE Candidate Discovery"| F
+    B -.->|"ICE Candidate Discovery"| F
+
+    classDef default fill:#1e1e1e,stroke:#00f3ff,stroke-width:2px,color:#fff;
+    classDef database fill:#0a0a19,stroke:#ff00ea,stroke-width:2px,color:#fff;
+    classDef external fill:#2d1f35,stroke:#ff7b54,stroke-width:2px,color:#fff;
+    class E database
+    class F external
+```
+
 ---
 
 ## 🔗 WebRTC & Signaling Flow
