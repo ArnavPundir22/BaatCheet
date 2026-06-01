@@ -18,6 +18,11 @@ Users have full control over their local media streams.
 
 -   **Toggle Audio (`toggleAudioBtn`):** Accesses the local WebRTC stream, gets the first audio track (`localStream.getAudioTracks()[0]`), and flips its `.enabled` property. The UI updates dynamically to reflect the muted/unmuted state.
 -   **Toggle Video (`toggleVideoBtn`):** Functions similarly to audio, toggling the `.enabled` property of the first video track. Disabling the video track stops sending frames, effectively turning off the camera while keeping the WebRTC connection alive.
+-   **More Options Dropdown (3-Dot Menu):** Consolidates advanced features into a sleek glassmorphic menu:
+    -   **Share Screen:** Leverages `navigator.mediaDevices.getDisplayMedia` to capture the desktop screen. When active, it automatically hides all other participant videos to maximize screen real estate. *Note: Mobile OS limitations prevent web-based screen sharing. On mobile, clicking this button gracefully pops open the Tips & Info modal to educate the user.*
+    -   **Copy Invite Link:** Writes the current URL to the clipboard using the `navigator.clipboard.writeText` API for easy sharing.
+    -   **Themes:** Opens the `#theme-modal` to dynamically alter the application's CSS variables (e.g., Matrix Green, Cyberpunk Purple).
+    -   **Tips & Info:** Opens an educational modal detailing platform capabilities, security guarantees, and device limitations.
 -   **Leave Room (`leaveRoomBtn`):** Emits a `leave` Socket.IO event to gracefully inform the server and peers, then redirects the user back to the homepage.
 
 ## 💬 Real-Time Chat & Typing Indicators

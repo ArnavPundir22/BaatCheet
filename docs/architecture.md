@@ -64,6 +64,10 @@ BaatCheet uses WebRTC for peer-to-peer video and audio streaming, meaning media 
 4.  **ICE Candidates:** Throughout this process, clients discover their public IP addresses using Google's public STUN servers (`stun.l.google.com:19302`). These network paths (ICE candidates) are exchanged via the server (`webrtc_ice_candidate`).
 5.  **P2P Connection Established:** Once SDPs and ICE candidates are exchanged, a direct peer-to-peer connection is established. Video and audio tracks are attached to dynamic `<video>` elements in the DOM.
 
+### Mobile Device Capabilities
+- **Camera/Microphone:** Fully supported on all modern mobile browsers (iOS Safari, Android Chrome) via `getUserMedia` (requires HTTPS).
+- **Screen Sharing:** Mobile operating systems inherently block web applications from capturing the screen for security reasons (`getDisplayMedia` is unsupported). Mobile users can seamlessly *view* screens shared by desktop users, but cannot broadcast their own screens. The UI elegantly intercepts this limitation and provides an educational modal.
+
 ---
 
 ## 🧠 Redis State Management (The Ephemeral Design)
