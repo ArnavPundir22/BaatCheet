@@ -574,6 +574,29 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// --- Dropdown Logic ---
+const moreOptionsBtn = document.getElementById('more-options-btn');
+const optionsDropdown = document.getElementById('options-dropdown');
+
+if (moreOptionsBtn && optionsDropdown) {
+    moreOptionsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        optionsDropdown.classList.toggle('show');
+    });
+
+    optionsDropdown.querySelectorAll('.dropdown-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            optionsDropdown.classList.remove('show');
+        });
+    });
+}
+
+document.addEventListener('click', (e) => {
+    if (optionsDropdown && !optionsDropdown.contains(e.target) && e.target !== moreOptionsBtn) {
+        optionsDropdown.classList.remove('show');
+    }
+});
+
 document.querySelectorAll('.reaction-emoji').forEach(btn => {
     btn.addEventListener('click', () => {
         const emoji = btn.getAttribute('data-emoji');
@@ -694,7 +717,7 @@ if (shareScreenBtn) {
 
                 // Update UI state
                 shareScreenBtn.classList.add('active');
-                shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><line x1="3" y1="3" x2="21" y2="21"></line></svg>'; // screen share stop icon
+                shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><line x1="3" y1="3" x2="21" y2="21"></line></svg> Stop Sharing';
                 toggleVideoBtn.disabled = true;
 
                 // Listen for native stop sharing from browser UI
@@ -739,7 +762,7 @@ function stopScreenSharing() {
     
     // Update UI state
     shareScreenBtn.classList.remove('active');
-    shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="m8 10 4-4 4 4"></path><path d="M12 6v8"></path></svg>';
+    shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="m8 10 4-4 4 4"></path><path d="M12 6v8"></path></svg> Share Screen';
     toggleVideoBtn.disabled = false;
 }
 

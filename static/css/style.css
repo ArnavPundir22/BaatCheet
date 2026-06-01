@@ -497,6 +497,60 @@ input[type="text"]:focus {
     gap: 1rem;
 }
 
+/* Dropdown Menu */
+.dropdown-container {
+    position: relative;
+}
+
+.options-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 0.5rem;
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    gap: 0.2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.options-dropdown.show {
+    display: flex;
+}
+
+.dropdown-item {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item.active {
+    color: var(--primary);
+    background: rgba(0, 243, 255, 0.1);
+}
+
+.dropdown-item svg {
+    flex-shrink: 0;
+}
+
 /* Reactions */
 .reaction-container {
     position: relative;
@@ -1168,7 +1222,7 @@ input[type="text"]:focus {
     }
 
     .chat-sidebar {
-        padding-top: calc(95px + env(safe-area-inset-top, 0px)); /* space for room-header */
+        padding-top: calc(70px + env(safe-area-inset-top, 0px)); /* space for room-header */
     }
 
     .chat-input-area {
@@ -1224,7 +1278,7 @@ input[type="text"]:focus {
         width: 100vw;
         z-index: 100;
         border-radius: 0;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         gap: 0.5rem;
     }
@@ -1233,10 +1287,10 @@ input[type="text"]:focus {
         display: flex;
         flex-direction: column;
         font-size: 1rem;
-        align-items: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
         gap: 2px;
-        width: 100%;
+        flex: 1;
         min-width: 0;
         overflow: hidden;
         white-space: nowrap;
@@ -1257,12 +1311,12 @@ input[type="text"]:focus {
         flex-shrink: 0;
     } */
     .controls {
-        gap: 0.4rem;
-        width: 100%;
-        justify-content: flex-start;
-        flex-shrink: 0;
+        gap: 0.25rem;
+        width: auto;
+        justify-content: flex-end;
+        flex-shrink: 1;
         overflow-x: auto;
-        padding-bottom: 2px;
+        padding-bottom: 0;
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -1276,10 +1330,12 @@ input[type="text"]:focus {
     }
 
     .reaction-panel {
-        top: auto;
+        position: fixed;
+        top: calc(65px + env(safe-area-inset-top, 0px));
         bottom: auto;
-        top: calc(100% + 15px);
-        width: 200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 260px;
         padding: 10px;
         border-radius: 16px;
         border: 1px solid var(--secondary);
@@ -1287,6 +1343,12 @@ input[type="text"]:focus {
         flex-wrap: wrap;
         justify-content: center;
         gap: 6px;
+    }
+
+    .options-dropdown {
+        position: fixed;
+        top: calc(65px + env(safe-area-inset-top, 0px));
+        right: 10px;
     }
 
     .reaction-emoji {
