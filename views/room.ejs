@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <title>{{ room_name }} | BaatCheet</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=14">
+    <title><%= room_name %> | BaatCheet</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=14">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 
     <script>
-        const ROOM_CODE = "{{ room_code }}";
-        const USERNAME = "{{ username }}";
+        const ROOM_CODE = "<%= room_code %>";
+        const USERNAME = "<%= username %>";
+        window.TURN_CONFIG = <%- turnConfig %>;
     </script>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6366f1">
@@ -26,9 +27,9 @@
         <!-- Main Video Area -->
         <main class="video-area">
             <header class="room-header">
-                <h2>{{ room_name }} <span class="font-mono"
+                <h2><%= room_name %> <span class="font-mono"
                         style="font-size: 0.6em; color: var(--text-muted); font-weight: normal; margin-left: 10px;">[ID]:
-                        <span class="highlight">{{ room_code }}</span></span></h2>
+                        <span class="highlight"><%= room_code %></span></span></h2>
                 <div class="controls">
                     <button id="toggle-audio" class="btn btn-icon active"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg></button>
                     <button id="toggle-video" class="btn btn-icon active"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg></button>
@@ -111,7 +112,7 @@
             <div id="video-grid" class="video-grid">
                 <div class="video-wrapper local-wrapper">
                     <video id="local-video" autoplay muted playsinline></video>
-                    <span class="video-label">{{ username }} (You)</span>
+                    <span class="video-label"><%= username %> (You)</span>
                     <button class="maximize-btn btn-icon" title="Maximize Video">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                     </button>
@@ -123,8 +124,8 @@
         <!-- Sidebar Chat -->
         <aside class="chat-sidebar glass-panel-light">
             <div class="chat-header">
-                <h3>{{ room_name }}</h3>
-                <span class="mobile-room-code font-mono">[ID]: <span class="highlight">{{ room_code }}</span></span>
+                <h3><%= room_name %></h3>
+                <span class="mobile-room-code font-mono">[ID]: <span class="highlight"><%= room_code %></span></span>
             </div>
 
             <div class="zero-log-banner font-mono" style="font-size: 0.75rem; text-transform: uppercase;">
@@ -234,10 +235,10 @@
     </div>
 
     <!-- Theme Engine -->
-    <script src="{{ url_for('static', filename='js/themes.js') }}"></script>
+    <script src="/static/js/themes.js"></script>
 
     <!-- WebRTC and Chat Logic -->
-    <script src="{{ url_for('static', filename='js/room.js') }}?v=11"></script>
+    <script src="/static/js/room.js?v=11"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

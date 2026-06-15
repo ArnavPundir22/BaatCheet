@@ -75,6 +75,14 @@ const iceServers = {
     ]
 };
 
+if (window.TURN_CONFIG && window.TURN_CONFIG.url) {
+    iceServers.iceServers.push({
+        urls: window.TURN_CONFIG.url,
+        username: window.TURN_CONFIG.username,
+        credential: window.TURN_CONFIG.credential
+    });
+}
+
 // Initialize Media
 async function initMedia() {
     console.log("navigator =", navigator);

@@ -6,7 +6,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
     <title>BaatCheet | Ephemeral Chat</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=14">
+    <link rel="stylesheet" href="/static/css/style.css?v=14">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
@@ -28,7 +28,7 @@
         </div>
 
         {% if error %}
-        <div class="error-msg font-mono" style="margin-bottom: 2rem;">{{ error }}</div>
+        <div class="error-msg font-mono" style="margin-bottom: 2rem;"><%= error %></div>
         {% endif %}
 
         <div class="bento-section">
@@ -37,7 +37,7 @@
                 <h3 class="font-mono" style="color: var(--primary); margoin-bottom: 1rem;">[SYS.INIT] > New Session</h3>
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Initialize a fresh, secure, disposable
                     environment.</p>
-                <form action="{{ url_for('index') }}" method="POST">
+                <form action="/" method="POST">
                     <div class="input-group">
                         <label for="username" class="font-mono">User Identity</label>
                         <input type="text" id="username" name="username" placeholder="Enter operator alias" required
@@ -58,7 +58,7 @@
                     Session</h3>
                 <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Establish connection to an active
                     environment.</p>
-                <form action="{{ url_for('index') }}" method="POST">
+                <form action="/" method="POST">
                     <div class="input-group">
                         <label for="join_username" class="font-mono">User Identity</label>
                         <input type="text" id="join_username" name="username" placeholder="Enter operator alias"
@@ -84,7 +84,7 @@
                 <div
                     style="display: flex; justify-content: space-around; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(16, 185, 129, 0.2);">
                     <div style="text-align: center;">
-                        <div class="font-mono" style="font-size: 1.8rem; color: white;">{{ active_rooms }}</div>
+                        <div class="font-mono" style="font-size: 1.8rem; color: white;"><%= active_rooms %></div>
                         <div class="font-mono" style="font-size: 0.7rem; color: var(--text-muted);">ACTIVE ENVIRONMENTS
                         </div>
                     </div>
@@ -189,7 +189,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 3rem; margin-bottom: 2rem;">
-            <a href="{{ url_for('about') }}" class="font-mono"
+            <a href="/about" class="font-mono"
                 style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed var(--text-muted); transition: color 0.3s ease;"
                 onmouseover="this.style.color='var(--primary)'; this.style.borderColor='var(--primary)';"
                 onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--text-muted)';">About
