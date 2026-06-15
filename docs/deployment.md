@@ -5,63 +5,60 @@ This guide details how to configure, run, and deploy the BaatCheet application f
 ## 🛠 Prerequisites
 
 Before starting, ensure you have the following installed on your system:
--   **Python 3.10+**: The backend framework is built on Python.
--   **Redis Server**: Required for state management and Socket.IO message queuing.
+-   **Node.js 18+**: The backend framework is built on Node.js.
+-   **Redis Server**: Required for state management and Socket.IO message queuing/scaling.
 -   **Modern Web Browser**: Chrome, Firefox, Safari, or Edge (must support WebRTC).
 
 ## 💻 Local Development Setup
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/yourusername/baatcheet.git
-    cd baatcheet
+    git clone https://github.com/ArnavPundir22/BaatCheet.git
+    cd BaatCheet
     ```
 
-2.  **Create a Virtual Environment:**
+2.  **Install Dependencies:**
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    npm install
     ```
 
-3.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Start Redis Server:**
+3.  **Start Redis Server:**
     Make sure your local Redis server is running on the default port `6379`.
     ```bash
     redis-server
     ```
 
-5.  **Run the Flask Development Server:**
+4.  **Run the Node.js Development Server:**
     ```bash
-    python app.py
+    npm start
     ```
     Access the app at `http://localhost:5000`.
 
-## 🌐 Production Deployment (Gunicorn & Eventlet)
+## 🌐 Production Deployment (Render / Heroku / Custom VPS)
 
-For production, the built-in Flask server is not sufficient. BaatCheet uses `gunicorn` with `eventlet` workers to handle asynchronous WebSocket connections efficiently.
+For production, BaatCheet is designed to deploy seamlessly on modern platforms like Render. It uses `express` and `socket.io` to handle asynchronous WebSocket connections efficiently.
 
-### Running with Gunicorn
+### Running in Production
 
-Use the following command to start the application (this is what the `Procfile` uses for platforms like Heroku/Render):
+Use the following command to start the application (platforms like Render will detect this via `package.json`):
 ```bash
-gunicorn --worker-class eventlet -w 1 app:app
+npm start
 ```
-*Note: Due to how Socket.IO manages state, it is recommended to start with `-w 1` (one worker). If you scale to multiple workers, ensure your `REDIS_URL` is correctly configured so the workers can communicate via the Redis message queue.*
+*Note: If you scale to multiple instances (e.g., Node.js cluster or multiple horizontal containers), ensure your `REDIS_URL` is correctly configured so the instances can communicate via the Redis Adapter.*
 
 ### Environment Variables
 
 You can customize the application behavior using the following environment variables:
--   `SECRET_KEY`: Security key for Flask sessions (Default: `super-secret-ephemeral-key`).
+-   `PORT`: The port on which the server binds (Default: `5000`).
 -   `REDIS_URL`: Connection string for your Redis instance (Default: `redis://localhost:6379`).
--   `PORT`: The port on which the server binds (Useful for cloud deployments).
+-   `TURN_URL`: The URL of your TURN server for reliable WebRTC video routing (e.g., `turn:global.relay.metered.ca:80`).
+-   `TURN_USERNAME`: Username for your TURN server.
+-   `TURN_CREDENTIAL`: Password/Credential for your TURN server.
 
-## 🔒 A Note on HTTPS and WebRTC
+## 🔒 A Note on HTTPS, TURN, and WebRTC
 
 WebRTC requires a secure context to access the user's camera and microphone.
 -   **Localhost:** Browsers allow media access over `http://localhost`.
 -   **Network/Internet:** If you access the application over a network IP (e.g., `http://192.168.1.5:5000`) or deploy it to a live domain without SSL, the browser will **block** camera and microphone access.
--   **Solution:** You MUST deploy the application behind an HTTPS proxy (like Nginx with Let's Encrypt), or use a cloud provider like Render or Heroku that automatically provisions SSL certificates.
+-   **Solution (HTTPS):** You MUST deploy the application behind an HTTPS proxy (like Nginx with Let's Encrypt), or use a cloud provider like Render or Heroku that automatically provisions SSL certificates.
+-   **Solution (TURN):** To ensure 100% connectivity for users on strict corporate, university, or 5G networks (Symmetric NAT), you must configure a TURN server via the environment variables listed above. Free TURN servers can be acquired from providers like Metered.ca.

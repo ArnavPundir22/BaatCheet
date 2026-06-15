@@ -6,7 +6,7 @@ BaatCheet is built on a modern, fully ephemeral, and scalable architecture desig
 
 The architecture consists of three primary layers:
 1.  **Client-Side (Frontend):** Pure Vanilla JavaScript, HTML5, and CSS3 handling WebRTC peer-to-peer media streams and Socket.IO for signaling/chat.
-2.  **Application Server (Backend):** A Python Flask application powered by `Flask-SocketIO` and `eventlet` for asynchronous WebSocket communication.
+2.  **Application Server (Backend):** A Node.js Express application powered by `Socket.IO` for asynchronous WebSocket communication.
 3.  **State Management (Data Layer):** Redis acts as both an in-memory key-value store for room/user state and a message queue for scaling across multiple worker processes.
 
 ```mermaid
@@ -17,8 +17,8 @@ graph LR
     end
 
     subgraph Backend Server
-        C["Flask + Socket.IO Worker 1"]
-        D["Flask + Socket.IO Worker 2"]
+        C["Node.js + Socket.IO Instance 1"]
+        D["Node.js + Socket.IO Instance 2"]
     end
 
     subgraph Data Layer
@@ -77,12 +77,11 @@ BaatCheet strictly adheres to a "No Database" policy for absolute privacy. All s
 ### Redis Key Schema
 -   `room:{room_code}:exists` (String): A temporary marker set when a room is created. It has a TTL of 3600 seconds (1 hour). If no one joins, the room expires automatically.
 -   `room:{room_code}:name` (String): An optional custom name assigned to the room by the creator. Uses the exact same 3600s TTL as the existence key.
--   `room:{room_code}:users` (Hash): Stores active users in a room. Key = Socket ID (`request.sid`), Value = Username.
+-   `room:{room_code}:users` (Hash): Stores active users in a room. Key = Socket ID (`socket.id`), Value = Username.
 -   `sid:{sid}:room` (String): Maps a user's Socket ID to their current room code (O(1) lookup on disconnect).
 -   `sid:{sid}:username` (String): Maps a user's Socket ID to their username.
 
-### Zero-Log Metrics & Transparency
-To build trust and prove the "Zero-Log" guarantee, the backend actively exposes its own memory state. The `/api/stats` endpoint queries Redis for `dbsize`, active room counts (by scanning `room:*:exists`), and the absence of log files, returning real-time data to the landing page dashboard.
+To build trust and prove the "Zero-Log" guarantee, the backend actively queries Redis for active room counts (by scanning `room:*:exists`) and displays it in real-time on the landing page.
 
 ### Ephemeral Cleanup Logic
 When a user disconnects or clicks "Leave Room", the server intercepts the `disconnect` event:
@@ -94,11 +93,12 @@ When a user disconnects or clicks "Leave Room", the server intercepts the `disco
 
 ## 🚀 Scaling & Concurrency
 
-By default, WebSockets bind users to a specific server process. If you run multiple Gunicorn workers, a user on Worker A cannot communicate with a user on Worker B.
+By default, WebSockets bind users to a specific server process. If you run multiple Node.js instances, a user on Instance A cannot communicate with a user on Instance B.
 
-**The Solution: Redis Message Queue**
-BaatCheet initializes `SocketIO` with a `message_queue` parameter pointing to Redis:
-```python
-socketio = SocketIO(app, async_mode='eventlet', message_queue=REDIS_URL)
+**The Solution: Redis Adapter**
+BaatCheet initializes `Socket.IO` with the `@socket.io/redis-adapter`:
+```javascript
+const { createAdapter } = require('@socket.io/redis-adapter');
+io.adapter(createAdapter(pubClient, subClient));
 ```
-This configures a pub/sub mechanism. When Worker A emits a message to a room, it publishes the event to Redis. All other workers subscribe to this event and forward the message to any connected clients in that room. This allows BaatCheet to scale horizontally across multiple servers or containers with ease.
+This configures a pub/sub mechanism. When Instance A emits a message to a room, it publishes the event to Redis. All other instances subscribe to this event and forward the message to any connected clients in that room. This allows BaatCheet to scale horizontally across multiple servers or containers with ease.
