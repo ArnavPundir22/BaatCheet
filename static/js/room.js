@@ -44,6 +44,13 @@ function adjustViewport() {
             sidebar.style.height = ''; 
         }
         document.body.style.height = '';
+        
+        // Reset draggable transforms when switching back to desktop
+        document.querySelectorAll('.video-wrapper').forEach(w => {
+            if (typeof w.resetDrag === 'function') {
+                w.resetDrag();
+            }
+        });
     }
 }
 
@@ -136,8 +143,19 @@ function createPeerConnection(sid, username) {
             label.className = 'video-label';
             label.innerText = username;
 
+            const maximizeBtn = document.createElement('button');
+            maximizeBtn.className = 'maximize-btn btn-icon';
+            maximizeBtn.title = 'Maximize Video';
+            maximizeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>';
+            
+            maximizeBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleMaximize(videoWrapper, maximizeBtn);
+            };
+
             videoWrapper.appendChild(videoElement);
             videoWrapper.appendChild(label);
+            videoWrapper.appendChild(maximizeBtn);
             videoGrid.appendChild(videoWrapper);
             makeDraggable(videoWrapper);
         }
@@ -847,6 +865,17 @@ function makeDraggable(el) {
     let xOffset = 0;
     let yOffset = 0;
 
+    el.resetDrag = () => {
+        xOffset = 0;
+        yOffset = 0;
+        currentX = 0;
+        currentY = 0;
+        initialX = 0;
+        initialY = 0;
+        el.style.transform = '';
+        el.style.zIndex = '';
+    };
+
     el.addEventListener("touchstart", dragStart, { passive: false });
     el.addEventListener("touchend", dragEnd, false);
     el.addEventListener("touchmove", drag, { passive: false });
@@ -906,6 +935,43 @@ function makeDraggable(el) {
 const localWrapper = document.querySelector('.local-wrapper');
 if (localWrapper) {
     makeDraggable(localWrapper);
+}
+
+// Maximize Video Logic
+function toggleMaximize(wrapper, btn) {
+    const isMaximized = wrapper.classList.contains('maximized-video');
+    
+    // Unmaximize any currently maximized video
+    document.querySelectorAll('.maximized-video').forEach(el => {
+        if (el !== wrapper) {
+            el.classList.remove('maximized-video');
+            const otherBtn = el.querySelector('.maximize-btn');
+            if (otherBtn) {
+                otherBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>';
+                otherBtn.title = 'Maximize Video';
+            }
+        }
+    });
+
+    if (!isMaximized) {
+        wrapper.classList.add('maximized-video');
+        document.body.classList.add('has-maximized-video');
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>';
+        btn.title = 'Minimize Video';
+    } else {
+        wrapper.classList.remove('maximized-video');
+        document.body.classList.remove('has-maximized-video');
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>';
+        btn.title = 'Maximize Video';
+    }
+}
+
+const localMaximizeBtn = document.querySelector('.local-wrapper .maximize-btn');
+if (localMaximizeBtn && localWrapper) {
+    localMaximizeBtn.onclick = (e) => {
+        e.stopPropagation();
+        toggleMaximize(localWrapper, localMaximizeBtn);
+    };
 }
 
 // Theme Modal
