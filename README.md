@@ -1,14 +1,14 @@
 <div align="center">
   <img src="static/banner.png" alt="BaatCheet Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px;">
   
-  # 💬 BaatCheet: Ephemeral Video & Text Chat
+  # 💬 BaatCheet: Ephemeral Video & Chat
 
-  *A sleek, modern, scalable, and fully ephemeral real-time communication platform built with Flask, WebRTC, Redis, and pure magic.*
+  *A sleek, modern, scalable, and fully ephemeral real-time communication platform built with Node.js, WebRTC, Redis, and pure magic.*
   
-  [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python)](https://www.python.org/)
-  [![Flask](https://img.shields.io/badge/Flask-Web%2BFramework-lightgrey?style=flat-square&logo=flask)](https://flask.palletsprojects.com/)
+  [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?style=flat-square&logo=node.js)](https://nodejs.org/)
+  [![Express](https://img.shields.io/badge/Express-Web%2BFramework-lightgrey?style=flat-square&logo=express)](https://expressjs.com/)
   [![Redis](https://img.shields.io/badge/Redis-State%20Management-red?style=flat-square&logo=redis)](https://redis.io/)
-  [![WebRTC](https://img.shields.io/badge/WebRTC-P2P%20Streaming-green?style=flat-square&logo=webrtc)](https://webrtc.org/)
+  [![WebRTC](https://img.shields.io/badge/WebRTC-P2P%20Streaming-blue?style=flat-square&logo=webrtc)](https://webrtc.org/)
 </div>
 
 ---
@@ -23,7 +23,7 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 
 ## ✨ Key Features
 
-- **🎥 Peer-to-Peer Video Calls:** High-quality, low-latency video streaming powered by native WebRTC and Google STUN servers.
+- **🎥 Peer-to-Peer Video Calls:** High-quality, low-latency video streaming powered by native WebRTC and TURN fallback integration.
 - **💬 Real-Time Messaging:** WhatsApp-styled text chat interface with dynamic typing indicators.
 - **🖼️ View-Once Ephemeral Images:** Send images directly in the chat that are automatically compressed and transmitted purely over WebSockets. Once viewed and closed, the image data is instantly and permanently destroyed.
 - **👻 Fully Ephemeral Design:** Data only exists while people are present. Managed entirely by Redis TTLs and hash counts.
@@ -32,7 +32,7 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 - **🖼️ Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
 - **🎉 Animated Reactions:** Instantly send fully animated emoji reactions (👍, ❤️, 😂, 🎉, 😘) that float seamlessly across the screen.
 - **🎧 Advanced Audio Filtering:** Built-in echo cancellation, automatic gain control, and noise suppression for crystal clear audio.
-- **🚀 Scalable Architecture:** Backend engineered with Redis to support multi-worker deployments (Gunicorn/Eventlet).
+- **🚀 Scalable Architecture:** Backend engineered with Node.js and Redis `@socket.io/redis-adapter` to support multi-process deployments.
 
 ---
 
@@ -57,7 +57,7 @@ To keep this README clean, detailed technical documentation has been divided int
 Discover the backend mechanics, including:
 - **WebRTC Signaling Flow:** How Offers, Answers, and ICE candidates are routed via Socket.IO.
 - **Redis State Management:** The logic behind the ephemeral "No Database" design.
-- **Worker Scaling:** How Redis Pub/Sub acts as a message queue for horizontal scaling.
+- **Node.js Scaling:** How Redis acts as a pub/sub message queue for horizontal scaling.
 
 ### 2. [🎮 UI & Controls Logic](docs/ui-controls.md)
 Dive into the frontend magic, including:
@@ -67,9 +67,9 @@ Dive into the frontend magic, including:
 
 ### 3. [🚀 Deployment & Setup Guide](docs/deployment.md)
 Learn how to run BaatCheet, including:
-- **Local Setup:** Creating the Python environment and running Redis.
-- **Production Execution:** Using Gunicorn with Eventlet workers.
-- **HTTPS Requirements:** Why SSL is strictly necessary for WebRTC to function over the internet.
+- **Local Setup:** Initializing Node.js and running Redis.
+- **Production Execution:** Deploying to platforms like Render or Heroku.
+- **HTTPS & TURN Requirements:** Why SSL and TURN servers are strictly necessary for WebRTC to function over the internet.
 
 ---
 
@@ -85,9 +85,9 @@ BaatCheet is a fully configured Progressive Web App (PWA). You can install it di
 
 ## 🛠️ Quick Tech Stack Overview
 
-- **Backend:** Python, Flask, Flask-SocketIO, Eventlet
+- **Backend:** Node.js, Express, Socket.IO
 - **Data Layer:** Redis (In-Memory Key-Value Store)
-- **Frontend:** Vanilla JavaScript, HTML5, Vanilla CSS
+- **Frontend:** Vanilla JavaScript, HTML5, Vanilla CSS, EJS
 - **Signaling Protocol:** WebSockets (Socket.IO)
 - **Media Protocol:** WebRTC API
 
@@ -98,5 +98,5 @@ This application does **not** use a permanent database. All room states and acti
 
 ---
 <div align="center">
-  <p>Built with ❤️ using Flask and WebRTC.</p>
+  <p>Built with ❤️ using Node.js and WebRTC.</p>
 </div>
