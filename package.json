@@ -2,7 +2,7 @@
   "name": "baatchit",
   "version": "1.0.0",
   "description": "<div align=\"center\">   <img src=\"static/banner.png\" alt=\"BaatCheet Banner\" width=\"100%\" style=\"border-radius: 12px; margin-bottom: 20px;\">",
-  "main": "index.js",
+  "main": "server.js",
   "directories": {
     "doc": "docs"
   },
