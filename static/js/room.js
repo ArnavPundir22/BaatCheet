@@ -383,11 +383,23 @@ function addChatMessage(user, text, isSystem = false, image = null, audio = null
     chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
 }
 
+let unreadMessageCount = 0;
+
 socket.on('message', (data) => {
     if (data.user === 'System') {
         addChatMessage(data.user, data.text, true);
     } else {
         addChatMessage(data.user, data.text, false, data.image, data.audio, data.reply_to);
+        
+        // Handle unread message notifications when chat is hidden
+        if (document.body.classList.contains('chat-hidden')) {
+            unreadMessageCount++;
+            const badge = document.getElementById('chat-notification-badge');
+            if (badge) {
+                badge.textContent = unreadMessageCount > 99 ? '99+' : unreadMessageCount;
+                badge.style.display = 'block';
+            }
+        }
     }
 });
 
@@ -969,6 +981,7 @@ function toggleMaximize(wrapper, btn) {
     } else {
         wrapper.classList.remove('maximized-video');
         document.body.classList.remove('has-maximized-video');
+        document.body.classList.remove('chat-hidden');
         btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>';
         btn.title = 'Maximize Video';
     }
@@ -1017,5 +1030,28 @@ if (infoBtn && infoModal && closeInfoModal) {
 
     closeInfoModal.addEventListener("click", () => {
         infoModal.style.display = "none";
+    });
+}
+
+// Fullscreen Chat Toggle Logic
+const closeChatBtn = document.getElementById('close-chat-btn');
+const floatingChatToggle = document.getElementById('floating-chat-toggle');
+
+if (closeChatBtn) {
+    closeChatBtn.addEventListener('click', () => {
+        document.body.classList.add('chat-hidden');
+    });
+}
+
+if (floatingChatToggle) {
+    floatingChatToggle.addEventListener('click', () => {
+        document.body.classList.remove('chat-hidden');
+        
+        // Reset unread count
+        unreadMessageCount = 0;
+        const badge = document.getElementById('chat-notification-badge');
+        if (badge) {
+            badge.style.display = 'none';
+        }
     });
 }
