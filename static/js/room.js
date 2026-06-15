@@ -647,6 +647,7 @@ document.querySelectorAll('.reaction-emoji').forEach(btn => {
 });
 
 function showFloatingReaction(wrapperId, emoji) {
+    console.log("showFloatingReaction called for", wrapperId, emoji);
     const wrapper = document.getElementById(wrapperId);
 
     const reactionEl = document.createElement('div');

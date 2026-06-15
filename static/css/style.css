@@ -599,7 +599,7 @@ input[type="text"]:focus {
     transform: translateX(-50%);
     animation: floatUp 3.5s ease-out forwards;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 1000001 !important;
     text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
