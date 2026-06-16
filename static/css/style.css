@@ -1254,7 +1254,7 @@ body.has-maximized-video .options-dropdown {
     height: 100vh;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
-    z-index: 2000;
+    z-index: 1000002;
     display: none;
     justify-content: center;
     align-items: center;
