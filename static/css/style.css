@@ -199,11 +199,32 @@ body {
 .logo-title {
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
+    background: linear-gradient(to right, var(--primary), var(--text-main), var(--secondary), var(--primary));
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
     margin-bottom: 0.5rem;
+    position: relative;
+    animation: cinematic-shimmer 6s linear infinite, cinematic-float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
+}
+
+@keyframes cinematic-shimmer {
+    to {
+        background-position: 300% center;
+    }
+}
+
+@keyframes cinematic-float {
+    0%, 100% {
+        transform: translateY(0);
+        filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
+    }
+    50% {
+        transform: translateY(-5px) scale(1.02);
+        filter: drop-shadow(0 0 25px rgba(52, 211, 153, 0.8));
+    }
 }
 
 .subtitle {
