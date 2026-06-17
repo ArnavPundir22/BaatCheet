@@ -1,9 +1,8 @@
-const CACHE_NAME = 'baatcheet-v13';
+const CACHE_NAME = 'baatcheet-v12';
 const ASSETS_TO_CACHE = [
   '/',
   '/static/css/style.css',
   '/static/js/room.js',
-  '/static/js/cinematic-intro.js',
   'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js'
 ];

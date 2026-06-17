@@ -15,20 +15,6 @@
 </head>
 
 <body>
-    <!-- Cinematic Overlay -->
-    <div id="cinematic-overlay">
-        <div id="cinematic-canvas-container"></div>
-        <div class="cinematic-hud" id="cinematic-hud-booting">
-            <div class="glitch-spinner" style="margin-bottom: 20px;"></div>
-            <h2 class="font-mono">[SYS.INIT] > BOOTING ENVIRONMENT...</h2>
-            <p class="font-mono" style="color: var(--primary);">Establishing secure connection.</p>
-        </div>
-        <div class="cinematic-hud" id="cinematic-hud-welcome" style="display: none; opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);">
-            <h1 class="logo-title cinematic-title" style="font-size: clamp(3rem, 15vw, 6rem);">BaatCheet</h1>
-            <p class="font-mono" style="letter-spacing: 5px; color: var(--secondary);">ACCESS GRANTED</p>
-        </div>
-    </div>
-
     <div class="wireframe-grid"></div>
 
     <div class="container index-container" style="max-width: 1200px; padding: 4rem 2rem; display: block;">
@@ -267,9 +253,6 @@
             }
         });
     </script>
-    <!-- Cinematic Three.js Logic -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="/static/js/cinematic-intro.js"></script>
 </body>
 
 </html>
