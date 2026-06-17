@@ -1,7 +1,12 @@
 // cinematic-intro.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Always play the cinematic intro when this script runs
+    // Check if cinematic has already been shown this session
+    if (sessionStorage.getItem('baatcheet_intro_played')) {
+        const overlay = document.getElementById('cinematic-overlay');
+        if (overlay) overlay.remove();
+        return;
+    }
 
     const overlay = document.getElementById('cinematic-overlay');
     if (!overlay) return;
@@ -146,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 setTimeout(() => {
                     overlay.remove();
-                    // Intro complete
+                    sessionStorage.setItem('baatcheet_intro_played', 'true');
                 }, 1000); // Wait for CSS transition
                 
             }, 2500); // Duration of Welcome text
