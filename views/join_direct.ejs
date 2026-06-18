@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <title>Join <%= room_name %> | BaatCheet</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=14">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+</head>
+
+<body>
+    <!-- Cinematic Overlay -->
+    <div id="cinematic-overlay">
+        <div id="cinematic-canvas-container"></div>
+        <div class="cinematic-hud" id="cinematic-hud-booting">
+            <div class="glitch-spinner" style="margin-bottom: 20px;"></div>
+            <h2 class="font-mono">[SYS.INIT] > BOOTING ENVIRONMENT...</h2>
+            <p class="font-mono" style="color: var(--primary);">Establishing secure connection.</p>
+        </div>
+        <div class="cinematic-hud" id="cinematic-hud-welcome" style="display: none; opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);">
+            <h1 class="logo-title cinematic-title" style="font-size: clamp(3rem, 15vw, 6rem);">BaatCheet</h1>
+            <p class="font-mono" style="letter-spacing: 5px; color: var(--secondary);">ACCESS GRANTED</p>
+        </div>
+    </div>
+
+    <div class="wireframe-grid"></div>
+    <div id="home-3d-canvas-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></div>
+
+    <div class="container index-container" style="max-width: 600px; padding: 4rem 2rem; display: block; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+        
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h1 class="logo-title"
+                style="font-size: clamp(2rem, 8vw, 3.5rem); margin-bottom: 0;">
+                BaatCheet</h1>
+            <p class="subtitle font-mono"
+                style="letter-spacing: 1px; font-size: clamp(0.75rem, 3vw, 1rem); text-transform: uppercase; margin-top: 10px;">
+                SECURE ENVIRONMENT INVITATION</p>
+        </div>
+
+        <div class="bento-section" style="display: block;">
+            <!-- Join Direct Room -->
+            <div class="card--border-glow" style="width: 100%;">
+                <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                    <span>[SYS.CONNECT] > Join Room</span>
+                    <span style="font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.1); color: var(--primary);"><%= room_code %></span>
+                </h3>
+                
+                <p style="color: var(--text-main); margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">
+                    You've been invited to: <span style="color: var(--primary);"><%= room_name %></span>
+                </p>
+
+                <form action="/" method="POST">
+                    <input type="hidden" name="room_code" value="<%= room_code %>">
+                    <div class="input-group">
+                        <label for="join_username" class="font-mono">User Identity</label>
+                        <input type="text" id="join_username" name="username" placeholder="Enter operator alias"
+                            required autocomplete="off" autofocus>
+                    </div>
+                    <button type="submit" name="action" value="join" class="btn btn-primary font-mono"
+                        style="text-transform: uppercase; width: 100%;">Execute: Enter Environment</button>
+                </form>
+
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <a href="/" class="font-mono" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none; border-bottom: 1px dashed var(--text-muted);">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cinematic Three.js Logic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="/static/js/cinematic-intro.js"></script>
+    <script src="/static/js/home-3d-bg.js"></script>
+</body>
+
+</html>

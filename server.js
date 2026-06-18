@@ -99,6 +99,27 @@ app.post('/', async (req, res) => {
     res.redirect('/');
 });
 
+app.get('/join/:room_code', async (req, res) => {
+    const { room_code } = req.params;
+    const exists1 = await redisClient.exists(`room:${room_code}:exists`);
+    const exists2 = await redisClient.exists(`room:${room_code}:users`);
+    
+    if (!(exists1 || exists2)) {
+        let activeRooms = 0;
+        try {
+            const keys = await redisClient.keys("room:*:exists");
+            activeRooms = keys.length;
+        } catch (e) { }
+        return res.render('index', { error: "Invalid or expired room code.", active_rooms: activeRooms });
+    }
+
+    let room_name = await redisClient.get(`room:${room_code}:name`);
+    if (!room_name) room_name = "Ephemeral Room";
+
+    res.render('join_direct', { room_code, room_name });
+});
+
+
 app.get('/room/:room_code', async (req, res) => {
     const { username } = req.query;
     const { room_code } = req.params;

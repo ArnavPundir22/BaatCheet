@@ -838,8 +838,8 @@ const inviteBtn = document.getElementById('invite-btn');
 
 if (inviteBtn) {
     inviteBtn.addEventListener('click', async () => {
-        const inviteLink = `${window.location.origin}/`;
-        const textToCopy = `Hey!\n\nJoin my BaatCheet video room.\n\nRoom Code: ${ROOM_CODE}\nSite: ${inviteLink}\n\nSee you there!`;
+        const inviteLink = `${window.location.origin}/join/${ROOM_CODE}`;
+        const textToCopy = `Hey!\n\nJoin my BaatCheet video room.\n\nClick the link below to join directly:\n${inviteLink}\n\nSee you there!`;
 
         try {
             await navigator.clipboard.writeText(textToCopy);
