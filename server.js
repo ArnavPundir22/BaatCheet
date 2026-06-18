@@ -31,7 +31,7 @@ const io = new Server(server, {
     maxHttpBufferSize: 1e7 // 10MB
 });
 
-// Helper
+// Helpers
 function makeid(length) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -40,6 +40,20 @@ function makeid(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function toHex(str) {
+    return Buffer.from(str, 'utf8').toString('hex');
+}
+
+function fromHex(hex) {
+    return Buffer.from(hex, 'hex').toString('utf8');
+}
+
+function generateTimestampParam() {
+    const now = Math.floor(Date.now() / 1000);
+    const earlier = now - Math.floor(Math.random() * 3600);
+    return `${earlier}~${now}`;
 }
 
 async function generateRoomCode(length = 6) {
@@ -85,13 +99,19 @@ app.post('/', async (req, res) => {
         if (room_name) {
             await redisClient.setEx(`room:${newRoomCode}:name`, 3600, room_name);
         }
-        return res.redirect(`/room/${newRoomCode}?username=${encodeURIComponent(username)}`);
+        const encodedRoom = toHex(newRoomCode);
+        const encodedUser = toHex(username);
+        const ts = generateTimestampParam();
+        return res.redirect(`/secure/env-${encodedRoom}/session/sess-${encodedUser}?ts=${ts}`);
     } else if (action === 'join') {
         const code = (room_code || '').toUpperCase();
         const exists1 = await redisClient.exists(`room:${code}:exists`);
         const exists2 = await redisClient.exists(`room:${code}:users`);
         if (exists1 || exists2) {
-            return res.redirect(`/room/${code}?username=${encodeURIComponent(username)}`);
+            const encodedRoom = toHex(code);
+            const encodedUser = toHex(username);
+            const ts = generateTimestampParam();
+            return res.redirect(`/secure/env-${encodedRoom}/session/sess-${encodedUser}?ts=${ts}`);
         } else {
             return res.render('index', { error: "Invalid room code.", active_rooms: activeRooms });
         }
@@ -120,11 +140,16 @@ app.get('/join/:room_code', async (req, res) => {
 });
 
 
-app.get('/room/:room_code', async (req, res) => {
-    const { username } = req.query;
-    const { room_code } = req.params;
+app.get('/secure/env-:encoded_room/session/sess-:encoded_user', async (req, res) => {
+    let room_code, username;
+    try {
+        room_code = fromHex(req.params.encoded_room);
+        username = fromHex(req.params.encoded_user);
+    } catch (e) {
+        return res.redirect('/');
+    }
 
-    if (!username) return res.redirect('/');
+    if (!username || !room_code) return res.redirect('/');
 
     const exists1 = await redisClient.exists(`room:${room_code}:exists`);
     const exists2 = await redisClient.exists(`room:${room_code}:users`);
