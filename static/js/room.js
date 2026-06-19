@@ -108,6 +108,12 @@ async function initMedia() {
         // Still join the room even if no media
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
         addChatMessage("System", "🔒 History is never saved. You are seeing live messages only.", true);
+        
+        // Add off classes since we have no media
+        const localWrapper = document.querySelector('.local-wrapper');
+        if (localWrapper) {
+            localWrapper.classList.add('video-off', 'audio-off');
+        }
     }
 }
 
@@ -147,6 +153,17 @@ function createPeerConnection(sid, username) {
             videoElement.autoplay = true;
             videoElement.playsInline = true;
 
+            const avatarFallback = document.createElement('div');
+            avatarFallback.className = 'avatar-fallback';
+            avatarFallback.innerText = username.charAt(0).toUpperCase();
+
+            const micIndicator = document.createElement('div');
+            micIndicator.className = 'mic-indicator';
+            micIndicator.innerHTML = `
+                <svg class="mic-on-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+                <svg class="mic-off-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" x2="22" y1="2" y2="22"></line><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"></path><path d="M5 10v2a7 7 0 0 0 12 5"></path><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"></path><path d="M9 9v3a3 3 0 0 0 5.12 2.12"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+            `;
+
             const label = document.createElement('span');
             label.className = 'video-label';
             label.innerText = username;
@@ -162,6 +179,8 @@ function createPeerConnection(sid, username) {
             };
 
             videoWrapper.appendChild(videoElement);
+            videoWrapper.appendChild(avatarFallback);
+            videoWrapper.appendChild(micIndicator);
             videoWrapper.appendChild(label);
             videoWrapper.appendChild(maximizeBtn);
             videoGrid.appendChild(videoWrapper);
@@ -201,6 +220,14 @@ socket.on('user_joined', async (data) => {
     // New user joined, we need to send them an offer
     const sid = data.sid;
     const pc = createPeerConnection(sid, data.username);
+
+    // Broadcast our media status to the newly joined user
+    if (localStream) {
+        const audioTrack = localStream.getAudioTracks()[0];
+        const videoTrack = localStream.getVideoTracks()[0];
+        if (audioTrack) socket.emit('media_status', { room: ROOM_CODE, type: 'audio', enabled: audioTrack.enabled });
+        if (videoTrack) socket.emit('media_status', { room: ROOM_CODE, type: 'video', enabled: videoTrack.enabled });
+    }
 
     try {
         const offer = await pc.createOffer();
@@ -279,6 +306,25 @@ socket.on('screen_share_status', (data) => {
         } else {
             wrapper.classList.remove('is-screen-share');
             if (videoGrid) videoGrid.classList.remove('has-screen-share');
+        }
+    }
+});
+
+socket.on('media_status', (data) => {
+    const wrapper = document.getElementById(`wrapper-${data.sender_sid}`);
+    if (wrapper) {
+        if (data.type === 'audio') {
+            if (data.enabled) {
+                wrapper.classList.remove('audio-off');
+            } else {
+                wrapper.classList.add('audio-off');
+            }
+        } else if (data.type === 'video') {
+            if (data.enabled) {
+                wrapper.classList.remove('video-off');
+            } else {
+                wrapper.classList.add('video-off');
+            }
         }
     }
 });
@@ -697,10 +743,14 @@ toggleAudioBtn.addEventListener('click', () => {
         if (audioTrack) {
             audioTrack.enabled = !audioTrack.enabled;
             if (audioTrack.enabled) {
+                document.querySelector('.local-wrapper').classList.remove('audio-off');
+                socket.emit('media_status', { room: ROOM_CODE, type: 'audio', enabled: true });
                 toggleAudioBtn.classList.remove('inactive');
                 toggleAudioBtn.classList.add('active');
                 toggleAudioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>';
             } else {
+                document.querySelector('.local-wrapper').classList.add('audio-off');
+                socket.emit('media_status', { room: ROOM_CODE, type: 'audio', enabled: false });
                 toggleAudioBtn.classList.remove('active');
                 toggleAudioBtn.classList.add('inactive');
                 toggleAudioBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" x2="22" y1="2" y2="22"></line><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"></path><path d="M5 10v2a7 7 0 0 0 12 5"></path><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"></path><path d="M9 9v3a3 3 0 0 0 5.12 2.12"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>';
@@ -715,10 +765,14 @@ toggleVideoBtn.addEventListener('click', () => {
         if (videoTrack) {
             videoTrack.enabled = !videoTrack.enabled;
             if (videoTrack.enabled) {
+                document.querySelector('.local-wrapper').classList.remove('video-off');
+                socket.emit('media_status', { room: ROOM_CODE, type: 'video', enabled: true });
                 toggleVideoBtn.classList.remove('inactive');
                 toggleVideoBtn.classList.add('active');
                 toggleVideoBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>';
             } else {
+                document.querySelector('.local-wrapper').classList.add('video-off');
+                socket.emit('media_status', { room: ROOM_CODE, type: 'video', enabled: false });
                 toggleVideoBtn.classList.remove('active');
                 toggleVideoBtn.classList.add('inactive');
                 toggleVideoBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" x2="22" y1="2" y2="22"></line><path d="M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16"></path><path d="M9.5 4h5l2.5 3h3a2 2 0 0 1 2 2v7.5"></path></svg>';

@@ -247,6 +247,10 @@ io.on('connection', (socket) => {
         socket.to(data.room).emit('screen_share_status', { is_sharing: data.is_sharing, sender_sid: socket.id });
     });
 
+    socket.on('media_status', (data) => {
+        socket.to(data.room).emit('media_status', { type: data.type, enabled: data.enabled, sender_sid: socket.id });
+    });
+
     socket.on('webrtc_offer', (data) => {
         io.to(data.target_sid).emit('webrtc_offer', {
             sdp: data.sdp,

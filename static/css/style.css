@@ -687,6 +687,64 @@ input[type="text"]:focus {
     object-fit: cover;
     transform: scaleX(-1);
     /* Mirror effect */
+    transition: opacity 0.3s;
+}
+
+.avatar-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--primary);
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.video-wrapper.video-off .avatar-fallback {
+    opacity: 1;
+}
+
+.video-wrapper.video-off video {
+    opacity: 0;
+}
+
+.mic-indicator {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 0.4rem;
+    border-radius: 50%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.mic-indicator svg {
+    width: 18px;
+    height: 18px;
+    color: var(--success);
+}
+
+.video-wrapper.audio-off .mic-indicator .mic-on-icon {
+    display: none !important;
+}
+
+.video-wrapper.audio-off .mic-indicator .mic-off-icon {
+    display: block !important;
+    color: var(--error);
 }
 
 .video-wrapper.is-screen-share {
