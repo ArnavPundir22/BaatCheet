@@ -10,6 +10,7 @@ const toggleAudioBtn = document.getElementById('toggle-audio');
 const toggleVideoBtn = document.getElementById('toggle-video');
 const shareScreenBtn = document.getElementById('share-screen');
 const leaveRoomBtn = document.getElementById('leave-room');
+const switchCameraBtn = document.getElementById('switch-camera');
 
 // Reply Elements
 let replyingTo = null;
@@ -66,6 +67,7 @@ adjustViewport();
 let localStream;
 let screenStream = null;
 let originalVideoTrack = null;
+let currentFacingMode = "user";
 const peers = {}; // Store RTCPeerConnection objects by socket ID
 
 const iceServers = {
@@ -823,6 +825,7 @@ if (shareScreenBtn) {
                 shareScreenBtn.classList.add('active');
                 shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><line x1="3" y1="3" x2="21" y2="21"></line></svg> Stop Sharing';
                 toggleVideoBtn.disabled = true;
+                if (switchCameraBtn) switchCameraBtn.disabled = true;
 
                 // Listen for native stop sharing from browser UI
                 screenTrack.onended = () => {
@@ -871,6 +874,7 @@ function stopScreenSharing() {
     shareScreenBtn.classList.remove('active');
     shareScreenBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="3" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="m8 10 4-4 4 4"></path><path d="M12 6v8"></path></svg> Share Screen';
     toggleVideoBtn.disabled = false;
+    if (switchCameraBtn) switchCameraBtn.disabled = false;
 }
 
 leaveRoomBtn.addEventListener('click', () => {
@@ -1114,4 +1118,85 @@ if (floatingChatToggle) {
             badge.style.display = 'none';
         }
     });
+}
+
+// Camera Switching Logic
+async function switchCamera() {
+    if (!localStream) return;
+    
+    // Disable button during transition to prevent double clicks
+    if (switchCameraBtn) switchCameraBtn.disabled = true;
+    
+    currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+    
+    try {
+        const newStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: currentFacingMode },
+            audio: false
+        });
+        
+        const newVideoTrack = newStream.getVideoTracks()[0];
+        
+        // Ensure new track is enabled
+        newVideoTrack.enabled = true;
+        
+        const oldVideoTrack = localStream.getVideoTracks()[0];
+        if (oldVideoTrack) {
+            oldVideoTrack.stop();
+            localStream.removeTrack(oldVideoTrack);
+        }
+        
+        localStream.addTrack(newVideoTrack);
+        
+        // Update local wrapper styling for back camera mirror effect
+        const localWrapper = document.querySelector('.local-wrapper');
+        if (localWrapper) {
+            localWrapper.classList.remove('video-off');
+            if (currentFacingMode === "environment") {
+                localWrapper.classList.add('back-camera');
+            } else {
+                localWrapper.classList.remove('back-camera');
+            }
+        }
+        
+        // Ensure video toggle button is visually active and media status is sent to peers
+        if (toggleVideoBtn) {
+            toggleVideoBtn.classList.remove('inactive');
+            toggleVideoBtn.classList.add('active');
+            toggleVideoBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>';
+        }
+        socket.emit('media_status', { room: ROOM_CODE, type: 'video', enabled: true });
+        
+        if (screenStream) {
+            // If screen sharing is active, update the original track to be restored later
+            if (originalVideoTrack) {
+                originalVideoTrack.stop();
+            }
+            originalVideoTrack = newVideoTrack;
+        } else {
+            localVideo.srcObject = localStream;
+            
+            // Replace track for all active peer connections
+            for (let sid in peers) {
+                const pc = peers[sid];
+                const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                if (sender) {
+                    sender.replaceTrack(newVideoTrack).catch(e => console.error("Error replacing track:", e));
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Error switching camera:", err);
+        addChatMessage("System", "Failed to switch camera: " + err.message, true);
+        // Revert facing mode state
+        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+    } finally {
+        if (switchCameraBtn && !screenStream) {
+            switchCameraBtn.disabled = false;
+        }
+    }
+}
+
+if (switchCameraBtn) {
+    switchCameraBtn.addEventListener('click', switchCamera);
 }

@@ -414,6 +414,10 @@ input[type="text"]:focus {
     min-height: 40px;
 }
 
+#switch-camera {
+    display: none;
+}
+
 .btn-icon svg {
     width: 20px !important;
     height: 20px !important;
@@ -688,6 +692,10 @@ input[type="text"]:focus {
     transform: scaleX(-1);
     /* Mirror effect */
     transition: opacity 0.3s;
+}
+
+.video-wrapper.back-camera video {
+    transform: none;
 }
 
 .avatar-fallback {
@@ -1656,6 +1664,10 @@ body.has-maximized-video .options-dropdown {
         height: 40px;
         padding: 0;
         border-radius: 50%;
+     }
+
+     #switch-camera {
+        display: flex;
      }
 
     /* #leave-room {
