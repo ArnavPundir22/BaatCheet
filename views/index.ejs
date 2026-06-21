@@ -7,6 +7,7 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
     <title>BaatCheet | Ephemeral Chat</title>
     <link rel="stylesheet" href="/static/css/style.css?v=14">
+    <link rel="stylesheet" href="/static/css/mobile.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
@@ -14,6 +15,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6366f1">
 </head>
+
 
 <body>
     <!-- Cinematic Overlay -->
@@ -34,71 +36,189 @@
     <div id="home-3d-canvas-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></div>
 
     <div class="container index-container" style="max-width: 1200px; padding: 4rem 2rem; display: block;">
-        <div style="text-align: center; margin-bottom: 4rem;">
+        <nav class="landing-nav">
+
+            <a href="/about" class="nav-link"> About Platform </a>
+            <a href="https://github.com/ArnavPundir22/BaatChit" target="_blank" class="nav-link">  GitHub Source </a> 
+            <button id="installNowBtn" class="install-nav-btn"> Install Now </button>
+        </nav>
+        <!-- MOBILE HAMBURGER -->
+        <div class="mobile-menu-btn" id="mobileMenuBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="mobile-panel" id="mobilePanel">
+            <div class="mobile-panel-header">
+                <h3>BaatCheet</h3>
+            </div>
+            <a href="/about" class="mobile-panel-link">
+                About Platform
+            </a>
+            <a href="https://github.com/ArnavPundir22/BaatChit"
+                target="_blank"
+                class="mobile-panel-link">
+                    GitHub Source
+            </a>
+
+            <button class="mobile-install-btn" onclick="document.getElementById('install-section').scrollIntoView({behavior:'smooth'});"> Install Now </button>
+        </div>
+                              
+
+        <section class="landing-layout">
+        <div class="landing-left">
+         <div style="text-align: center; margin-bottom: 4rem;">
             <h1 class="logo-title"
                 style="font-size: clamp(2.5rem, 12vw, 5rem); margin-bottom: 0;">
-                BaatCheet</h1>
+                BaatCheet
+            </h1>
+
             <p class="subtitle font-mono"
                 style="letter-spacing: 1px; font-size: clamp(0.75rem, 3vw, 1rem); text-transform: uppercase; margin-top: 10px;">
-                INTEGRATED EPHEMERAL COMMUNICATION SYSTEM</p>
+                    INTEGRATED EPHEMERAL COMMUNICATION SYSTEM
+            </p>
+
+        </div> 
+
+    </div> 
+
+<div class="landing-right">
+    <div class="card-stack">
+        <div class="stack-shadow stack-shadow-1"></div>
+        <div class="stack-shadow stack-shadow-2"></div>
+
+        <!-- Room Creation (Spans 2 columns on desktop) -->
+        <div id="createCard" class="stack-card active-stack-card">
+
+            <div class="card--border-glow">
+
+                <h3 class="font-mono" style="color: var(--primary); margin-bottom: 1rem;">
+                    [SYS.INIT] > New Session
+                </h3>
+
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Initialize a fresh, secure, disposable environment.
+                </p>
+
+                <form action="/" method="POST">
+
+                    <div class="input-group">
+                        <label for="hero_username" class="font-mono">
+                            User Identity
+                        </label>
+
+                        <input type="text" id="hero_username" name="username" placeholder="Enter operator alias" required autocomplete="off">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hero_room_name" class="font-mono">
+                            Environment Designation (Optional)
+                        </label>
+
+                        <input type="text" id="hero_room_name" name="room_name" placeholder="Assign room title" autocomplete="off">
+                    </div>
+
+                    <button type="submit" name="action" value="create" class="btn btn-primary font-mono" style="text-transform: uppercase;"> Execute: Create Room </button>
+                </form>
+            </div>
         </div>
+
+        <!-- JOIN ROOM -->
+        <div id="joinCard" class="stack-card next-stack-card">
+
+            <div class="card--border-glow">
+
+                <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 1rem;">
+                    [SYS.CONNECT] > Existing Session
+                </h3>
+
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                    Establish connection to an active environment.
+                </p>
+
+                <form action="/" method="POST">
+
+                    <div class="input-group">
+                        <label class="font-mono">
+                            User Identity
+                        </label>
+
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Enter operator alias"
+                            required
+                            autocomplete="off">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="font-mono">
+                            Connection Token
+                        </label>
+
+                        <input
+                            type="text"
+                            name="room_code"
+                            placeholder="e.g. A7X9Q2"
+                            required
+                            autocomplete="off">
+                    </div>
+
+                    <button
+                        type="submit"
+                        name="action"
+                        value="join"
+                        class="btn btn-primary font-mono"
+                        style="text-transform: uppercase;">
+
+                        Execute: Join Room
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <div class="session-switcher">
+            <button id="newSessionBtn" class="session-tab active-tab">NEW SESSION</button>
+            <button id="joinSessionBtn" class="session-tab">JOIN SESSION </button> 
+        </div>
+            <!-- <button id="nextCard" class="stack-btn">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+            </button> -->
+        </div>
+    </div>
+</section>
 
         <% if (error) { %>
         <div class="error-msg font-mono" style="margin-bottom: 2rem;"><%= error %></div>
         <% } %>
 
-        <div class="bento-section">
-            <!-- Room Creation (Spans 2 columns on desktop) -->
-            <div class="card--border-glow col-span-2">
-                <h3 class="font-mono" style="color: var(--primary); margoin-bottom: 1rem;">[SYS.INIT] > New Session</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Initialize a fresh, secure, disposable
-                    environment.</p>
-                <form action="/" method="POST">
-                    <div class="input-group">
-                        <label for="username" class="font-mono">User Identity</label>
-                        <input type="text" id="username" name="username" placeholder="Enter operator alias" required
-                            autocomplete="off">
-                    </div>
-                    <div class="input-group">
-                        <label for="room_name" class="font-mono">Environment Designation (Optional)</label>
-                        <input type="text" name="room_name" placeholder="Assign room title" autocomplete="off">
-                    </div>
-                    <button type="submit" name="action" value="create" class="btn btn-primary font-mono"
-                        style="text-transform: uppercase;">Execute: Create Room</button>
-                </form>
-            </div>
-
-            <!-- Join Room -->
-            <div class="card--border-glow col-span-2">
-                <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 1rem;">[SYS.CONNECT] > Existing
-                    Session</h3>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Establish connection to an active
-                    environment.</p>
-                <form action="/" method="POST">
-                    <div class="input-group">
-                        <label for="join_username" class="font-mono">User Identity</label>
-                        <input type="text" id="join_username" name="username" placeholder="Enter operator alias"
-                            required autocomplete="off">
-                    </div>
-                    <div class="input-group">
-                        <label for="room_code" class="font-mono">Connection Token</label>
-                        <input type="text" name="room_code" placeholder="e.g. A7X9Q2" required autocomplete="off">
-                    </div>
-                    <button type="submit" name="action" value="join" class="btn btn-primary font-mono"
-                        style="text-transform: uppercase;">Execute: Join Room</button>
-                </form>
-            </div>
-
+       
+            <div class="info-grid">
             <!-- Zero-Log Stats -->
-            <div class="card--border-glow col-span-2" style="background: rgba(16, 185, 129, 0.05);">
-                <h3 class="font-mono" style="color: var(--primary); display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 1.5rem;">🔒</span> Zero-Trust Architecture
+            <div class="zero-trust-section">
+             <div class="card--border-glow feature-card" style="background: rgba(16, 185, 129, 0.05);">
+            <!-- <div class="card--border-glow col-span-2" style="background: rgba(16, 185, 129, 0.05);"> -->
+                <h3 class="info-card-title font-mono">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 
+                    Zero-Trust Architecture
                 </h3>
-                <p style="font-size: 0.9rem; margin-top: 1rem;">Absolute volatility. Room data exists only in active
+                <p class="info-card-desc">Absolute volatility. Room data exists only in active
                     memory and undergoes automatic self-destruction upon termination.</p>
 
-                <div
-                    style="display: flex; justify-content: space-around; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                
+                    <div class="trust-stats">
                     <div style="text-align: center;">
                         <div class="font-mono" style="font-size: 1.8rem; color: white;"><%= active_rooms %></div>
                         <div class="font-mono" style="font-size: 0.7rem; color: var(--text-muted);">ACTIVE ENVIRONMENTS
@@ -115,62 +235,142 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="feature-grid">
 
             <!-- Professional Section -->
-            <div class="card--border-glow col-span-2">
-                <h3 class="font-mono" style="color: var(--text-main); display: flex; align-items: center; gap: 10px;">
-                    <span>💼</span> Enterprise Protocol
+            <div class="card--border-glow feature-card">
+
+                
+                    <h3 class="info-card-title font-mono">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2H10a2 2 0 0 0-2 2v16"/></svg>
+                         Enterprise Protocol
                 </h3>
-                <p style="font-size: 0.85rem; margin: 1rem 0; color: var(--text-muted);">
+
+                <p class="info-card-desc">
                     Engineered for high-stakes communications where privacy is non-negotiable.
                 </p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem;">
-                    <div
-                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">⚖️
-                            LEGAL & LAW</div>
-                    </div>
-                    <div
-                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">🏥
-                            TELEMEDICINE</div>
-                    </div>
-                    <div
-                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">🏢
-                            ENTERPRISE</div>
-                    </div>
-                    <div
-                        style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div class="font-mono" style="color: var(--primary); font-size: 0.75rem; margin-bottom: 4px;">
-                            🛡️ JOURNALISM</div>
-                    </div>
-                </div>
-                <div style="text-align: center;">
-                    <a href="https://github.com/ArnavPundir22/BaatChit/blob/main/docs/architecture.md" target="_blank"
-                        class="btn font-mono"
-                        style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); width: 100%; display: block; text-decoration: none; box-sizing: border-box;">Read
-                        Architecture Docs ↗</a>
+
+            <div
+                style=" display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:10px;
+                    margin-bottom:1.5rem;
+                ">
+
+            <div style="
+                background:rgba(0,0,0,0.4);
+                padding:10px;
+                border-radius:8px;
+                border:1px solid rgba(255,255,255,0.05);
+            ">
+              <div class="industry-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 16a3 3 0 0 1-6 0"/><path d="M8 16a3 3 0 0 1-6 0"/><path d="M12 3v13"/><path d="M3 7h18"/><path d="M5 7l3 6"/><path d="M19 7l-3 6"/>
+                    </svg><span>LEGAL & LAW</span>
                 </div>
             </div>
 
-            <!-- Capabilities & Limits -->
-            <div class="card--border-glow col-span-2">
-                <h3 class="font-mono" style="color: var(--text-main); display: flex; align-items: center; gap: 10px;">
-                    <span>⚡</span> Capabilities
+            <div style="
+                background:rgba(0,0,0,0.4);
+                padding:10px;
+                border-radius:8px;
+                border:1px solid rgba(255,255,255,0.05);
+            ">
+                <div class="industry-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/>
+                    </svg><span>TELEMEDICINE</span>
+                </div>
+            </div>
+
+            <div style="
+                background:rgba(0,0,0,0.4);
+                padding:10px;
+                border-radius:8px;
+                border:1px solid rgba(255,255,255,0.05);
+            ">
+                <div class="industry-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
+                    </svg><span>ENTERPRISE</span>
+                </div>
+            </div>
+
+            <div style="
+                background:rgba(0,0,0,0.4);
+                padding:10px;
+                border-radius:8px;
+                border:1px solid rgba(255,255,255,0.05);
+            ">
+                <div class="industry-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg><span>JOURNALISM</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top:auto;">
+            <a
+                href="https://github.com/ArnavPundir22/BaatChit/blob/main/docs/architecture.md"
+                target="_blank"
+                class="btn font-mono"
+                style="
+                    background:rgba(255,255,255,0.05);
+                    border:1px solid rgba(255,255,255,0.2);
+                    width:100%;
+                    display:block;
+                    text-decoration:none;
+                    box-sizing:border-box;
+                    text-align:center;
+                ">
+                Read Architecture Docs ↗
+            </a>
+        </div>
+
+    </div>
+
+            <!-- Capabilities -->
+            <div class="card--border-glow feature-card">
+                <h3 class="font-mono"
+                    <h3 class="info-card-title font-mono">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                     Capabilities
                 </h3>
-                <p style="font-size: 0.85rem; margin: 1rem 0; color: var(--text-muted);">
-                    Fully optimized for cross-platform usage with specific hardware boundaries.
-                </p>
-                <ul style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; padding-left: 1.2rem; margin-bottom: 1.5rem;">
-                    <li><strong style="color: var(--primary);">Desktop Screen Sharing:</strong> Broadcast your screen in high definition from any desktop or laptop browser.</li>
-                    <li><strong style="color: var(--primary);">Mobile Screen Viewing:</strong> Mobile users can perfectly view shared screens and participate via camera/microphone, though OS security prevents broadcasting the mobile screen itself.</li>
-                    <li><strong style="color: var(--primary);">View-Once Media:</strong> Send ephemeral images that permanently self-destruct after a single view.</li>
-                </ul>
-            </div>
 
+                <p class="info-card-desc">
+                   Fully optimized for cross-platform usage with specific hardware boundaries.
+                </p>
+
+                <ul style=" color:var(--text-muted); font-size:rem; line-height:2.2; padding-left:1.2rem; margin-bottom:1.5rem; ">
+                <li>
+                    <strong style="color:var(--primary);">
+                        Desktop Screen Sharing:
+                    </strong>
+                        Broadcast your screen in high definition from any desktop or laptop browser.
+                </li>
+
+                <li>
+                    <strong style="color:var(--primary);">
+                        Mobile Screen Viewing:
+                    </strong>
+                        Mobile users can perfectly view shared screens and participate via camera/microphone, though OS security prevents broadcasting the mobile screen itself.
+                </li>
+
+                <li>
+                    <strong style="color:var(--primary);">
+                        View-Once Media:
+                    </strong>
+                        Send ephemeral images that permanently self-destruct after a single view.
+                </li>
+            </ul>
+
+            </div>
+        </div>
+    </div>
             <!-- App Promo -->
-            <div class="card--border-glow col-span-4" style="text-align: center;">
+            <!-- <div class="card--border-glow col-span-4" style="text-align: center;"> -->
+                <div id="install-section" class="devices-section">
+                <div class="card--border-glow" style="text-align:center;">
                 <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 0.5rem;">[DEVICES] > Local
                     Installation</h3>
                 <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem auto;">Mount BaatCheet
@@ -203,20 +403,9 @@
                     Install</button>
             </div>
         </div>
+    </div>
 
-        <div style="text-align: center; margin-top: 3rem; margin-bottom: 2rem;">
-            <a href="/about" class="font-mono"
-                style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed var(--text-muted); transition: color 0.3s ease;"
-                onmouseover="this.style.color='var(--primary)'; this.style.borderColor='var(--primary)';"
-                onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--text-muted)';">About
-                Platform</a>
-            <span style="color: var(--text-muted); margin: 0 1rem;">|</span>
-            <a href="https://github.com/ArnavPundir22/BaatChit" target="_blank" class="font-mono"
-                style="color: var(--text-muted); text-decoration: none; border-bottom: 1px dashed var(--text-muted); transition: color 0.3s ease;"
-                onmouseover="this.style.color='var(--primary)'; this.style.borderColor='var(--primary)';"
-                onmouseout="this.style.color='var(--text-muted)'; this.style.borderColor='var(--text-muted)';">GitHub
-                Source</a>
-        </div>
+       
     </div>
     <script>
         // Force unregister service workers to fix cache issues
@@ -268,10 +457,15 @@
             }
         });
     </script>
+
+    
     <!-- Cinematic Three.js Logic -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="/static/js/cinematic-intro.js"></script>
     <script src="/static/js/home-3d-bg.js"></script>
+    <script src="/static/js/card-stack.js"></script>
+    <script src="/static/js/mobile-menu.js"></script>
+    
 </body>
 
 </html>

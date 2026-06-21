@@ -7,20 +7,28 @@
     <title>About | BaatCheet</title>
     <meta name="description" content="Learn more about BaatCheet, the ephemeral instant video & text chat platform.">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/mobile.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/static/icon.svg">
 </head>
 
 <body>
-    <div class="background-elements">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-    </div>
+    <!-- Animated Background -->
+    <div class="cyber-grid"></div>
+    <canvas id="networkCanvas"></canvas>
 
-    <div class="container index-container">
-        <div class="glass-panel" style="max-width: 600px; width: 100%;">
-            <h1 class="logo-title" style="font-size: 2.5rem;">About BaatCheet</h1>
-            <p class="subtitle" style="margin-bottom: 1.5rem;">Ephemeral, Instant Video & Text Chat</p>
+   
+   <div class="about-layout">
+
+        <!-- LEFT SIDE -->
+        <div class="about-left">
+            <h1 class="logo-title">About BaatCheet</h1>
+            <p class="hero-subtitle font-mono"> Ephemeral, Instant Video & Text Chat </p>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="about-right">
+            <div class="glass-panel about-card">
 
             <div style="color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem;">
                 <p style="margin-bottom: 1rem; font-size: 1.05rem;"><strong>BaatCheet</strong> is a next-generation
@@ -73,11 +81,10 @@
                 <a href="/" class="btn btn-secondary"
                     style="display: block; text-align: center; text-decoration: none;">Back to Home</a>
             </div>
+            </div>
         </div>
     </div>
-</body>
 
-</html>
 
 <script>
     // Page Transition Handling
@@ -99,7 +106,9 @@
             });
         }
     });
+    
 </script>
+<script src="/static/js/about-bg.js"></script>
 </body>
 
 </html>
