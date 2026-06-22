@@ -1086,9 +1086,16 @@ body.has-maximized-video .options-dropdown {
     align-items: center;
 }
 
-.chat-input-area input {
+.chat-input-wrapper {
+    position: relative;
     flex: 1;
-    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.chat-input-area input {
+    width: 100%;
+    padding: 0.6rem 2.8rem 0.6rem 1rem;
     border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.05);
@@ -1098,6 +1105,27 @@ body.has-maximized-video .options-dropdown {
     transition: all 0.3s ease;
 }
 
+.chat-emoji-btn-inner {
+    position: absolute;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+    padding: 0;
+}
+
+.chat-emoji-btn-inner:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
 .chat-input-area input:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.1);
