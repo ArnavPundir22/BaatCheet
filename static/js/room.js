@@ -1127,24 +1127,28 @@ async function switchCamera() {
     // Disable button during transition to prevent double clicks
     if (switchCameraBtn) switchCameraBtn.disabled = true;
     
+    const oldVideoTrack = localStream.getVideoTracks()[0];
+    const previousFacingMode = currentFacingMode;
     currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
     
+    // 1. Stop and remove the old video track first to release camera resources (critical for iOS/Safari)
+    if (oldVideoTrack) {
+        oldVideoTrack.stop();
+        localStream.removeTrack(oldVideoTrack);
+    }
+    
     try {
+        // 2. Request the new camera stream using ideal facingMode constraint
         const newStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: currentFacingMode },
+            video: { facingMode: { ideal: currentFacingMode } },
             audio: false
         });
         
         const newVideoTrack = newStream.getVideoTracks()[0];
+        if (!newVideoTrack) throw new Error("No video track found in the new stream.");
         
         // Ensure new track is enabled
         newVideoTrack.enabled = true;
-        
-        const oldVideoTrack = localStream.getVideoTracks()[0];
-        if (oldVideoTrack) {
-            oldVideoTrack.stop();
-            localStream.removeTrack(oldVideoTrack);
-        }
         
         localStream.addTrack(newVideoTrack);
         
@@ -1186,10 +1190,46 @@ async function switchCamera() {
             }
         }
     } catch (err) {
-        console.error("Error switching camera:", err);
-        addChatMessage("System", "Failed to switch camera: " + err.message, true);
-        // Revert facing mode state
-        currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+        console.error("Error switching camera, attempting fallback to previous mode:", err);
+        
+        // Fallback: try to restore the previous camera mode
+        currentFacingMode = previousFacingMode;
+        try {
+            const fallbackStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: currentFacingMode } },
+                audio: false
+            });
+            const fallbackVideoTrack = fallbackStream.getVideoTracks()[0];
+            if (fallbackVideoTrack) {
+                fallbackVideoTrack.enabled = true;
+                localStream.addTrack(fallbackVideoTrack);
+                
+                const localWrapper = document.querySelector('.local-wrapper');
+                if (localWrapper) {
+                    if (currentFacingMode === "environment") {
+                        localWrapper.classList.add('back-camera');
+                    } else {
+                        localWrapper.classList.remove('back-camera');
+                    }
+                }
+                
+                if (!screenStream) {
+                    localVideo.srcObject = localStream;
+                    for (let sid in peers) {
+                        const pc = peers[sid];
+                        const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                        if (sender) {
+                            sender.replaceTrack(fallbackVideoTrack).catch(e => console.error("Error replacing track on fallback:", e));
+                        }
+                    }
+                } else {
+                    originalVideoTrack = fallbackVideoTrack;
+                }
+            }
+        } catch (fallbackErr) {
+            console.error("Critical: Fallback camera retrieval also failed:", fallbackErr);
+            addChatMessage("System", "Failed to access camera: " + err.message, true);
+        }
     } finally {
         if (switchCameraBtn && !screenStream) {
             switchCameraBtn.disabled = false;
