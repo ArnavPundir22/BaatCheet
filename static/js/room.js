@@ -230,7 +230,37 @@ function removePeerVideo(sid) {
 
 // --- Socket Events (Signaling & Chat) ---
 
+// --- Notification Sounds ---
+function playJoinSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        
+        const playTone = (freq, startTime, duration) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+            gain.gain.setValueAtTime(0, ctx.currentTime + startTime);
+            gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + startTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + startTime);
+            osc.stop(ctx.currentTime + startTime + duration);
+        };
+
+        playTone(600, 0, 0.15);     // First tone
+        playTone(800, 0.1, 0.2);    // Second tone, slightly higher and later
+    } catch(e) {
+        console.error("Audio play failed", e);
+    }
+}
+
 socket.on('user_joined', async (data) => {
+    playJoinSound();
+
     // New user joined, we need to send them an offer
     const sid = data.sid;
     const pc = createPeerConnection(sid, data.username);
