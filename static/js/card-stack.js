@@ -91,6 +91,7 @@ if(cardStack){
     cardStack.addEventListener("touchstart",(e)=>{
 
         startX = e.touches[0].clientX;
+        currentX = startX; // Prevent false swipe on tap
 
     },{ passive:true });
 
