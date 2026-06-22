@@ -698,13 +698,36 @@ document.addEventListener('click', (e) => {
     }
 });
 
-document.querySelectorAll('.reaction-emoji').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const emoji = btn.getAttribute('data-emoji');
-        socket.emit('reaction', { room: ROOM_CODE, reaction: emoji });
+const reactionPicker = document.getElementById('reaction-picker');
+if (reactionPicker) {
+    reactionPicker.addEventListener('emoji-click', event => {
+        socket.emit('reaction', { room: ROOM_CODE, reaction: event.detail.unicode });
         reactionPanel.classList.remove('show');
     });
-});
+}
+
+// --- Chat Emoji Logic ---
+const chatEmojiBtn = document.getElementById('chat-emoji-btn');
+const chatEmojiPanel = document.getElementById('chat-emoji-panel');
+const chatEmojiPicker = document.getElementById('chat-emoji-picker');
+
+if (chatEmojiBtn && chatEmojiPanel && chatEmojiPicker) {
+    chatEmojiBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        chatEmojiPanel.classList.toggle('show');
+    });
+
+    chatEmojiPicker.addEventListener('emoji-click', event => {
+        chatInput.value += event.detail.unicode;
+        chatInput.focus();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!chatEmojiPanel.contains(e.target) && e.target !== chatEmojiBtn) {
+            chatEmojiPanel.classList.remove('show');
+        }
+    });
+}
 
 function showFloatingReaction(wrapperId, emoji) {
     console.log("showFloatingReaction called for", wrapperId, emoji);
