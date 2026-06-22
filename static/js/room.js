@@ -478,6 +478,7 @@ function sendMessage() {
             reply_to: replyingTo
         });
         chatInput.value = '';
+        chatInput.style.height = 'auto';
         cancelReply();
         socket.emit('stop_typing', { room: ROOM_CODE, username: USERNAME });
         isTyping = false;
@@ -485,13 +486,27 @@ function sendMessage() {
 }
 
 sendBtn.addEventListener('click', sendMessage);
-chatInput.addEventListener('keypress', (e) => {
+chatInput.addEventListener('keydown', (e) => {
+    const isMobile = window.innerWidth <= 768;
+
     if (e.key === 'Enter') {
-        sendMessage();
+        if (isMobile) {
+            // Let the default newline behavior happen on mobile
+            return;
+        } else {
+            // Desktop behavior
+            if (!e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
     }
 });
 
 chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = (chatInput.scrollHeight) + 'px';
+
     if (!isTyping) {
         isTyping = true;
         socket.emit('typing', { room: ROOM_CODE, username: USERNAME });
