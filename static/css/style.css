@@ -689,12 +689,15 @@ input[type="text"]:focus {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scaleX(-1);
-    /* Mirror effect */
     transition: opacity 0.3s;
 }
 
-.video-wrapper.back-camera video {
+.local-wrapper video {
+    transform: scaleX(-1);
+    /* Mirror effect for local camera */
+}
+
+.local-wrapper.back-camera video {
     transform: none;
 }
 

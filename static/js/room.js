@@ -100,6 +100,18 @@ async function initMedia() {
         });
         localVideo.srcObject = localStream;
 
+        const videoTrack = localStream.getVideoTracks()[0];
+        if (videoTrack) {
+            const settings = videoTrack.getSettings();
+            if (settings.facingMode) {
+                currentFacingMode = settings.facingMode;
+                if (currentFacingMode === 'environment') {
+                    const localWrapper = document.querySelector('.local-wrapper');
+                    if (localWrapper) localWrapper.classList.add('back-camera');
+                }
+            }
+        }
+
         // After getting media, join the room via Socket
         socket.emit('join', { room: ROOM_CODE, username: USERNAME });
         addChatMessage("System", "🔒 History is never saved. You are seeing live messages only.", true);
