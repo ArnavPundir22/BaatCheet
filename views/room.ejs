@@ -14,6 +14,11 @@
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
     <script>
         const ROOM_CODE = "<%= room_code %>";
@@ -64,6 +69,12 @@
                             <circle cx="12" cy="13" r="3"></circle>
                             <path d="m18 22 4-4-4-4"></path>
                             <path d="m20 18H14"></path>
+                        </svg></button>
+                    <button id="toggle-air-draw" class="btn btn-icon" title="Air Draw (Beta)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 19 7-7 3 3-7 7-3-3z"></path>
+                            <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                            <path d="m2 2 7.586 7.586"></path>
+                            <circle cx="11" cy="11" r="2"></circle>
                         </svg></button>
 
 
@@ -156,6 +167,22 @@
             <div id="video-grid" class="video-grid">
                 <div class="video-wrapper local-wrapper">
                     <video id="local-video" autoplay muted playsinline></video>
+                    <canvas id="air-draw-canvas" class="air-draw-canvas"></canvas>
+                    <div id="air-draw-cursor" class="air-draw-cursor" style="display: none;"></div>
+                    <div id="air-draw-controls" class="air-draw-controls" style="display: none;">
+                        <div class="color-options">
+                            <button class="color-btn active" data-color="#10b981" style="background-color: #10b981;" title="Green"></button>
+                            <button class="color-btn" data-color="#ef4444" style="background-color: #ef4444;" title="Red"></button>
+                            <button class="color-btn" data-color="#3b82f6" style="background-color: #3b82f6;" title="Blue"></button>
+                            <button class="color-btn" data-color="#eab308" style="background-color: #eab308;" title="Yellow"></button>
+                            <button class="color-btn" data-color="#ec4899" style="background-color: #ec4899;" title="Pink"></button>
+                            <button class="color-btn rainbow-btn" data-color="rainbow" title="Multicolor"></button>
+                        </div>
+                        <div class="stroke-options">
+                            <label for="stroke-width" class="stroke-label">Thickness</label>
+                            <input type="range" id="stroke-width" min="2" max="20" value="6">
+                        </div>
+                    </div>
                     <div class="avatar-fallback"><%= username.charAt(0).toUpperCase() %></div>
                     <div class="mic-indicator">
                         <svg class="mic-on-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
@@ -354,6 +381,7 @@
 
     <!-- WebRTC and Chat Logic -->
     <script src="/static/js/room.js?v=11"></script>
+    <script src="/static/js/air-draw.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

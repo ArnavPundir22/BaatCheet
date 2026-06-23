@@ -12,6 +12,12 @@ const shareScreenBtn = document.getElementById('share-screen');
 const leaveRoomBtn = document.getElementById('leave-room');
 const switchCameraBtn = document.getElementById('switch-camera');
 
+// Global hook for air-draw.js
+window.broadcastAirDrawStroke = function(strokeData) {
+    socket.emit('air_draw_sync', { room: ROOM_CODE, points: strokeData });
+};
+window.remoteAirDrawStrokes = {}; // Map of sid -> strokes array
+
 // Reply Elements
 let replyingTo = null;
 const replyPreview = document.getElementById('reply-preview');
@@ -167,6 +173,10 @@ function createPeerConnection(sid, username) {
             videoElement.autoplay = true;
             videoElement.playsInline = true;
 
+            const canvasElement = document.createElement('canvas');
+            canvasElement.id = `air-draw-remote-${sid}`;
+            canvasElement.className = 'remote-air-draw-canvas';
+
             const avatarFallback = document.createElement('div');
             avatarFallback.className = 'avatar-fallback';
             avatarFallback.innerText = username.charAt(0).toUpperCase();
@@ -193,6 +203,7 @@ function createPeerConnection(sid, username) {
             };
 
             videoWrapper.appendChild(videoElement);
+            videoWrapper.appendChild(canvasElement);
             videoWrapper.appendChild(avatarFallback);
             videoWrapper.appendChild(micIndicator);
             videoWrapper.appendChild(label);
@@ -351,6 +362,17 @@ socket.on('screen_share_status', (data) => {
             wrapper.classList.remove('is-screen-share');
             if (videoGrid) videoGrid.classList.remove('has-screen-share');
         }
+    }
+});
+
+socket.on('air_draw_sync', (data) => {
+    const { sender_sid, points } = data;
+    if (!window.remoteAirDrawStrokes) window.remoteAirDrawStrokes = {};
+    if (!window.remoteAirDrawStrokes[sender_sid]) window.remoteAirDrawStrokes[sender_sid] = [];
+    if (points) {
+        // OVERRIDE timestamp with receiver's local time to avoid system clock drift bugs!
+        points.timestamp = Date.now();
+        window.remoteAirDrawStrokes[sender_sid].push(points);
     }
 });
 

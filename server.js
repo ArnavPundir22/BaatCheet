@@ -251,6 +251,11 @@ io.on('connection', (socket) => {
         socket.to(data.room).emit('media_status', { type: data.type, enabled: data.enabled, sender_sid: socket.id });
     });
 
+    socket.on('air_draw_sync', (data) => {
+        console.log(`Routing air draw from ${socket.id} to room ${data.room}`);
+        socket.to(data.room).emit('air_draw_sync', { sender_sid: socket.id, points: data.points });
+    });
+
     socket.on('webrtc_offer', (data) => {
         io.to(data.target_sid).emit('webrtc_offer', {
             sdp: data.sdp,
