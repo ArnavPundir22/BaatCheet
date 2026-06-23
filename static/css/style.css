@@ -695,11 +695,8 @@ emoji-picker {
     height: 100%;
     object-fit: cover;
     transition: opacity 0.3s;
-}
-
-.local-wrapper video {
     transform: scaleX(-1);
-    /* Mirror effect for local camera */
+    /* Mirror effect for all cameras */
 }
 
 .local-wrapper.back-camera video {
@@ -2856,6 +2853,7 @@ body.has-maximized-video .options-dropdown {
     height: 100%;
     pointer-events: none;
     z-index: 5;
+    transform: scaleX(-1);
 }
 
 #toggle-air-draw.active {
