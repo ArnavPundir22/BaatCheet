@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stroke History for Vector Rendering
     let strokes = [];
     let currentStroke = null;
-    const LINE_LIFESPAN = 2500; // 2.5 seconds before fading out completely
+    const LINE_LIFESPAN = 5000; // 5 seconds before fading out completely
     let smoothedPoint = null;
 
     // Set up controls listeners
