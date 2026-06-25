@@ -13,6 +13,17 @@
 
 ---
 
+## 📑 Table of Contents
+- [📖 Introduction](#-introduction)
+- [✨ Key Features](#-key-features)
+- [💼 Professional & Enterprise Use Cases](#-professional--enterprise-use-cases)
+- [📚 Documentation Index](#-documentation-index)
+- [📲 Install as a Mobile App (PWA)](#-install-as-a-mobile-app-pwa)
+- [🛠️ Quick Tech Stack Overview](#️-quick-tech-stack-overview)
+- [🔒 Security & Privacy Guarantee](#-security--privacy-guarantee)
+
+---
+
 ## 📖 Introduction
 
 **BaatCheet** (meaning "Conversation" in Hindi) is a cutting-edge, real-time video and text chat application designed from the ground up for absolute privacy and zero persistence. When you join a room, you communicate directly via peer-to-peer WebRTC streams. When the last person leaves the room, the room and all its data are wiped from existence instantly.
@@ -30,8 +41,8 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 - **📱 Progressive Web App (PWA):** Fully installable mobile app experience. Works offline, launches in full-screen standalone mode without a browser bar.
 - **📱 Notch-Aware UI:** Built-in dynamic padding that automatically respects mobile safe-area insets (`env(safe-area-inset-bottom)`) ensuring your UI is never blocked by iOS/Android home indicators.
 - **🖼️ Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
-- **🎨 Multiplayer Air Draw:** Real-time synchronized canvas overlay allowing users to draw directly on the video feed. Hand-tracked strokes are accurately broadcast and rendered across all remote participants' screens instantly.
-- **🎉 Animated Reactions & Emoji Gallery:** Comprehensive dark-mode glassmorphic emoji picker (`emoji-picker-element`) accessible from the chat and reaction toolbar. Send fully animated floating reactions across the screen or use them in text chat.
+- **🎨 Multiplayer Air Draw:** A dynamic, synchronized canvas overlay that allows users to draw directly on the video feed in real-time. Hand-tracked strokes are smoothly rendered and instantly broadcasted to all participants, making visual collaboration seamless.
+- **🎉 Animated Reactions & Emoji Gallery:** A comprehensive, dark-mode glassmorphic emoji picker (powered by `emoji-picker-element`). Accessible from both the chat input and the reaction toolbar, allowing users to send fully animated floating reactions across the screen or use them inline in text chats.
 - **🎧 Advanced Audio Filtering:** Built-in echo cancellation, automatic gain control, and noise suppression for crystal clear audio.
 - **🚀 Scalable Architecture:** Backend engineered with Node.js and Redis `@socket.io/redis-adapter` to support multi-process deployments.
 

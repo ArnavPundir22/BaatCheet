@@ -64,6 +64,29 @@ BaatCheet uses WebRTC for peer-to-peer video and audio streaming, meaning media 
 4.  **ICE Candidates:** Throughout this process, clients discover their public IP addresses using Google's public STUN servers (`stun.l.google.com:19302`). These network paths (ICE candidates) are exchanged via the server (`webrtc_ice_candidate`).
 5.  **P2P Connection Established:** Once SDPs and ICE candidates are exchanged, a direct peer-to-peer connection is established. Video and audio tracks are attached to dynamic `<video>` elements in the DOM.
 
+#### WebRTC Sequence Diagram
+```mermaid
+sequenceDiagram
+    participant P1 as Peer 1 (Existing)
+    participant S as Node.js Server
+    participant P2 as Peer 2 (New User)
+    
+    P2->>S: join(room_code)
+    S-->>P1: user_joined(P2_id)
+    Note over P1: Create RTCPeerConnection<br/>Generate SDP Offer
+    P1->>S: webrtc_offer(Offer, P2_id)
+    S-->>P2: webrtc_offer(Offer, P1_id)
+    Note over P2: Set Remote Description<br/>Generate SDP Answer
+    P2->>S: webrtc_answer(Answer, P1_id)
+    S-->>P1: webrtc_answer(Answer, P2_id)
+    Note over P1,P2: Simultaneous ICE Candidate Discovery via STUN
+    P1->>S: webrtc_ice_candidate(Candidate)
+    S-->>P2: webrtc_ice_candidate(Candidate)
+    P2->>S: webrtc_ice_candidate(Candidate)
+    S-->>P1: webrtc_ice_candidate(Candidate)
+    Note over P1,P2: P2P Connection Established
+```
+
 ### Mobile Device Capabilities
 - **Camera/Microphone:** Fully supported on all modern mobile browsers (iOS Safari, Android Chrome) via `getUserMedia` (requires HTTPS).
 - **Screen Sharing:** Mobile operating systems inherently block web applications from capturing the screen for security reasons (`getDisplayMedia` is unsupported). Mobile users can seamlessly *view* screens shared by desktop users, but cannot broadcast their own screens. The UI elegantly intercepts this limitation and provides an educational modal.
@@ -72,7 +95,10 @@ BaatCheet uses WebRTC for peer-to-peer video and audio streaming, meaning media 
 
 ## 🧠 Redis State Management (The Ephemeral Design)
 
-BaatCheet strictly adheres to a "No Database" policy for absolute privacy. All state is stored in Redis and is highly volatile.
+BaatCheet strictly adheres to a "No Database" policy for absolute privacy. All state is stored in Redis and is highly volatile. This architecture is intentionally chosen over traditional SQL (PostgreSQL/MySQL) or NoSQL (MongoDB) databases because:
+1.  **Speed:** Redis operates entirely in memory, making state queries (like checking if a room exists) near instantaneous.
+2.  **Built-in TTL (Time to Live):** Keys can be programmed to self-destruct. We leverage this to automatically clean up orphaned rooms.
+3.  **No Residual Data:** Traditional databases write to disk, meaning deleted data could potentially be recovered from storage sectors. Redis guarantees that once memory is freed, the data is gone forever.
 
 ### Redis Key Schema
 -   `room:{room_code}:exists` (String): A temporary marker set when a room is created. It has a TTL of 3600 seconds (1 hour). If no one joins, the room expires automatically.

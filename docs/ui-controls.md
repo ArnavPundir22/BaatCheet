@@ -39,8 +39,8 @@ The chat system is designed to look and feel like modern messaging apps (e.g., W
 
 Users can send ephemeral emoji reactions that float across everyone's screens, or use them inline within the chat.
 
--   **Full Emoji Picker Integration:** Upgraded to a comprehensive emoji picker using `emoji-picker-element`.
--   **UI Integration:** Designed with a dark-mode, glassmorphic UI, the emoji gallery is seamlessly accessible from both the reaction toolbar and the chat input field.
+-   **Full Emoji Picker Integration:** Upgraded to a comprehensive emoji picker using `emoji-picker-element`, which utilizes the modern Web Components standard for high performance and native DOM encapsulation.
+-   **UI Integration & State Management:** Designed with a dark-mode, glassmorphic UI, the emoji gallery is seamlessly accessible from both the reaction toolbar and the chat input field. The state is centrally managed so picking an emoji while typing appends it to the chat input, whereas picking it from the reaction menu instantly broadcasts it.
 -   **Floating Animation (`showFloatingReaction`):** When a reaction is triggered, a temporary DOM element is created and injected into the user's specific video wrapper (or randomly on screen as a fallback).
 -   **Math & Randomization:** The spawn position includes a random horizontal offset (`(Math.random() - 0.5) * 80`) to ensure multiple reactions don't overlap perfectly.
 -   **CSS Keyframes:** The element uses CSS animations (`@keyframes floatUp`) to rise, fade out, and disappear.
@@ -50,10 +50,10 @@ Users can send ephemeral emoji reactions that float across everyone's screens, o
 
 A dynamic collaborative drawing feature allows participants to draw over the video feed in real time.
 
--   **Canvas Overlay:** An interactive HTML5 `<canvas>` sits over the video wrapper, scaling responsively with the participant's video.
--   **Drawing Engine:** Tracks mouse, touch, and hand-tracking coordinates to render smooth strokes using `CanvasRenderingContext2D`.
--   **Real-Time Synchronization:** As the user draws, drawing strokes and coordinates are broadcasted to the room via WebSockets.
--   **Network Resiliency:** The implementation handles network synchronization across all remote participants' video feeds and ensures the drawing engine is robust against browser-side disconnects or session resets.
+-   **Canvas Overlay:** An interactive HTML5 `<canvas>` sits over the video wrapper, scaling responsively with the participant's video using CSS absolute positioning and `pointer-events` routing.
+-   **Drawing Engine & Normalization:** Tracks mouse, touch, and hand-tracking coordinates to render smooth strokes using `CanvasRenderingContext2D`. To ensure drawings align perfectly across devices with varying screen resolutions, all X and Y coordinates are normalized (e.g., `x / canvas.width`) before being broadcasted.
+-   **Real-Time Synchronization:** As the user draws, the normalized coordinate objects `{x, y, color, type}` are emitted continuously via WebSockets (`draw` event). Remote clients receive these events, scale the normalized coordinates back up to their local canvas dimensions (`normalizedX * localCanvas.width`), and render the stroke.
+-   **Network Resiliency & Clear States:** The implementation handles network synchronization across all remote participants' video feeds. If a user clicks the "Clear Canvas" button, a `clear_canvas` WebSocket event is dispatched to wipe the remote contexts simultaneously.
 
 ## 👻 View-Once Ephemeral Media (Images & Audio)
 

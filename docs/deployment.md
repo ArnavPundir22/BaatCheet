@@ -60,5 +60,43 @@ You can customize the application behavior using the following environment varia
 WebRTC requires a secure context to access the user's camera and microphone.
 -   **Localhost:** Browsers allow media access over `http://localhost`.
 -   **Network/Internet:** If you access the application over a network IP (e.g., `http://192.168.1.5:5000`) or deploy it to a live domain without SSL, the browser will **block** camera and microphone access.
--   **Solution (HTTPS):** You MUST deploy the application behind an HTTPS proxy (like Nginx with Let's Encrypt), or use a cloud provider like Render or Heroku that automatically provisions SSL certificates.
+-   **Solution (HTTPS):** You MUST deploy the application behind an HTTPS proxy (like Nginx with Let's Encrypt), or use a cloud provider like Render or Heroku that automatically provisions SSL certificates. See the [Reverse Proxy Setup (Nginx)](#️-reverse-proxy-setup-nginx) section below for detailed instructions.
 -   **Solution (TURN):** To ensure 100% connectivity for users on strict corporate, university, or 5G networks (Symmetric NAT), you must configure a TURN server via the environment variables listed above. Free TURN servers can be acquired from providers like Metered.ca.
+
+## 🛡️ Reverse Proxy Setup (Nginx)
+
+When deploying to a custom VPS (like DigitalOcean, Linode, or AWS EC2), you should use Nginx as a reverse proxy to handle SSL termination and forward WebSocket traffic to your Node.js application.
+
+1. **Install Nginx and Certbot:**
+   ```bash
+   sudo apt update
+   sudo apt install nginx certbot python3-certbot-nginx
+   ```
+2. **Configure Nginx (`/etc/nginx/sites-available/baatcheet`):**
+   ```nginx
+   server {
+       server_name yourdomain.com;
+       
+       location / {
+           proxy_pass http://localhost:5000;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection "upgrade";
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+       }
+   }
+   ```
+3. **Enable the Site & Obtain SSL:**
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/baatcheet /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo certbot --nginx -d yourdomain.com
+   sudo systemctl restart nginx
+   ```
+
+## 🚑 Troubleshooting Guide
+
+- **Camera/Microphone access is blocked:** Ensure you are accessing the site via `https://` or `http://localhost`. Browsers explicitly block media APIs over unencrypted HTTP network connections.
+- **Videos are not connecting (Black Screen):** This is usually an ICE candidate (NAT traversal) failure. Ensure your TURN server credentials in the environment variables are correct and that the TURN server is currently active.
+- **Socket.IO connection drops frequently:** If using multiple Node.js instances behind a load balancer, ensure you have enabled "Sticky Sessions" (Session Affinity) on your load balancer, or that the Redis Adapter is configured and functioning correctly.
