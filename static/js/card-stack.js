@@ -66,12 +66,7 @@ if (installBtn) {
 
     installBtn.addEventListener("click", () => {
 
-        document
-            .getElementById("install-section")
-            .scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
+        document.getElementById("install-modal").style.display = "flex";
 
     });
 

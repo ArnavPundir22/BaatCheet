@@ -61,7 +61,7 @@
                     GitHub Source
             </a>
 
-            <button class="mobile-install-btn" onclick="document.getElementById('install-section').scrollIntoView({behavior:'smooth'});"> Install Now </button>
+            <button class="mobile-install-btn" onclick="document.getElementById('install-modal').style.display='flex'"> Install Now </button>
         </div>
                               
 
@@ -368,41 +368,34 @@
         </div>
     </div>
             <!-- App Promo -->
-            <!-- <div class="card--border-glow col-span-4" style="text-align: center;"> -->
-                <div id="install-section" class="devices-section">
-                <div class="card--border-glow" style="text-align:center;">
-                <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 0.5rem;">[DEVICES] > Local
-                    Installation</h3>
-                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem auto;">Mount BaatCheet
-                    directly onto your hardware for an untethered, full-screen native experience.</p>
+    <!-- App Install Modal -->
+    <div id="install-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content glass-panel" style="max-width: 800px; padding: 2rem; text-align: center;">
+            <h3 class="font-mono" style="color: var(--secondary); margin-bottom: 0.5rem;">[DEVICES] > Local Installation</h3>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem auto;">Mount BaatCheet directly onto your hardware for an untethered, full-screen native experience.</p>
 
-                <div id="install-instructions"
-                    style="display: none; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                    <div
-                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
-                        <strong class="font-mono" style="color: var(--primary);">🍏 iOS (Safari)</strong><br><br>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Tap <b>Share</b> > <b>"Add to Home
-                                Screen"</b></span>
-                    </div>
-                    <div
-                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
-                        <strong class="font-mono" style="color: var(--primary);">🤖 Android</strong><br><br>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Browser menu > <b>"Add to Home
-                                screen"</b></span>
-                    </div>
-                    <div
-                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
-                        <strong class="font-mono" style="color: var(--primary);">💻 Desktop</strong><br><br>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Click the install icon in address
-                            bar</span>
-                    </div>
+            <div id="install-instructions" style="display: none; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
+                    <strong class="font-mono" style="color: var(--primary);">🍏 iOS (Safari)</strong><br><br>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Tap <b>Share</b> > <b>"Add to Home Screen"</b></span>
                 </div>
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
+                    <strong class="font-mono" style="color: var(--primary);">🤖 Android</strong><br><br>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Browser menu > <b>"Add to Home screen"</b></span>
+                </div>
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex: 1; min-width: 200px;">
+                    <strong class="font-mono" style="color: var(--primary);">💻 Desktop</strong><br><br>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Click the install icon in address bar</span>
+                </div>
+            </div>
 
-                <button id="install-btn" class="btn btn-secondary font-mono"
-                    style="display: none; margin: 0 auto; width: auto; min-width: 250px; text-transform: uppercase;">Execute
-                    Install</button>
+            <button id="install-btn" class="btn btn-secondary font-mono" style="display: none; margin: 2rem auto 0 auto; width: auto; min-width: 250px; text-transform: uppercase;">Execute Install</button>
+            
+            <div class="modal-actions" style="margin-top: 2rem;">
+                <button id="close-install-modal" class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('install-modal').style.display='none'">Close</button>
             </div>
         </div>
+    </div>
     </div>
 
        
@@ -431,9 +424,13 @@
 
             if (isStandalone) {
                 if (installCard) installCard.style.display = 'none';
+                const installNowBtn = document.getElementById('installNowBtn');
+                if (installNowBtn) installNowBtn.style.display = 'none';
+                const mobileInstallBtn = document.querySelector('.mobile-install-btn');
+                if (mobileInstallBtn) mobileInstallBtn.style.display = 'none';
             } else {
                 // Show manual instructions always as fallback
-                installInstructions.style.display = 'block';
+                installInstructions.style.display = 'flex';
             }
         });
 
