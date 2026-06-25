@@ -18,14 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     document.getElementById('cinematic-canvas-container').appendChild(renderer.domElement);
 
     // Create Cyber Tunnel (Points/Particles)
     const geometry = new THREE.BufferGeometry();
-    const particlesCount = 3000;
+    const particlesCount = 1000;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i+=3) {
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(particlesMesh);
 
     // Create a wireframe grid at the bottom
-    const gridGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
+    const gridGeometry = new THREE.PlaneGeometry(100, 100, 20, 20);
     const gridMaterial = new THREE.MeshBasicMaterial({ 
         color: 0x059669, 
         wireframe: true,
@@ -80,8 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animation Loop
     const clock = new THREE.Clock();
 
+    let animationId;
     function animate() {
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
         
         const elapsedTime = clock.getElapsedTime();
 
@@ -150,6 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 hudWelcome.style.opacity = '0';
                 
                 setTimeout(() => {
+                    cancelAnimationFrame(animationId);
+                    geometry.dispose();
+                    material.dispose();
+                    gridGeometry.dispose();
+                    gridMaterial.dispose();
+                    renderer.dispose();
+                    
                     overlay.remove();
                     sessionStorage.setItem('baatcheet_intro_played', 'true');
                 }, 1000); // Wait for CSS transition
