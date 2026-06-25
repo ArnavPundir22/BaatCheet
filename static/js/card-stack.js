@@ -6,7 +6,7 @@ const joinBtn = document.getElementById("joinSessionBtn");
 
 let showingCreate = true;
 
-function showCreateRoom(){
+function showCreateRoom() {
 
     createCard.classList.remove("next-stack-card");
     createCard.classList.add("active-stack-card");
@@ -20,7 +20,7 @@ function showCreateRoom(){
     showingCreate = true;
 }
 
-function showJoinRoom(){
+function showJoinRoom() {
 
     joinCard.classList.remove("next-stack-card");
     joinCard.classList.add("active-stack-card");
@@ -69,8 +69,8 @@ if (installBtn) {
         document
             .getElementById("install-section")
             .scrollIntoView({
-                behavior:"smooth",
-                block:"start"
+                behavior: "smooth",
+                block: "start"
             });
 
     });
@@ -86,16 +86,16 @@ let currentX = 0;
 
 const cardStack = document.querySelector(".card-stack");
 
-if(cardStack){
+if (cardStack) {
 
-    cardStack.addEventListener("touchstart",(e)=>{
+    cardStack.addEventListener("touchstart", (e) => {
 
         startX = e.touches[0].clientX;
         currentX = startX; // Prevent false swipe on tap
 
-    },{ passive:true });
+    }, { passive: true });
 
-    cardStack.addEventListener("touchmove",(e)=>{
+    cardStack.addEventListener("touchmove", (e) => {
 
         currentX = e.touches[0].clientX;
 
@@ -103,7 +103,7 @@ if(cardStack){
 
         const activeCard = document.querySelector(".active-stack-card");
 
-        if(activeCard){
+        if (activeCard) {
 
             activeCard.style.transition = "none";
 
@@ -113,15 +113,15 @@ if(cardStack){
                 `translate3d(${diff}px,0,0)`;
         }
 
-    },{ passive:true });
+    }, { passive: true });
 
-    cardStack.addEventListener("touchend",()=>{
+    cardStack.addEventListener("touchend", () => {
 
         const diff = currentX - startX;
 
         const activeCard = document.querySelector(".active-stack-card");
 
-        if(activeCard){
+        if (activeCard) {
 
             activeCard.style.transition =
                 "transform .15s cubic-bezier(.22,1,.36,1)";
@@ -130,13 +130,13 @@ if(cardStack){
                 "translate3d(0,0,0)";
         }
 
-        if(Math.abs(diff) > 35){
+        if (Math.abs(diff) > 35) {
 
-            if(diff < 0){
+            if (diff < 0) {
 
                 showJoinRoom();
 
-            }else{
+            } else {
 
                 showCreateRoom();
 

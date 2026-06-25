@@ -35,15 +35,25 @@ The chat system is designed to look and feel like modern messaging apps (e.g., W
 -   **Inline Message Replies:** Users can hover over any chat bubble to reveal a `↩️` reply button positioned outside the message bubble for a cleaner UI. Clicking it populates a `replyingTo` state object and reveals a glassmorphic `#reply-preview` banner above the chat input. When the message is dispatched, the socket payload includes the `reply_to` context, which is rendered dynamically as a WhatsApp-style quoted block inside the chat bubble by `addChatMessage`.
 -   **"Zero-Log" Cyberpunk Purge:** To visually reinforce the ephemeral nature, clicking "Leave Room" triggers a full-screen `#purge-overlay`. This overlay features high-fidelity cyberpunk visual effects including screen flickering, glitch text, and dual-rotating spinners for 1200ms before disconnecting the socket and routing home.
 
-## 🎉 Animated Reactions
+## 🎉 Animated Reactions & Emoji Gallery
 
-Users can send ephemeral emoji reactions that float across everyone's screens.
+Users can send ephemeral emoji reactions that float across everyone's screens, or use them inline within the chat.
 
--   **Reaction Panel:** A glassmorphic pop-up panel contains selectable emojis. Clicking outside the panel or on the toggle button safely closes it via event propagation control (`e.stopPropagation()`).
+-   **Full Emoji Picker Integration:** Upgraded to a comprehensive emoji picker using `emoji-picker-element`.
+-   **UI Integration:** Designed with a dark-mode, glassmorphic UI, the emoji gallery is seamlessly accessible from both the reaction toolbar and the chat input field.
 -   **Floating Animation (`showFloatingReaction`):** When a reaction is triggered, a temporary DOM element is created and injected into the user's specific video wrapper (or randomly on screen as a fallback).
 -   **Math & Randomization:** The spawn position includes a random horizontal offset (`(Math.random() - 0.5) * 80`) to ensure multiple reactions don't overlap perfectly.
 -   **CSS Keyframes:** The element uses CSS animations (`@keyframes floatUp`) to rise, fade out, and disappear.
 -   **Garbage Collection:** A `setTimeout` removes the element from the DOM after 3.6 seconds to prevent memory leaks and DOM clutter.
+
+## 🎨 Multiplayer Air Draw
+
+A dynamic collaborative drawing feature allows participants to draw over the video feed in real time.
+
+-   **Canvas Overlay:** An interactive HTML5 `<canvas>` sits over the video wrapper, scaling responsively with the participant's video.
+-   **Drawing Engine:** Tracks mouse, touch, and hand-tracking coordinates to render smooth strokes using `CanvasRenderingContext2D`.
+-   **Real-Time Synchronization:** As the user draws, drawing strokes and coordinates are broadcasted to the room via WebSockets.
+-   **Network Resiliency:** The implementation handles network synchronization across all remote participants' video feeds and ensures the drawing engine is robust against browser-side disconnects or session resets.
 
 ## 👻 View-Once Ephemeral Media (Images & Audio)
 

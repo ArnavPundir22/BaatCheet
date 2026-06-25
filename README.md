@@ -30,7 +30,8 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 - **📱 Progressive Web App (PWA):** Fully installable mobile app experience. Works offline, launches in full-screen standalone mode without a browser bar.
 - **📱 Notch-Aware UI:** Built-in dynamic padding that automatically respects mobile safe-area insets (`env(safe-area-inset-bottom)`) ensuring your UI is never blocked by iOS/Android home indicators.
 - **🖼️ Responsive UI & Mobile PIP:** Stunning glassmorphism UI. On mobile devices, the video collapses into a draggable Picture-in-Picture (PIP) miniplayer.
-- **🎉 Animated Reactions:** Instantly send fully animated emoji reactions (👍, ❤️, 😂, 🎉, 😘) that float seamlessly across the screen.
+- **🎨 Multiplayer Air Draw:** Real-time synchronized canvas overlay allowing users to draw directly on the video feed. Hand-tracked strokes are accurately broadcast and rendered across all remote participants' screens instantly.
+- **🎉 Animated Reactions & Emoji Gallery:** Comprehensive dark-mode glassmorphic emoji picker (`emoji-picker-element`) accessible from the chat and reaction toolbar. Send fully animated floating reactions across the screen or use them in text chat.
 - **🎧 Advanced Audio Filtering:** Built-in echo cancellation, automatic gain control, and noise suppression for crystal clear audio.
 - **🚀 Scalable Architecture:** Backend engineered with Node.js and Redis `@socket.io/redis-adapter` to support multi-process deployments.
 
