@@ -983,23 +983,34 @@ body.has-maximized-video .options-dropdown {
     border-radius: 8px;
     max-width: 85%;
     word-wrap: break-word;
-    animation: fadeIn 0.3s ease;
     position: relative;
     box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
     font-size: 0.95rem;
     user-select: none;
     -webkit-user-select: none;
+    animation: messageReceive 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: bottom left;
 }
 
-@keyframes fadeIn {
-    from {
+@keyframes messageReceive {
+    0% {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(15px) scale(0.95);
     }
-
-    to {
+    100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes messageSend {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -1035,6 +1046,9 @@ body.has-maximized-video .options-dropdown {
     box-shadow: 0 0 10px color-mix(in srgb, var(--primary) 35%, transparent);
 
     color: var(--text-main);
+    
+    animation: messageSend 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+    transform-origin: bottom right;
 }
 
 .message.mine::before {
