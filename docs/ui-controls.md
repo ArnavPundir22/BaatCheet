@@ -1,6 +1,6 @@
 # 🎮 UI & Controls Logic
 
-BaatCheet features a highly interactive, responsive, and dynamic user interface built with Vanilla JavaScript and CSS3. The focus is on providing a seamless "native-app" feel, particularly on mobile devices.
+AuraMeet features a highly interactive, responsive, and dynamic user interface built with Vanilla JavaScript and CSS3. The focus is on providing a seamless "native-app" feel, particularly on mobile devices.
 
 ## 📱 Mobile Miniplayer (Picture-in-Picture)
 
@@ -57,7 +57,7 @@ A dynamic collaborative drawing feature allows participants to draw over the vid
 
 ## 👻 View-Once Ephemeral Media (Images & Audio)
 
-BaatCheet implements a "Snapchat-like" view-once media system directly in the browser without relying on any backend storage or databases.
+AuraMeet implements a "Snapchat-like" view-once media system directly in the browser without relying on any backend storage or databases.
 
 ### 🖼️ Ephemeral Images
 -   **Client-Side Compression:** When an image is selected, it is loaded into a hidden `<canvas>` element using the `FileReader` and `Image` APIs. The canvas aggressively resizes and compresses the image to a maximum 800x800 resolution at 70% JPEG quality.

@@ -1,7 +1,7 @@
-# Technical Architecture Document (TAD) - BaatCheet
+# Technical Architecture Document (TAD) - AuraMeet
 
 ## 1. Introduction
-This document outlines the technical architecture for **BaatCheet**, an ephemeral, cyberpunk-themed real-time communication platform. It focuses on zero-footprint state management, WebRTC peer-to-peer data transfers, and WebSocket communication.
+This document outlines the technical architecture for **AuraMeet**, an ephemeral, cyberpunk-themed real-time communication platform. It focuses on zero-footprint state management, WebRTC peer-to-peer data transfers, and WebSocket communication.
 
 ## 2. Technology Stack
 

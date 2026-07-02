@@ -234,11 +234,11 @@ document.body.classList.add(`theme-${themeName}`);
 }
 
 function saveTheme(themeName) {
-    localStorage.setItem("baatcheet-theme", themeName);
+    localStorage.setItem("aurameet-theme", themeName);
 }
 
 function loadTheme() {
-    return localStorage.getItem("baatcheet-theme") || "aurora";
+    return localStorage.getItem("aurameet-theme") || "aurora";
 }
 
 function setTheme(themeName) {

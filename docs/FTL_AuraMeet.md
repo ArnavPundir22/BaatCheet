@@ -1,4 +1,4 @@
-# Feature Traceability List (FTL) - BaatCheet
+# Feature Traceability List (FTL) - AuraMeet
 
 | Feature ID | Feature Name | Description | Target Role | Test Scenario | Expected Outcome | Priority |
 |---|---|---|---|---|---|---|

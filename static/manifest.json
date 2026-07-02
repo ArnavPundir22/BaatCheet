@@ -1,6 +1,6 @@
 {
-  "name": "BaatCheet",
-  "short_name": "BaatCheet",
+  "name": "AuraMeet",
+  "short_name": "AuraMeet",
   "description": "Ephemeral, Instant Video & Text Chat",
   "start_url": "/",
   "display": "standalone",

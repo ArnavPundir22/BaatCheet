@@ -1,7 +1,7 @@
-# Product Requirements Document (PRD): BaatCheet 
+# Product Requirements Document (PRD): AuraMeet 
 
 ## 1. Product Overview
-**BaatCheet** is an ephemeral, ultra-cyberpunk-themed communication platform that combines real-time chat, WebRTC screen casting, and immersive 3D interactive environments. It transitions a standard utility into a highly engaging, premium SaaS experience.
+**AuraMeet** is an ephemeral, ultra-cyberpunk-themed communication platform that combines real-time chat, WebRTC screen casting, and immersive 3D interactive environments. It transitions a standard utility into a highly engaging, premium SaaS experience.
 
 ## 2. Target Audience
 - **Tech Enthusiasts & Gamers:** Users who appreciate high-fidelity, cyberpunk aesthetics and interactive 3D UI elements.
@@ -9,7 +9,7 @@
 - **Remote Teams & Freelancers:** Professionals needing quick, secure, drop-in screen sharing for collaboration without long-term data retention.
 
 ## 3. The Problem it Solves
-Standard communication tools (like Slack or Zoom) are visually sterile, retain massive amounts of data by default, and feel strictly utilitarian. BaatCheet solves the "boring utility" problem by offering a highly stylized, secure, and ephemeral meeting environment where users can share ideas and screens without leaving a permanent data trail.
+Standard communication tools (like Slack or Zoom) are visually sterile, retain massive amounts of data by default, and feel strictly utilitarian. AuraMeet solves the "boring utility" problem by offering a highly stylized, secure, and ephemeral meeting environment where users can share ideas and screens without leaving a permanent data trail.
 
 ## 4. Core Features
 

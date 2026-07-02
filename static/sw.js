@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baatcheet-v13';
+const CACHE_NAME = 'aurameet-v13';
 const ASSETS_TO_CACHE = [
   '/',
   '/static/css/style.css',

@@ -1,6 +1,6 @@
-# 🏗️ BaatCheet Architecture
+# 🏗️ AuraMeet Architecture
 
-BaatCheet is built on a modern, fully ephemeral, and scalable architecture designed to handle real-time video, audio, and text communication with zero persistent storage.
+AuraMeet is built on a modern, fully ephemeral, and scalable architecture designed to handle real-time video, audio, and text communication with zero persistent storage.
 
 ## High-Level Overview
 
@@ -55,7 +55,7 @@ graph LR
 
 ## 🔗 WebRTC & Signaling Flow
 
-BaatCheet uses WebRTC for peer-to-peer video and audio streaming, meaning media does *not* route through the server, ensuring extremely low latency and high privacy. The server's only job in the media pipeline is **signaling** (exchanging connection data).
+AuraMeet uses WebRTC for peer-to-peer video and audio streaming, meaning media does *not* route through the server, ensuring extremely low latency and high privacy. The server's only job in the media pipeline is **signaling** (exchanging connection data).
 
 ### The Signaling Process
 1.  **Join Event:** A client joins a room via Socket.IO (`socket.emit('join')`).
@@ -95,7 +95,7 @@ sequenceDiagram
 
 ## 🧠 Redis State Management (The Ephemeral Design)
 
-BaatCheet strictly adheres to a "No Database" policy for absolute privacy. All state is stored in Redis and is highly volatile. This architecture is intentionally chosen over traditional SQL (PostgreSQL/MySQL) or NoSQL (MongoDB) databases because:
+AuraMeet strictly adheres to a "No Database" policy for absolute privacy. All state is stored in Redis and is highly volatile. This architecture is intentionally chosen over traditional SQL (PostgreSQL/MySQL) or NoSQL (MongoDB) databases because:
 1.  **Speed:** Redis operates entirely in memory, making state queries (like checking if a room exists) near instantaneous.
 2.  **Built-in TTL (Time to Live):** Keys can be programmed to self-destruct. We leverage this to automatically clean up orphaned rooms.
 3.  **No Residual Data:** Traditional databases write to disk, meaning deleted data could potentially be recovered from storage sectors. Redis guarantees that once memory is freed, the data is gone forever.
@@ -122,9 +122,9 @@ When a user disconnects or clicks "Leave Room", the server intercepts the `disco
 By default, WebSockets bind users to a specific server process. If you run multiple Node.js instances, a user on Instance A cannot communicate with a user on Instance B.
 
 **The Solution: Redis Adapter**
-BaatCheet initializes `Socket.IO` with the `@socket.io/redis-adapter`:
+AuraMeet initializes `Socket.IO` with the `@socket.io/redis-adapter`:
 ```javascript
 const { createAdapter } = require('@socket.io/redis-adapter');
 io.adapter(createAdapter(pubClient, subClient));
 ```
-This configures a pub/sub mechanism. When Instance A emits a message to a room, it publishes the event to Redis. All other instances subscribe to this event and forward the message to any connected clients in that room. This allows BaatCheet to scale horizontally across multiple servers or containers with ease.
+This configures a pub/sub mechanism. When Instance A emits a message to a room, it publishes the event to Redis. All other instances subscribe to this event and forward the message to any connected clients in that room. This allows AuraMeet to scale horizontally across multiple servers or containers with ease.

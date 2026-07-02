@@ -1,6 +1,6 @@
 # 🚀 Deployment & Setup
 
-This guide details how to configure, run, and deploy the BaatCheet application for both local development and production environments.
+This guide details how to configure, run, and deploy the AuraMeet application for both local development and production environments.
 
 ## 🛠 Prerequisites
 
@@ -13,8 +13,8 @@ Before starting, ensure you have the following installed on your system:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/ArnavPundir22/BaatCheet.git
-    cd BaatCheet
+    git clone https://github.com/ArnavPundir22/AuraMeet.git
+    cd AuraMeet
     ```
 
 2.  **Install Dependencies:**
@@ -36,7 +36,7 @@ Before starting, ensure you have the following installed on your system:
 
 ## 🌐 Production Deployment (Render / Heroku / Custom VPS)
 
-For production, BaatCheet is designed to deploy seamlessly on modern platforms like Render. It uses `express` and `socket.io` to handle asynchronous WebSocket connections efficiently.
+For production, AuraMeet is designed to deploy seamlessly on modern platforms like Render. It uses `express` and `socket.io` to handle asynchronous WebSocket connections efficiently.
 
 ### Running in Production
 
@@ -72,7 +72,7 @@ When deploying to a custom VPS (like DigitalOcean, Linode, or AWS EC2), you shou
    sudo apt update
    sudo apt install nginx certbot python3-certbot-nginx
    ```
-2. **Configure Nginx (`/etc/nginx/sites-available/baatcheet`):**
+2. **Configure Nginx (`/etc/nginx/sites-available/aurameet`):**
    ```nginx
    server {
        server_name yourdomain.com;
@@ -89,7 +89,7 @@ When deploying to a custom VPS (like DigitalOcean, Linode, or AWS EC2), you shou
    ```
 3. **Enable the Site & Obtain SSL:**
    ```bash
-   sudo ln -s /etc/nginx/sites-available/baatcheet /etc/nginx/sites-enabled/
+   sudo ln -s /etc/nginx/sites-available/aurameet /etc/nginx/sites-enabled/
    sudo nginx -t
    sudo certbot --nginx -d yourdomain.com
    sudo systemctl restart nginx

@@ -1,7 +1,7 @@
-# System Architecture Document (SAD) - BaatCheet
+# System Architecture Document (SAD) - AuraMeet
 
 ## 1. System Overview
-BaatCheet's architecture is built around the concept of ephemeral communication. It utilizes a central WebSocket server for signaling and chat, backed by Redis for fast, volatile state management. Screen sharing is offloaded to peer-to-peer WebRTC connections to minimize server bandwidth and ensure privacy.
+AuraMeet's architecture is built around the concept of ephemeral communication. It utilizes a central WebSocket server for signaling and chat, backed by Redis for fast, volatile state management. Screen sharing is offloaded to peer-to-peer WebRTC connections to minimize server bandwidth and ensure privacy.
 
 ## 2. High-Level Architecture Diagram
 

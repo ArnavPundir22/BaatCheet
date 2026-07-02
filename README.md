@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="static/banner.png" alt="BaatCheet Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px;">
+  <img src="static/banner.png" alt="AuraMeet Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px;">
   
-  # 💬 BaatCheet: Ephemeral Video & Chat
+  # 💬 AuraMeet: Ephemeral Video & Chat
 
   *A sleek, modern, scalable, and fully ephemeral real-time communication platform built with Node.js, WebRTC, Redis, and pure magic.*
   
@@ -26,7 +26,7 @@
 
 ## 📖 Introduction
 
-**BaatCheet** (meaning "Conversation" in Hindi) is a cutting-edge, real-time video and text chat application designed from the ground up for absolute privacy and zero persistence. When you join a room, you communicate directly via peer-to-peer WebRTC streams. When the last person leaves the room, the room and all its data are wiped from existence instantly.
+**AuraMeet** (meaning "Conversation" in Hindi) is a cutting-edge, real-time video and text chat application designed from the ground up for absolute privacy and zero persistence. When you join a room, you communicate directly via peer-to-peer WebRTC streams. When the last person leaves the room, the room and all its data are wiped from existence instantly.
 
 No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral communication.
 
@@ -50,7 +50,7 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 
 ## 💼 Professional & Enterprise Use Cases
 
-BaatCheet is engineered for high-stakes, confidential communications where privacy is non-negotiable. By enforcing an ephemeral architecture, it mitigates data liability and protects sensitive information.
+AuraMeet is engineered for high-stakes, confidential communications where privacy is non-negotiable. By enforcing an ephemeral architecture, it mitigates data liability and protects sensitive information.
 
 - **⚖️ Legal Consultations:** Maintain absolute attorney-client privilege. Without database records or logs, communications cannot be subpoenaed.
 - **🏥 Telemedicine & Healthcare:** Conduct secure, non-persistent health consultations. Patient data is transmitted securely and never stored, aligning with strict privacy standards.
@@ -63,7 +63,7 @@ BaatCheet is engineered for high-stakes, confidential communications where priva
 
 ## 📚 Documentation Index
 
-To keep this README clean, detailed technical documentation has been divided into specialized modules. Please explore the following guides to understand the inner workings of BaatCheet:
+To keep this README clean, detailed technical documentation has been divided into specialized modules. Please explore the following guides to understand the inner workings of AuraMeet:
 
 ### 1. [🏗️ Architecture & Logic](docs/architecture.md)
 Discover the backend mechanics, including:
@@ -78,7 +78,7 @@ Dive into the frontend magic, including:
 - **Chat & Reactions:** The logic driving typing indicators and floating CSS animations.
 
 ### 3. [🚀 Deployment & Setup Guide](docs/deployment.md)
-Learn how to run BaatCheet, including:
+Learn how to run AuraMeet, including:
 - **Local Setup:** Initializing Node.js and running Redis.
 - **Production Execution:** Deploying to platforms like Render or Heroku.
 - **HTTPS & TURN Requirements:** Why SSL and TURN servers are strictly necessary for WebRTC to function over the internet.
@@ -87,7 +87,7 @@ Learn how to run BaatCheet, including:
 
 ## 📲 Install as a Mobile App (PWA)
 
-BaatCheet is a fully configured Progressive Web App (PWA). You can install it directly to your device for a native-like experience:
+AuraMeet is a fully configured Progressive Web App (PWA). You can install it directly to your device for a native-like experience:
 
 - **Android (Chrome):** Open the site, tap the menu (⋮), and select **"Install App"** or **"Add to Home Screen"**.
 - **iOS (Safari):** Open the site in Safari, tap the **Share** button at the bottom, and select **"Add to Home Screen"**.

@@ -1,7 +1,7 @@
-# Functional Architecture Document (FAD) - BaatCheet
+# Functional Architecture Document (FAD) - AuraMeet
 
 ## 1. Introduction
-This document defines the functional scope of the BaatCheet platform, focusing on real-time interactions, ephemeral workflows, and the highly stylized cyberpunk user experience.
+This document defines the functional scope of the AuraMeet platform, focusing on real-time interactions, ephemeral workflows, and the highly stylized cyberpunk user experience.
 
 ## 2. User Roles & Personas
 - **Guest User:** An unauthenticated user participating in a temporary, free-tier session.
