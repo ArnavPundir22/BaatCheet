@@ -212,6 +212,7 @@ body {
     background: linear-gradient(to right, var(--primary), var(--text-main), var(--secondary), var(--primary));
     background-size: 300% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
     margin-bottom: 0.5rem;
