@@ -25,9 +25,9 @@
     <script>
         const ROOM_CODE = "<%= room_code %>";
         const USERNAME = "<%= username %>";
-        window.TURN_CONFIG = <%- turnConfig %>;
+        window.TURN_CONFIG = JSON.parse('<%- turnConfig %>');
     </script>
-    <link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+    <link rel="icon" type="image/png" href="/static/icon-192.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6366f1">
 </head>
