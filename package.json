@@ -1,6 +1,6 @@
 {
   "name": "aurameet",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "<div align=\"center\">   <img src=\"static/banner.png\" alt=\"AuraMeet Banner\" width=\"100%\" style=\"border-radius: 12px; margin-bottom: 20px;\">",
   "main": "server.js",
   "directories": {
