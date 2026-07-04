@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /about
+Disallow: /join/
+Disallow: /secure/
+
+Sitemap: https://baatcheet-88e9.onrender.com/sitemap.xml

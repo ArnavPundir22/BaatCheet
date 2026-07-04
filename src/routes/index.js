@@ -11,6 +11,12 @@ router.get("/sw.js", (req, res) =>
 router.get("/manifest.json", (req, res) =>
   res.sendFile(path.join(__dirname, "../../static/manifest.json")),
 );
+router.get("/robots.txt", (req, res) =>
+  res.sendFile(path.join(__dirname, "../../static/robots.txt")),
+);
+router.get("/sitemap.xml", (req, res) =>
+  res.sendFile(path.join(__dirname, "../../static/sitemap.xml")),
+);
 router.get("/google6ebffc7c3f9362cb.html", (req, res) =>
   res.sendFile(
     path.join(__dirname, "../../static/google6ebffc7c3f9362cb.html"),
