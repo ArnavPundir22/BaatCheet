@@ -28,6 +28,7 @@ router.get("/about", (req, res) => res.render("about"));
 // Room routes
 router.get("/", roomController.renderIndex);
 router.post("/", roomController.handleAction);
+router.get("/meet", roomController.handleApiMeet);
 router.get("/join/:room_code", roomController.joinDirect);
 router.get(
   "/secure/env-:encoded_room/session/sess-:encoded_user",

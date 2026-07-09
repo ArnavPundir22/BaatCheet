@@ -48,6 +48,28 @@ async function handleAction(req, res) {
   res.redirect("/");
 }
 
+async function handleApiMeet(req, res) {
+  const { action, username, room_name, room_code } = req.query;
+
+  if (!username) {
+    return res.redirect("/");
+  }
+
+  if (action === "create") {
+    const newRoomCode = room_code || (await roomService.generateRoomCode());
+    await roomService.createRoom(newRoomCode, room_name);
+
+    const encodedRoom = toHex(newRoomCode);
+    const encodedUser = toHex(username);
+    const ts = generateTimestampParam();
+    return res.redirect(
+      `/secure/env-${encodedRoom}/session/sess-${encodedUser}?ts=${ts}`,
+    );
+  }
+
+  res.redirect("/");
+}
+
 async function joinDirect(req, res) {
   const { room_code } = req.params;
   const exists = await roomService.roomExists(room_code);
@@ -99,6 +121,7 @@ async function renderRoom(req, res) {
 module.exports = {
   renderIndex,
   handleAction,
+  handleApiMeet,
   joinDirect,
   renderRoom,
 };
