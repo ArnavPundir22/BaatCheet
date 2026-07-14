@@ -702,3 +702,31 @@
         line-height: 1.2 !important;
     }
 }
+
+
+
+@media (max-width:768px){
+
+  .options-dropdown{
+      width:190px;
+      right:10px;
+      left:auto;
+      top:calc(100% + 8px);
+      border-radius:14px;
+  }
+
+  .dropdown-item{
+      padding:12px 14px;
+      font-size:14px;
+      gap:10px;
+  }
+
+  .dropdown-item svg{
+      width:18px;
+      height:18px;
+      flex-shrink:0;
+  }
+
+  
+
+}
