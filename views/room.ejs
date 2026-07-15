@@ -43,10 +43,18 @@
             <header class="room-header">
                 <h2>
                     <%= room_name %>
-                    <span class="font-mono" style="font-size: 0.6em; color: var(--text-muted); font-weight: normal; margin-left: 10px;">
-                        [ID]: <span class="highlight"><%= room_code %></span>
+                        <span class="font-mono" style="font-size:0.6em;color:var(--text-muted);font-weight:normal;margin-left:10px;">
+                        [ID]:
+                        <span class="room-code-wrapper">
+                        <span id="room-code" class="highlight">
+                            <%= room_code %>
+                        </span>
+                        <span id="copy-toast" class="copy-toast">
+                            ✓ Copied
+                        </span>
                     </span>
-                </h2>
+                   </span>
+               </h2>
                 <div class="controls">
                     <button id="toggle-audio" class="btn btn-icon active"><svg xmlns="http://www.w3.org/2000/svg"
                             width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,6 +159,22 @@
                                 </svg>
                                 Tips & Info
                             </button>
+                            <button id="clear-chat-mobile" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"      
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M8 6V4h8v2"></path>
+                                    <path d="M19 6l-1 14H6L5 6"></path>
+                                </svg>
+                                Clear Messages
+                            </button>
                         </div>
                     </div>
                     <!-- </button>
@@ -232,8 +256,12 @@
                     <%= room_name %>
                 </h3>
                 <span class="mobile-room-code font-mono">
-                    [ID]: <span class="highlight"><%= room_code %></span>
+                    [ID]: <span class="highlight room-code" id="room-code" title="Copy Room Code"> <%= room_code %> </span>
                 </span>
+               <button id="clear-chat-btn" class="btn btn-icon" title="Clear Chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M235.5,216.81c-22.56-11-35.5-34.58-35.5-64.8V134.73a15.94,15.94,0,0,0-10.09-14.87L165,110a8,8,0,0,1-4.48-10.34l21.32-53a28,28,0,0,0-16.1-37,28.14,28.14,0,0,0-35.82,16,.61.61,0,0,0,0,.12L108.9,79a8,8,0,0,1-10.37,4.49L73.11,73.14A15.89,15.89,0,0,0,55.74,76.8C34.68,98.45,24,123.75,24,152a111.45,111.45,0,0,0,31.18,77.53A8,8,0,0,0,61,232H232a8,8,0,0,0,3.5-15.19ZM67.14,88l25.41,10.3a24,24,0,0,0,31.23-13.45l21-53c2.56-6.11,9.47-9.27,15.43-7a12,12,0,0,1,6.88,15.92L145.69,93.76a24,24,0,0,0,13.43,31.14L184,134.73V152c0,.33,0,.66,0,1L55.77,101.71A108.84,108.84,0,0,1,67.14,88Zm48,128a87.53,87.53,0,0,1-24.34-42,8,8,0,0,0-15.49,4,105.16,105.16,0,0,0,18.36,38H64.44A95.54,95.54,0,0,1,40,152a85.9,85.9,0,0,1,7.73-36.29l137.8,55.12c3,18,10.56,33.48,21.89,45.16Z"></path></svg>
+
+                </button>
                 <button id="close-chat-btn" class="btn btn-icon btn-close-chat"
                     style="display: none; width: 32px; height: 32px;" title="Close Chat">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -401,6 +429,31 @@
             </div>
         </div>
     </div>
+    <!-- Clear Chat Modal -->
+    <div id="clear-chat-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content glass-panel" style="max-width:420px;">
+
+            <h3 style="display:flex;align-items:center;gap:10px;color:var(--primary);margin-bottom:1rem;">
+                🧹 Clear Chat
+            </h3>
+
+            <p style="color:var(--text-muted);line-height:1.6;margin-bottom:1.8rem;">
+                This will clear all messages on <strong>your device only.</strong><br>
+                Other participants will still see their chat.
+            </p>
+
+            <div class="modal-actions">
+                <button id="cancel-clear-chat" class="btn btn-secondary">
+                    Cancel
+                </button>
+
+                <button id="confirm-clear-chat" class="btn btn-danger">
+                    Clear
+             </button>
+            </div>
+        </div>
+    </div>
+    
 
     <!-- Theme Engine -->
     <script src="/static/js/themes.js"></script>
