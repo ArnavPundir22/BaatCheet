@@ -1197,6 +1197,10 @@ clearChatMobile?.addEventListener("click", (e) => {
   openClearChatModal();
 });
 
+cancelClearChatBtn?.addEventListener("click", () => {
+  clearChatModal.style.display = "none";
+});
+
 confirmClearChatBtn?.addEventListener("click", () => {
   chatMessages.querySelectorAll(".message").forEach((msg) => msg.remove());
   typingIndicator.style.display = "none";

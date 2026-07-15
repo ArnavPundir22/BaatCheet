@@ -1120,7 +1120,7 @@ body.has-maximized-video .options-dropdown {
   align-self: flex-start;
   border-top-left-radius: 0;
 
-  color: var(--text-main);-
+  color: var(--text-main);
 }
 
 .message.theirs::before {
@@ -1233,7 +1233,9 @@ body.has-maximized-video .options-dropdown {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-bottom: 30px;
 }
+
 
 /* Audio Recording Animation */
 #audio-btn.recording {
