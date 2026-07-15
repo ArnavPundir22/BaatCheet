@@ -1120,7 +1120,7 @@ body.has-maximized-video .options-dropdown {
   align-self: flex-start;
   border-top-left-radius: 0;
 
-  color: var(--text-main);-
+  color: var(--text-main);
 }
 
 .message.theirs::before {
