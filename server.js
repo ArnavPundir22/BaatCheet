@@ -17,6 +17,9 @@ const { pubClient, subClient, redisClient } = require('./src/config/redis');
 const app = express();
 const server = http.createServer(app);
 
+// Trust the reverse proxy (e.g., Render, Heroku, Nginx) so rate limiter uses correct IP
+app.set('trust proxy', 1);
+
 // Setup Express Middleware
 app.use(helmet({ contentSecurityPolicy: false })); 
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
