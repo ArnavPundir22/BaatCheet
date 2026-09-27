@@ -24,6 +24,8 @@ router.get("/google6ebffc7c3f9362cb.html", (req, res) =>
 );
 router.get("/favicon.ico", (req, res) => res.status(404).send());
 router.get("/about", (req, res) => res.render("about"));
+router.get("/ping", (req, res) => res.status(200).json({ status: "alive", timestamp: new Date().toISOString() }));
+
 
 // Room routes
 router.get("/", roomController.renderIndex);

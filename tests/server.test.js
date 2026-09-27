@@ -22,6 +22,12 @@ describe('NexusStream-RTC Express Server', () => {
         expect(response.status).toBe(200);
     });
 
+    test('GET /ping should return 200 OK with alive status', async () => {
+        const response = await request(app).get('/ping');
+        expect(response.status).toBe(200);
+        expect(response.body.status).toBe('alive');
+    });
+
     test('POST / with empty body should fail gracefully', async () => {
         const response = await request(app).post('/').type('form').send({});
         expect(response.status).toBe(200); // the current logic re-renders index with an error

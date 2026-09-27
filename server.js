@@ -12,6 +12,7 @@ const rateLimit = require('express-rate-limit');
 // Import Modules
 const routes = require('./src/routes');
 const setupSockets = require('./src/sockets');
+const startKeepAlive = require('./src/utils/keepAlive');
 const { pubClient, subClient, redisClient } = require('./src/config/redis');
 
 const app = express();
@@ -63,6 +64,7 @@ const PORT = process.env.PORT || 5000;
 if (require.main === module) {
     server.listen(PORT, '0.0.0.0', () => {
         console.log(`Server listening on port ${PORT}`);
+        startKeepAlive();
     });
 
     const shutdown = async () => {

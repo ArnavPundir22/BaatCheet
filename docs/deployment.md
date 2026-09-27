@@ -99,6 +99,8 @@ You can customize the application behavior using the following environment varia
 - `TURN_URL`: The URL of your TURN server for reliable WebRTC video routing.
 - `TURN_USERNAME`: Username for your TURN server.
 - `TURN_CREDENTIAL`: Password/Credential for your TURN server.
+- `SELF_URL`: (Optional) Custom external URL for keep-alive self-pinging. Automatically picked up on Render via `RENDER_EXTERNAL_URL`.
+- `PING_INTERVAL_MINUTES`: (Optional) Interval in minutes between keep-alive pings (Default: `14` minutes).
 
 ---
 
