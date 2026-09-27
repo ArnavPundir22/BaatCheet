@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { app, redisClient, pubClient, subClient } = require('../server');
 
-describe('AuraMeet Express Server', () => {
+describe('NexusStream-RTC Express Server', () => {
     // connection is handled by server.js on require
 
     afterAll(async () => {
@@ -14,7 +14,7 @@ describe('AuraMeet Express Server', () => {
     test('GET / should return 200 OK', async () => {
         const response = await request(app).get('/');
         expect(response.status).toBe(200);
-        expect(response.text).toContain('AuraMeet'); // checking if EJS template rendered
+        expect(response.text).toContain('NexusStream-RTC'); // checking if EJS template rendered
     });
 
     test('GET /about should return 200 OK', async () => {

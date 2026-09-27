@@ -1,10 +1,10 @@
 # 🚀 Deployment & CI/CD Pipeline
 
-This guide details how the AuraMeet application is tested, configured, and deployed for both local development and production environments.
+This guide details how the NexusStream-RTC application is tested, configured, and deployed for both local development and production environments.
 
 ## 🔄 CI/CD Pipeline Flow
 
-AuraMeet utilizes a robust CI/CD (Continuous Integration / Continuous Deployment) pipeline via GitHub Actions to ensure code quality and prevent regressions in production.
+NexusStream-RTC utilizes a robust CI/CD (Continuous Integration / Continuous Deployment) pipeline via GitHub Actions to ensure code quality and prevent regressions in production.
 
 ```mermaid
 graph TD
@@ -49,8 +49,8 @@ Before starting, ensure you have the following installed on your system:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/ArnavPundir22/AuraMeet.git
-   cd AuraMeet
+   git clone https://github.com/ArnavPundir22/NexusStream-RTC.git
+   cd NexusStream-RTC
    ```
 
 2. **Install Dependencies:**
@@ -87,7 +87,7 @@ Before starting, ensure you have the following installed on your system:
 
 ## 🌐 Production Deployment (Render / Heroku / Custom VPS)
 
-For production, AuraMeet is designed to deploy seamlessly on modern platforms like Render. The application features **Graceful Shutdown** listeners (`SIGTERM`/`SIGINT`), meaning when the PaaS restarts the server, it will cleanly close HTTP and Redis connections without crashing active sessions abruptly.
+For production, NexusStream-RTC is designed to deploy seamlessly on modern platforms like Render. The application features **Graceful Shutdown** listeners (`SIGTERM`/`SIGINT`), meaning when the PaaS restarts the server, it will cleanly close HTTP and Redis connections without crashing active sessions abruptly.
 
 ### Environment Variables
 

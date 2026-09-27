@@ -1,6 +1,6 @@
-# 🏗️ AuraMeet Architecture
+# 🏗️ NexusStream-RTC Architecture
 
-AuraMeet is built on a modern, fully ephemeral, and scalable architecture designed to handle real-time video, audio, and text communication with zero persistent storage. The backend strictly follows a modular **MVC (Model-View-Controller)** pattern.
+NexusStream-RTC is built on a modern, fully ephemeral, and scalable architecture designed to handle real-time video, audio, and text communication with zero persistent storage. The backend strictly follows a modular **MVC (Model-View-Controller)** pattern.
 
 ## High-Level System Architecture
 
@@ -93,7 +93,7 @@ sequenceDiagram
 
 ## 🔗 WebRTC & Signaling Flow
 
-AuraMeet uses WebRTC for peer-to-peer video and audio streaming, meaning media does _not_ route through the server, ensuring extremely low latency and high privacy. The server's only job in the media pipeline is **signaling** (exchanging connection data).
+NexusStream-RTC uses WebRTC for peer-to-peer video and audio streaming, meaning media does _not_ route through the server, ensuring extremely low latency and high privacy. The server's only job in the media pipeline is **signaling** (exchanging connection data).
 
 ### The Signaling Process
 
@@ -107,7 +107,7 @@ AuraMeet uses WebRTC for peer-to-peer video and audio streaming, meaning media d
 
 ## 🧠 The Ephemeral Lifecycle (Redis State Management)
 
-AuraMeet strictly adheres to a "No Database" policy for absolute privacy. All state is stored in Redis and is highly volatile.
+NexusStream-RTC strictly adheres to a "No Database" policy for absolute privacy. All state is stored in Redis and is highly volatile.
 
 ### Redis Key Schema
 
@@ -142,4 +142,4 @@ stateDiagram-v2
 By default, WebSockets bind users to a specific server process. If you run multiple Node.js instances, a user on Instance A cannot communicate with a user on Instance B.
 
 **The Solution: Redis Adapter**
-AuraMeet initializes `Socket.IO` with the `@socket.io/redis-adapter`. This configures a pub/sub mechanism. When Instance A emits a message to a room, it publishes the event to Redis. All other instances subscribe to this event and forward the message to any connected clients in that room. This allows AuraMeet to scale horizontally across multiple servers or containers with ease.
+NexusStream-RTC initializes `Socket.IO` with the `@socket.io/redis-adapter`. This configures a pub/sub mechanism. When Instance A emits a message to a room, it publishes the event to Redis. All other instances subscribe to this event and forward the message to any connected clients in that room. This allows NexusStream-RTC to scale horizontally across multiple servers or containers with ease.

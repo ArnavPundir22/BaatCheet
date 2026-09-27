@@ -1,7 +1,7 @@
 {
-  "name": "aurameet",
+  "name": "nexusstream-rtc",
   "version": "1.0.0",
-  "description": "<div align=\"center\">   <img src=\"static/banner.png\" alt=\"AuraMeet Banner\" width=\"100%\" style=\"border-radius: 12px; margin-bottom: 20px;\">",
+  "description": "<div align=\"center\">   <img src=\"static/banner.png\" alt=\"NexusStream-RTC Banner\" width=\"100%\" style=\"border-radius: 12px; margin-bottom: 20px;\">",
   "main": "server.js",
   "directories": {
     "doc": "docs"
@@ -16,16 +16,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArnavPundir22/AuraMeet.git"
+    "url": "git+https://github.com/ArnavPundir22/NexusStream-RTC.git"
   },
   "keywords": [],
   "author": "",
   "license": "UNLICENSED",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/ArnavPundir22/AuraMeet/issues"
+    "url": "https://github.com/ArnavPundir22/NexusStream-RTC/issues"
   },
-  "homepage": "https://github.com/ArnavPundir22/AuraMeet#readme",
+  "homepage": "https://github.com/ArnavPundir22/NexusStream-RTC#readme",
   "dependencies": {
     "@socket.io/redis-adapter": "^8.3.0",
     "cors": "^2.8.6",

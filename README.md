@@ -1,8 +1,8 @@
 <!-- markdownlint-disable MD033 MD041 MD023 -->
 <div align="center">
-  <img src="static/banner.png" alt="AuraMeet Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px;">
+  <img src="static/banner.png" alt="NexusStream-RTC Banner" width="100%" style="border-radius: 12px; margin-bottom: 20px;">
 
-# 💬 AuraMeet: Ephemeral Video & Chat
+# 💬 NexusStream-RTC: Ephemeral Video & Chat
 
 _A sleek, modern, scalable, and fully ephemeral real-time communication platform built with Node.js, WebRTC, Redis, and pure magic._
 
@@ -29,7 +29,7 @@ _A sleek, modern, scalable, and fully ephemeral real-time communication platform
 
 ## 📖 Introduction
 
-**AuraMeet** (meaning "Conversation" in Hindi) is a cutting-edge, real-time video and text chat application designed from the ground up for absolute privacy and zero persistence. When you join a room, you communicate directly via peer-to-peer WebRTC streams. When the last person leaves the room, the room and all its data are wiped from existence instantly.
+**NexusStream-RTC** (meaning "Conversation" in Hindi) is a cutting-edge, real-time video and text chat application designed from the ground up for absolute privacy and zero persistence. When you join a room, you communicate directly via peer-to-peer WebRTC streams. When the last person leaves the room, the room and all its data are wiped from existence instantly.
 
 No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral communication built on a robust MVC backend.
 
@@ -50,7 +50,7 @@ No SQL databases. No chat history. No logs. Just pure, real-time, ephemeral comm
 
 ## 💼 Professional & Enterprise Use Cases
 
-AuraMeet is engineered for high-stakes, confidential communications where privacy is non-negotiable.
+NexusStream-RTC is engineered for high-stakes, confidential communications where privacy is non-negotiable.
 
 - **⚖️ Legal Consultations:** Maintain absolute attorney-client privilege. Without database records or logs, communications cannot be subpoenaed.
 - **🏥 Telemedicine & Healthcare:** Conduct secure, non-persistent health consultations. Patient data is transmitted securely and never stored.
@@ -79,7 +79,7 @@ Dive into the frontend magic, including:
 
 ### 3. [🚀 Deployment & Setup Guide](docs/deployment.md)
 
-Learn how to run AuraMeet, including:
+Learn how to run NexusStream-RTC, including:
 
 - **CI/CD Pipeline Flowchart:** How GitHub Actions tests and deploys the app.
 - **Local Setup & Testing:** Running Jest integration tests and Redis locally.
@@ -89,7 +89,7 @@ Learn how to run AuraMeet, including:
 
 ## 📲 Install as a Mobile App (PWA)
 
-AuraMeet is a fully configured Progressive Web App (PWA). You can install it directly to your device for a native-like experience:
+NexusStream-RTC is a fully configured Progressive Web App (PWA). You can install it directly to your device for a native-like experience:
 
 - **Android (Chrome):** Open the site, tap the menu (⋮), and select **"Install App"**.
 - **iOS (Safari):** Open the site in Safari, tap the **Share** button, and select **"Add to Home Screen"**.

@@ -234,11 +234,11 @@ document.body.classList.add(`theme-${themeName}`);
 }
 
 function saveTheme(themeName) {
-    localStorage.setItem("aurameet-theme", themeName);
+    localStorage.setItem("nexusstream-rtc-theme", themeName);
 }
 
 function loadTheme() {
-    return localStorage.getItem("aurameet-theme") || "aurora";
+    return localStorage.getItem("nexusstream-rtc-theme") || "aurora";
 }
 
 function setTheme(themeName) {

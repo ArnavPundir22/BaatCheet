@@ -1,6 +1,6 @@
 {
-  "name": "AuraMeet",
-  "short_name": "AuraMeet",
+  "name": "NexusStream-RTC",
+  "short_name": "NexusStream-RTC",
   "description": "Ephemeral, Instant Video & Text Chat",
   "start_url": "/",
   "display": "standalone",

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: nexusstream-rtc-web
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: nexusstream-rtc-redis
+          property: connectionString
+      - key: CORS_ORIGIN
+        value: '*'
+      - key: NODE_ENV
+        value: production
+
+  - type: redis
+    name: nexusstream-rtc-redis
+    plan: free
+    ipAllowList: [] # Access allowed only from Render services
