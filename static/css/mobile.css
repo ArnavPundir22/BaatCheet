@@ -701,4 +701,39 @@
         font-size: .55rem !important;
         line-height: 1.2 !important;
     }
+
+    /* MOBILE CLOSED CAPTIONS & AI MODALS */
+    .caption-container {
+        bottom: 85px !important;
+        width: 94vw !important;
+        max-width: 94vw !important;
+        padding: 8px 12px !important;
+        border-radius: 18px !important;
+        gap: 6px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.95), 0 0 12px rgba(16, 185, 129, 0.4) !important;
+    }
+
+    .caption-badge {
+        font-size: 0.6rem !important;
+        padding: 2px 6px !important;
+    }
+
+    .caption-lang-select {
+        font-size: 0.75rem !important;
+        padding: 2px 4px !important;
+        max-width: 100px !important;
+    }
+
+    .caption-text {
+        font-size: 0.85rem !important;
+        max-height: 90px !important;
+        line-height: 1.3 !important;
+    }
+
+    .ai-modal-content {
+        padding: 1.2rem !important;
+        max-height: 90vh !important;
+        width: 95vw !important;
+        border-radius: 18px !important;
+    }
 }
