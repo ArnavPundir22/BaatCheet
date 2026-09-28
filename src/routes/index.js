@@ -36,4 +36,9 @@ router.get(
   roomController.renderRoom,
 );
 
+// AI API Routes
+router.get("/api/room/:room_code/summary", roomController.getSummary);
+router.get("/api/room/:room_code/quiz", roomController.getQuiz);
+
 module.exports = router;
+

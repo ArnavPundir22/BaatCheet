@@ -1,4 +1,6 @@
 const socket = io();
+window.socket = socket;
+
 
 // UI Elements
 const videoGrid = document.getElementById('video-grid');
@@ -1342,3 +1344,6 @@ async function switchCamera() {
 if (switchCameraBtn) {
     switchCameraBtn.addEventListener('click', switchCamera);
 }
+
+
+

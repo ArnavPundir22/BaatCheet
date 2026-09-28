@@ -76,9 +76,34 @@ async function renderRoom(req, res) {
     res.render('room', { room_code, room_name, username, turnConfig: JSON.stringify(turnConfig) });
 }
 
+const aiService = require('../services/ai.service');
+
+async function getSummary(req, res) {
+    const { room_code } = req.params;
+    try {
+        const summary = await aiService.generateSummary(room_code);
+        res.json({ success: true, summary });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+async function getQuiz(req, res) {
+    const { room_code } = req.params;
+    try {
+        const quiz = await aiService.generateQuiz(room_code);
+        res.json({ success: true, quiz });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
 module.exports = {
     renderIndex,
     handleAction,
     joinDirect,
-    renderRoom
+    renderRoom,
+    getSummary,
+    getQuiz
 };
+

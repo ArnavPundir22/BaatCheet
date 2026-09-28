@@ -63,6 +63,39 @@ async function removeUserFromRoom(sid) {
     return { room, username };
 }
 
+// In-memory fallback if Redis is unavailable
+const memoryTranscripts = new Map();
+
+async function addTranscriptEntry(room, username, text, type = 'spoken') {
+    if (!room || !text) return;
+    const entry = JSON.stringify({
+        username,
+        text,
+        type, // 'spoken' or 'chat'
+        timestamp: new Date().toISOString()
+    });
+
+    try {
+        await redisClient.rPush(`room:${room}:transcript`, entry);
+        await redisClient.expire(`room:${room}:transcript`, 7200); // 2 hour TTL
+    } catch (e) {
+        if (!memoryTranscripts.has(room)) memoryTranscripts.set(room, []);
+        memoryTranscripts.get(room).push(JSON.parse(entry));
+    }
+}
+
+async function getRoomTranscript(room) {
+    if (!room) return [];
+    try {
+        const raw = await redisClient.lRange(`room:${room}:transcript`, 0, -1);
+        if (raw && raw.length > 0) {
+            return raw.map(item => JSON.parse(item));
+        }
+    } catch (e) { }
+
+    return memoryTranscripts.get(room) || [];
+}
+
 module.exports = {
     generateRoomCode,
     roomExists,
@@ -70,5 +103,8 @@ module.exports = {
     getRoomName,
     getActiveRoomsCount,
     addUserToRoom,
-    removeUserFromRoom
+    removeUserFromRoom,
+    addTranscriptEntry,
+    getRoomTranscript
 };
+

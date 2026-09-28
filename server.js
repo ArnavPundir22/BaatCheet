@@ -39,17 +39,25 @@ app.use(express.json());
 // Use Routes
 app.use('/', routes);
 
-// Connect Redis
+// Connect Redis safely
 Promise.all([pubClient.connect(), subClient.connect(), redisClient.connect()]).then(() => {
-    console.log('Connected to Redis');
-}).catch(console.error);
+    console.log('Redis initialized');
+}).catch(err => {
+    console.log('Redis unavailable, using in-memory adapter');
+});
 
 // Socket.IO Setup
-const io = new Server(server, {
+const socketOptions = {
     cors: { origin: '*' },
-    adapter: createAdapter(pubClient, subClient),
     maxHttpBufferSize: 1e7 // 10MB
-});
+};
+
+if (pubClient && pubClient.isReal) {
+    socketOptions.adapter = createAdapter(pubClient, subClient);
+}
+
+const io = new Server(server, socketOptions);
+
 
 setupSockets(io);
 

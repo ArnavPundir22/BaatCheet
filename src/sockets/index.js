@@ -1,4 +1,5 @@
 const roomService = require('../services/room.service');
+const aiService = require('../services/ai.service');
 
 function setupSockets(io) {
     io.on('connection', (socket) => {
@@ -33,11 +34,57 @@ function setupSockets(io) {
             const exists = await roomService.roomExists(room);
             if (exists) {
                 const payload = { user: data.username };
-                if (data.text) payload.text = data.text;
+                if (data.text) {
+                    payload.text = data.text;
+                    await roomService.addTranscriptEntry(room, data.username, data.text, 'chat');
+                }
                 if (data.image) payload.image = data.image;
                 if (data.audio) payload.audio = data.audio;
                 if (data.reply_to) payload.reply_to = data.reply_to;
                 io.to(room).emit('message', payload);
+            }
+        });
+
+        socket.on('caption_speech', async (data) => {
+            const { room, username, text, isFinal } = data;
+            if (!room || !text) return;
+            // Broadcast live caption stream to everyone in the room
+            io.to(room).emit('caption_speech', {
+                sender_sid: socket.id,
+                username: username || 'Participant',
+                text,
+                isFinal: !!isFinal
+            });
+
+            // Store in transcript when speech chunk is final
+            if (isFinal && text.trim().length > 0) {
+                await roomService.addTranscriptEntry(room, username, text, 'spoken');
+            }
+        });
+
+        socket.on('get_ai_summary', async (data, callback) => {
+            const { room } = data || {};
+            try {
+                const summary = await aiService.generateSummary(room);
+                if (typeof callback === 'function') callback({ success: true, summary });
+                else socket.emit('ai_summary_result', { success: true, summary });
+            } catch (err) {
+                const errorResp = { success: false, error: err.message };
+                if (typeof callback === 'function') callback(errorResp);
+                else socket.emit('ai_summary_result', errorResp);
+            }
+        });
+
+        socket.on('get_ai_quiz', async (data, callback) => {
+            const { room } = data || {};
+            try {
+                const quiz = await aiService.generateQuiz(room);
+                if (typeof callback === 'function') callback({ success: true, quiz });
+                else socket.emit('ai_quiz_result', { success: true, quiz });
+            } catch (err) {
+                const errorResp = { success: false, error: err.message };
+                if (typeof callback === 'function') callback(errorResp);
+                else socket.emit('ai_quiz_result', errorResp);
             }
         });
 
